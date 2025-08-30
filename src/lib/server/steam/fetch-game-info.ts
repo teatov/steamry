@@ -1,41 +1,44 @@
+import { ContentDescriptor, type NewGame } from '../db/schema';
+
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
 
-export default async function fetchGameInfo(appId: string) {
+export default async function fetchGameInfo(appid: string): Promise<NewGame | null> {
   const detailsUrl = new URL(APP_DETAILS_URL);
-  detailsUrl.searchParams.set('appids', appId);
+  detailsUrl.searchParams.set('appids', appid);
 
   const detailsResponse = await fetch(detailsUrl);
   if (!detailsResponse.ok) {
-    console.error(`App ${appId} details ${detailsResponse.status} ${detailsResponse.statusText}`);
+    console.error(`App ${appid} details ${detailsResponse.status} ${detailsResponse.statusText}`);
     return null;
   }
 
   const detailsResult = (await detailsResponse.json()) as AppDetailsResponse;
-  if (!detailsResult[appId] || !detailsResult[appId].success || !detailsResult[appId].data) {
-    console.error(`App ${appId} details fetch failed`);
+  if (!detailsResult[appid] || !detailsResult[appid].success || !detailsResult[appid].data) {
+    console.error(`App ${appid} details fetch failed`);
     return null;
   }
 
-  const appDetails = detailsResult[appId].data;
+  const appDetails = detailsResult[appid].data;
   if (appDetails.type != 'game') {
-    console.error(`App ${appId} is not a game`);
+    console.error(`App ${appid} is not a game`);
     return null;
   }
 
   if (
-    appDetails.content_descriptors.ids.includes(ContentDescriptor.FrequentNudityorSexualContent)
+    appDetails.content_descriptors &&
+    appDetails.content_descriptors.ids.includes(ContentDescriptor.FrequentNudityOrSexualContent)
   ) {
-    console.error(`App ${appId} has FrequentNudityorSexualContent`);
+    console.error(`App ${appid} has FrequentNudityorSexualContent`);
     return null;
   }
 
   if (appDetails.release_date.coming_soon) {
-    console.error(`App ${appId} is not released`);
+    console.error(`App ${appid} is not released`);
     return null;
   }
 
-  const reviewsUrl = new URL(`${APP_REVIEWS_URL}/${appId}`);
+  const reviewsUrl = new URL(`${APP_REVIEWS_URL}/${appid}`);
   reviewsUrl.searchParams.set('json', '1');
   reviewsUrl.searchParams.set('language', 'all');
   reviewsUrl.searchParams.set('purchase_type', 'all');
@@ -43,23 +46,45 @@ export default async function fetchGameInfo(appId: string) {
 
   const reviewsResponse = await fetch(reviewsUrl);
   if (!reviewsResponse.ok) {
-    console.error(`App ${appId} details ${reviewsResponse.status} ${reviewsResponse.statusText}`);
+    console.error(`App ${appid} details ${reviewsResponse.status} ${reviewsResponse.statusText}`);
     return null;
   }
 
   const reviewsResult = (await reviewsResponse.json()) as AppReviewsResponse;
   if (reviewsResult.success != 1 || !reviewsResult.query_summary) {
-    console.error(`App ${appId} reviews fetch failed`);
+    console.error(`App ${appid} reviews fetch failed`);
     return null;
   }
 
   const reviewsSummary = reviewsResult.query_summary;
   if (reviewsSummary.total_negative + reviewsSummary.total_positive === 0) {
-    console.error(`App ${appId} has zero reviews`);
+    console.error(`App ${appid} has zero reviews`);
     return null;
   }
 
-  return { details: appDetails, reviews: reviewsSummary };
+  return {
+    appid: appDetails.steam_appid,
+    name: appDetails.name,
+    reviewsPositive: reviewsSummary.total_positive,
+    reviewsNegative: reviewsSummary.total_negative,
+    description: appDetails.short_description,
+    price:
+      appDetails.is_free || !appDetails.price_overview
+        ? null
+        : appDetails.price_overview.initial_formatted || appDetails.price_overview.final_formatted,
+    releaseDate: appDetails.release_date.date,
+    headerImage: appDetails.header_image,
+    developers: appDetails.developers,
+    publishers: appDetails.publishers,
+    categories: appDetails.categories
+      ? appDetails.categories.map((value) => value.description)
+      : [],
+    genres: appDetails.genres ? appDetails.genres.map((value) => value.description) : [],
+    screenshots: appDetails.screenshots
+      ? appDetails.screenshots.map((value) => value.path_full)
+      : [],
+    contentDescriptors: appDetails.content_descriptors ? appDetails.content_descriptors.ids : [],
+  };
 }
 
 type AppDetailsResponse = Record<string, { success: boolean; data?: AppDetails }>;
@@ -67,20 +92,22 @@ type AppDetailsResponse = Record<string, { success: boolean; data?: AppDetails }
 type AppDetails = {
   type: 'game' | 'dlc' | 'demo' | 'advertising' | 'mod' | 'video';
   name: string;
+  steam_appid: number;
+  is_free: boolean;
   short_description: string;
   header_image: string;
   developers: string[];
   publishers: string[];
-  price_overview: {
+  price_overview?: {
     currency: string;
     initial: number;
-    initial_formatted: string;
+    initial_formatted?: string;
     final_formatted: string;
   };
-  categories: { id: number; description: string }[];
-  genres: { id: number; description: string }[];
-  screenshots: { id: number; path_thumbnail: string; path_full: string }[];
-  movies: {
+  categories?: { id: number; description: string }[];
+  genres?: { id: number; description: string }[];
+  screenshots?: { id: number; path_thumbnail: string; path_full: string }[];
+  movies?: {
     id: number;
     name: string;
     thumbnail: string;
@@ -92,16 +119,8 @@ type AppDetails = {
     coming_soon: boolean;
     date: string;
   };
-  content_descriptors: { ids: ContentDescriptor[]; notes: string | null };
+  content_descriptors?: { ids: ContentDescriptor[]; notes: string | null };
 };
-
-enum ContentDescriptor {
-  SomeNudityorSexualContent = 1,
-  FrequentViolenceOrGore = 2,
-  AdultOnlySexualContent = 3,
-  FrequentNudityorSexualContent = 4,
-  GeneralMatureContent = 5,
-}
 
 type AppReviewsResponse = {
   success: number;

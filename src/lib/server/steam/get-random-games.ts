@@ -23,7 +23,7 @@ export default async function getRandomGames() {
       throw new Error('minId or maxId is null');
     }
 
-    const games = [];
+    const games: schema.NewGame[] = [];
     let attempts = 0;
     const usedIds: number[] = [];
 
@@ -40,10 +40,9 @@ export default async function getRandomGames() {
         continue;
       }
 
-      const appId = steamApp.appid?.toString();
-      console.log(`\nhttps://store.steampowered.com/app/${appId}`);
+      console.log(`\nhttps://store.steampowered.com/app/${steamApp.appid}`);
 
-      const game = await fetchGameInfo(appId);
+      const game = await fetchGameInfo(steamApp.appid.toString());
       if (!game) {
         continue;
       }
