@@ -3,10 +3,9 @@ import { db } from '../db';
 import * as schema from '../db/schema';
 import fetchGameInfo from './fetch-game-info';
 
-const GAMES_AMOUNT = 10;
 const MAX_ATTEMPTS = 200;
 
-export default async function getRandomGames() {
+export default async function getRandomGames(amount: number): Promise<schema.NewGame[] | null> {
   try {
     const minMaxIdResult = await db
       .select({
@@ -27,7 +26,7 @@ export default async function getRandomGames() {
     let attempts = 0;
     const usedIds: number[] = [];
 
-    while (games.length < GAMES_AMOUNT && attempts < MAX_ATTEMPTS) {
+    while (games.length < amount && attempts < MAX_ATTEMPTS) {
       attempts += 1;
       const id = Math.floor(Math.random() * (maxId - minId + 1)) + minId;
 

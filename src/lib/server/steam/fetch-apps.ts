@@ -30,7 +30,7 @@ export default async function fetchApps() {
       }
     });
 
-    console.log('Finished!');
+    console.log('Done!');
   } catch (error) {
     console.error(error);
   }

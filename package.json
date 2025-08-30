@@ -18,7 +18,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "games:fetch": "tsx scripts/fetch-apps.ts",
-    "games:random": "tsx scripts/get-random-games.ts"
+    "games:random": "tsx scripts/get-random-games.ts",
+    "games:generate": "tsx scripts/generate-dailies.ts"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",

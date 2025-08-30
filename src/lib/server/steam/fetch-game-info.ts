@@ -75,8 +75,8 @@ export default async function fetchGameInfo(appid: string): Promise<NewGame | nu
         : appDetails.price_overview.initial_formatted || appDetails.price_overview.final_formatted,
     releaseDate: appDetails.release_date.date,
     headerImage: appDetails.header_image,
-    developers: appDetails.developers,
-    publishers: appDetails.publishers,
+    developers: appDetails.developers ? appDetails.developers : [],
+    publishers: appDetails.publishers ? appDetails.publishers : [],
     categories: appDetails.categories
       ? appDetails.categories.map((value) => value.description)
       : [],
@@ -97,8 +97,8 @@ type AppDetails = {
   is_free: boolean;
   short_description: string;
   header_image: string;
-  developers: string[];
-  publishers: string[];
+  developers?: string[];
+  publishers?: string[];
   price_overview?: {
     currency: string;
     initial: number;
