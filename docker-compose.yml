@@ -3,11 +3,11 @@ services:
     image: postgres
     restart: always
     ports:
-      - 5432:5432
+      - ${DB_PORT:-5432}:5432
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: local
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     volumes:
       - pgdata:/var/lib/postgresql/data
 volumes:
