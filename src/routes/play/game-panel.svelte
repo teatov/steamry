@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getScore } from '$lib';
+  import iconVideoImage from '$lib/assets/icon-video.png';
   import reviewNegativeImage from '$lib/assets/review-negative.png';
   import reviewPositiveImage from '$lib/assets/review-positive.png';
   import type { Game } from '$lib/server/db/schema';
@@ -12,9 +13,21 @@
   }: { game: Game; isCorrect: boolean; reveal: boolean; onguess: (game: Game) => void } = $props();
 
   let modalElement = $state<HTMLElement>();
-  let currentScreenshot = $state<number>(0);
+  let currentMedia = $state<{ type: 'trailer' | 'screenshot'; index: number }>({
+    type: game.trailers.length > 0 ? 'trailer' : 'screenshot',
+    index: 0,
+  });
   let currentModalScreenshot = $state<number>(0);
   let showModal = $state<boolean>(false);
+
+  $effect(() => {
+    if (game) {
+      currentMedia = {
+        type: game.trailers.length > 0 ? 'trailer' : 'screenshot',
+        index: 0,
+      };
+    }
+  });
 
   const numberFormat = new Intl.NumberFormat('en-US');
 
@@ -35,31 +48,76 @@
   <div class="flex h-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2">
     <div class="flex w-8/12 flex-col space-y-2 pb-2">
       <h2 class="truncate px-4 pt-2 text-white md:text-3xl" title={game.name}>{game.name}</h2>
-      {#key game.screenshots}
-        <button
-          class="block h-0 grow bg-black"
-          onclick={() => {
-            currentModalScreenshot = currentScreenshot;
-            showModal = true;
-          }}
-        >
-          <img
-            src={currentScreenshot < game.screenshots.length
-              ? game.screenshots[currentScreenshot]
-              : ''}
-            alt="Screenshot"
+      {#key game}
+        {#if currentMedia.type === 'screenshot'}
+          <button
+            class="block h-0 grow bg-black"
+            onclick={() => {
+              currentModalScreenshot = currentMedia.index;
+              showModal = true;
+            }}
+          >
+            <img
+              src={currentMedia.index < game.screenshots.length
+                ? game.screenshots[currentMedia.index]
+                : ''}
+              alt="Screenshot"
+              width="1920"
+              height="1080"
+              class="h-full w-full object-contain"
+            />
+          </button>
+        {:else if currentMedia.type === 'trailer'}
+          {@const currentTrailer = game.trailers[currentMedia.index]}
+          <!-- svelte-ignore a11y_media_has_caption -->
+          <video
             width="1920"
             height="1080"
-            class="h-full w-full object-contain"
-          />
-        </button>
+            controls
+            class=" block h-0 w-full grow bg-black object-contain"
+          >
+            {#if currentTrailer.webm}
+              <source src={currentTrailer.webm} type="video/webm" />
+            {/if}
+            {#if currentTrailer.mp4}
+              <source src={currentTrailer.mp4} type="video/mp4" />
+            {/if}
+          </video>
+        {/if}
         <div class="flex overflow-x-auto">
-          {#each game.screenshots as screenshot, i}
+          {#each game.trailers as trailer, i}
             <button
-              class="shrink-0 border-2 border-foreground/0 {currentScreenshot === i
+              class="relative shrink-0 border-2 border-foreground/0 {currentMedia.type ===
+                'trailer' && currentMedia.index === i
                 ? 'border-foreground/100'
                 : ''}"
-              onclick={() => (currentScreenshot = i)}
+              onclick={() => {
+                currentMedia.type = 'trailer';
+                currentMedia.index = i;
+              }}
+            >
+              <img
+                src={trailer.thumbnail}
+                alt="Trailer {i + 1}"
+                width="1920"
+                height="1080"
+                class="block h-12 w-auto object-contain"
+              />
+              <div class="absolute inset-0 flex items-center justify-center">
+                <img src={iconVideoImage} alt="" width="32" height="32" />
+              </div>
+            </button>
+          {/each}
+          {#each game.screenshots as screenshot, i}
+            <button
+              class="shrink-0 border-2 border-foreground/0 {currentMedia.type === 'screenshot' &&
+              currentMedia.index === i
+                ? 'border-foreground/100'
+                : ''}"
+              onclick={() => {
+                currentMedia.type = 'screenshot';
+                currentMedia.index = i;
+              }}
             >
               <img
                 src={screenshot}
@@ -85,7 +143,7 @@
       </div>
     </div>
     <div class="w-5/12 overflow-y-auto pb-2">
-      {#key game.headerImage}
+      {#key game}
         <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
       {/key}
       <div class="mt-2 space-y-2 pr-4 text-xs">

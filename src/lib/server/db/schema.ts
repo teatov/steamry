@@ -36,6 +36,7 @@ export const games = pgTable('games', {
   categories: json().$type<string[]>().notNull(),
   genres: json().$type<string[]>().notNull(),
   screenshots: json().$type<string[]>().notNull(),
+  trailers: json().$type<{ thumbnail: string; webm?: string; mp4?: string }[]>().notNull(),
   contentDescriptors: json().$type<ContentDescriptor[]>().notNull(),
 });
 

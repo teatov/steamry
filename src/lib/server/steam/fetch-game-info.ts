@@ -91,6 +91,29 @@ export default async function fetchGameInfo(appid: string): Promise<NewGame | nu
     screenshots: appDetails.screenshots
       ? appDetails.screenshots.toSorted((a, b) => a.id - b.id).map((value) => value.path_full)
       : [],
+    trailers: appDetails.movies
+      ? appDetails.movies
+          .toSorted((a, b) => a.id - b.id)
+          .filter((value) => value.highlight && (value.webm || value.mp4))
+          .map((value) => {
+            const trailer: NewGame['trailers'][number] = { thumbnail: value.thumbnail };
+            if (value.webm) {
+              if (value.webm.max) {
+                trailer.webm = value.webm.max;
+              } else if (Object.keys(value.webm).length > 0) {
+                trailer.webm = value.webm[Object.keys(value.webm)[0] as string];
+              }
+            }
+            if (value.mp4) {
+              if (value.mp4.max) {
+                trailer.mp4 = value.mp4.max;
+              } else if (Object.keys(value.mp4).length > 0) {
+                trailer.mp4 = value.mp4[Object.keys(value.mp4)[0] as string];
+              }
+            }
+            return trailer;
+          })
+      : [],
     contentDescriptors: appDetails.content_descriptors ? appDetails.content_descriptors.ids : [],
   };
 }
@@ -119,8 +142,8 @@ type AppDetails = {
     id: number;
     name: string;
     thumbnail: string;
-    webm: { '480': string; max: string };
-    mp4: { '480': string; max: string };
+    webm?: Record<string, string>;
+    mp4?: Record<string, string>;
     highlight: boolean;
   }[];
   release_date: {
