@@ -11,11 +11,24 @@
     onguess,
   }: { game: Game; isCorrect: boolean; reveal: boolean; onguess: (game: Game) => void } = $props();
 
-  let currentScreenshot: string = $derived<string>(
-    game.screenshots.length > 0 ? game.screenshots[0] : '',
-  );
+  let modalElement = $state<HTMLElement>();
+  let currentScreenshot = $state<number>(0);
+  let currentModalScreenshot = $state<number>(0);
+  let showModal = $state<boolean>(false);
 
   const numberFormat = new Intl.NumberFormat('en-US');
+
+  function hideModal(event: KeyboardEvent) {
+    if (showModal && event.key === 'Escape') {
+      event.preventDefault();
+      showModal = false;
+    }
+  }
+
+  function changeModalScreenshot(offset: number) {
+    currentModalScreenshot =
+      (currentModalScreenshot + game.screenshots.length + offset) % game.screenshots.length;
+  }
 </script>
 
 <div class="relative h-0 grow break-words">
@@ -23,22 +36,30 @@
     <div class="flex w-8/12 flex-col space-y-2 pb-2">
       <h2 class="truncate px-4 pt-2 text-white md:text-3xl" title={game.name}>{game.name}</h2>
       {#key game.screenshots}
-        <div class="h-0 grow bg-black">
+        <button
+          class="block h-0 grow bg-black"
+          onclick={() => {
+            currentModalScreenshot = currentScreenshot;
+            showModal = true;
+          }}
+        >
           <img
-            src={currentScreenshot}
+            src={currentScreenshot < game.screenshots.length
+              ? game.screenshots[currentScreenshot]
+              : ''}
             alt="Screenshot"
             width="1920"
             height="1080"
             class="h-full w-full object-contain"
           />
-        </div>
+        </button>
         <div class="flex overflow-x-auto">
           {#each game.screenshots as screenshot, i}
             <button
-              class="shrink-0 border-2 border-foreground/0 {currentScreenshot === screenshot
+              class="shrink-0 border-2 border-foreground/0 {currentScreenshot === i
                 ? 'border-foreground/100'
                 : ''}"
-              onclick={() => (currentScreenshot = screenshot)}
+              onclick={() => (currentScreenshot = i)}
             >
               <img
                 src={screenshot}
@@ -68,7 +89,7 @@
         <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
       {/key}
       <div class="mt-2 space-y-2 pr-4 text-xs">
-        <p class="md:text-sm text-card-foreground">{@html game.description}</p>
+        <p class="text-card-foreground md:text-sm">{@html game.description}</p>
         <div class="flex flex-col gap-x-4 md:flex-row">
           <p class="text-mute-foreground uppercase">Total reviews:</p>
           <p>{numberFormat.format(game.reviewsNegative + game.reviewsPositive)}</p>
@@ -147,3 +168,44 @@
     </div>
   {/if}
 </div>
+
+{#if showModal}
+  <div
+    bind:this={modalElement}
+    class="fixed inset-0 z-50 flex items-center justify-center overflow-auto overscroll-contain bg-black/75"
+    onclick={(event) => {
+      if (event.target === modalElement) {
+        event.preventDefault();
+        showModal = false;
+      }
+    }}
+    onkeydown={hideModal}
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+  >
+    <div class="rounded-sm bg-linear-to-r from-modal-background-1 to-modal-background-2 p-2">
+      <img
+        src={currentModalScreenshot < game.screenshots.length
+          ? game.screenshots[currentModalScreenshot]
+          : ''}
+        alt="Screenshot"
+        width="1920"
+        height="1080"
+        class="aspect-video h-[calc(100vh-10rem)] w-full max-w-[calc(100vw-10rem)] bg-black object-contain"
+      />
+      <div class="mt-2 flex items-center justify-between">
+        <button
+          class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          onclick={() => changeModalScreenshot(-1)}>Prev</button
+        >
+        <button
+          class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          onclick={() => changeModalScreenshot(1)}>Next</button
+        >
+      </div>
+    </div>
+  </div>
+{/if}
+
+<svelte:window onkeydown={hideModal} />

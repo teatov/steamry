@@ -15,6 +15,9 @@
   --color-accent-background-hover-1: #8ed629;
   --color-accent-background-hover-2: #6aa621;
   --color-danger-foreground: #c85e2d;
+  --color-modal-background-1: #356480;
+  --color-modal-background-2: #1a303d;
+  --color-modal-foreground: #294d61;
 }
 
 @layer base {

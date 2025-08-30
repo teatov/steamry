@@ -134,7 +134,7 @@
         <button
           title="Copy results"
           aria-label="Copy results"
-          class="inline-block rounded bg-primary-background p-2 text-primary-foreground hover:bg-primary-foreground/50 active:bg-primary-background"
+          class="inline-block rounded bg-primary-background p-2 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
           onclick={copyResults}
         >
           <IconCopy />
@@ -180,7 +180,7 @@
       <div class="mt-6 text-right">
         <a
           href="/"
-          class="inline-block rounded bg-primary-background py-2 pr-4 pl-3 text-primary-foreground hover:bg-primary-foreground/50 active:bg-primary-background"
+          class="inline-block rounded-sm bg-primary-background py-2 pr-4 pl-3 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
         >
           <IconLeft />
           Back to home page
