@@ -18,12 +18,12 @@
   const numberFormat = new Intl.NumberFormat('en-US');
 </script>
 
-<div class="grow h-0 break-words relative">
-  <div class="bg-linear-to-r from-card-background-1 to-card-background-2 h-full flex grow gap-4">
-    <div class="w-8/12 flex flex-col space-y-2 pb-2">
-      <h2 class="text-3xl text-white px-4 pt-2">{game.name}</h2>
+<div class="relative h-0 grow break-words">
+  <div class="flex h-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2">
+    <div class="flex w-8/12 flex-col space-y-2 pb-2">
+      <h2 class="px-4 pt-2 text-3xl text-white">{game.name}</h2>
       {#key game.screenshots}
-        <div class="grow h-0 bg-black">
+        <div class="h-0 grow bg-black">
           <img
             src={currentScreenshot}
             alt="Screenshot"
@@ -52,12 +52,12 @@
         </div>
       {/key}
       <div class="flex justify-end">
-        <div class="bg-black p-1 flex items-center gap-2">
+        <div class="flex items-center gap-2 bg-black p-1">
           <div class="px-3 text-sm text-card-foreground">
             {game.price || 'Free'}
           </div>
           <button
-            class="bg-linear-to-r from-accent-background-1 to-accent-background-2 px-4 py-1 text-accent-foreground text-shadow-[1px_1px_0px] text-shadow-black/30 hover:text-white hover:from-accent-background-hover-1 hover:to-accent-background-hover-2 rounded-xs"
+            class="rounded-xs bg-linear-to-r from-accent-background-1 to-accent-background-2 px-4 py-1 text-accent-foreground text-shadow-[1px_1px_0px] text-shadow-black/30 hover:from-accent-background-hover-1 hover:to-accent-background-hover-2 hover:text-white"
             onclick={() => onguess(game)}>Guess!</button
           >
         </div>
@@ -67,19 +67,19 @@
       {#key game.headerImage}
         <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
       {/key}
-      <div class="pr-4 space-y-2 mt-2">
-        <p class="text-card-foreground text-sm">{@html game.description}</p>
+      <div class="mt-2 space-y-2 pr-4">
+        <p class="text-sm text-card-foreground">{@html game.description}</p>
         <div class="flex gap-4 text-xs">
-          <p class="uppercase text-mute-foreground">Total reviews:</p>
+          <p class="text-mute-foreground uppercase">Total reviews:</p>
           <p>{numberFormat.format(game.reviewsNegative + game.reviewsPositive)}</p>
         </div>
         <div class="flex gap-4 text-xs">
-          <p class="uppercase text-mute-foreground">Release date:</p>
+          <p class="text-mute-foreground uppercase">Release date:</p>
           <p>{game.releaseDate}</p>
         </div>
         <div>
-          <div class="flex gap-4 mt-2 text-xs">
-            <p class="uppercase text-mute-foreground">Developer:</p>
+          <div class="mt-2 flex gap-4 text-xs">
+            <p class="text-mute-foreground uppercase">Developer:</p>
             <p>
               {#each game.developers as developer, i}
                 <span class="text-primary-foreground">{developer}</span
@@ -90,7 +90,7 @@
             </p>
           </div>
           <div class="flex gap-4 text-xs">
-            <p class="uppercase text-mute-foreground">Publisher:</p>
+            <p class="text-mute-foreground uppercase">Publisher:</p>
             <p>
               {#each game.publishers as publisher, i}
                 <span class="text-primary-foreground">{publisher}</span
@@ -102,18 +102,18 @@
           </div>
         </div>
         <div>
-          <p class="uppercase mt-2 text-mute-foreground text-xs">Genres:</p>
+          <p class="mt-2 text-xs text-mute-foreground uppercase">Genres:</p>
           <ul class="flex flex-wrap gap-1 text-xs">
             {#each game.genres as genre}
-              <li class="bg-primary-background text-primary-foreground px-1.5 py-0.5 rounded-xs">
+              <li class="rounded-xs bg-primary-background px-1.5 py-0.5 text-primary-foreground">
                 {genre}
               </li>
             {/each}
           </ul>
         </div>
-        <ul class="text-xs space-y-1">
+        <ul class="space-y-1 text-xs">
           {#each game.categories as category}
-            <li class="bg-primary-background/50 text-primary-foreground px-1.5 py-0.5">
+            <li class="bg-primary-background/50 px-1.5 py-0.5 text-primary-foreground">
               {category}
             </li>
           {/each}
@@ -124,7 +124,7 @@
   {#if reveal}
     <div class="absolute inset-0 flex items-center justify-center bg-card-background-2/50">
       <div
-        class="flex gap-6 flex-col items-center bg-linear-to-r from-card-background-1 to-card-background-2 p-8"
+        class="flex flex-col items-center gap-6 bg-linear-to-r from-card-background-1 to-card-background-2 p-8"
       >
         <h3
           class="text-6xl font-semibold {isCorrect

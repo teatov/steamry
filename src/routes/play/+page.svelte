@@ -99,7 +99,7 @@
     {#each data.rounds as round, i}
       <div
         aria-label={i < results.length ? (results[i] ? 'Correct' : 'Incorrect') : 'No guess'}
-        class="h-6 w-full rounded text-white flex items-center justify-center {i < results.length
+        class="flex h-6 w-full items-center justify-center rounded text-white {i < results.length
           ? results[i]
             ? 'bg-accent-background-1'
             : 'bg-danger-foreground'
@@ -118,28 +118,28 @@
 {/snippet}
 
 {#if !finished}
-  <main class="h-full flex flex-col py-4 gap-4 mx-auto max-w-5xl">
+  <main class="mx-auto flex h-full max-w-5xl flex-col gap-4 py-4">
     {@render resultsIndicator()}
     {#each round.games as game}
       <GamePanel {game} isCorrect={isCorrect(game)} {reveal} onguess={guess} />
     {/each}
   </main>
 {:else}
-  <main class="h-full flex items-center justify-center">
-    <div class="max-w-3xl w-full">
+  <main class="flex h-full items-center justify-center">
+    <div class="w-full max-w-3xl">
       {@render resultsIndicator()}
-      <div class="text-center text-card-foreground text-4xl mt-2">
+      <div class="mt-2 text-center text-4xl text-card-foreground">
         {correctGuesses}/{data.rounds.length}
         <button
           title="Copy results"
           aria-label="Copy results"
-          class="inline-block bg-primary-background text-primary-foreground p-2 rounded hover:bg-primary-foreground/50 active:bg-primary-background"
+          class="inline-block rounded bg-primary-background p-2 text-primary-foreground hover:bg-primary-foreground/50 active:bg-primary-background"
           onclick={copyResults}
         >
           <IconCopy />
         </button>
       </div>
-      <ul class="space-y-1 mt-6 text-card-foreground">
+      <ul class="mt-6 space-y-1 text-card-foreground">
         {#each data.rounds as round, i}
           {@const roundMaxScore = getMaxScore(round.games)}
           <li
@@ -155,11 +155,11 @@
             {/if}
             {#each round.games as game}
               {@const score = getScore(game)}
-              <div class="grow w-0 flex gap-2 justify-between">
+              <div class="flex w-0 grow justify-between gap-2">
                 <a
                   href={`${STORE_PAGE_URL}/${game.appid}`}
                   rel="nofollow, noopener, noreferrer"
-                  class="hover:underline truncate"
+                  class="truncate hover:underline"
                   title="Open Steam page"
                 >
                   {game.name}
@@ -179,7 +179,7 @@
       <div class="mt-6 text-right">
         <a
           href="/"
-          class="inline-block bg-primary-background text-primary-foreground py-2 px-4 rounded hover:bg-primary-foreground/50 active:bg-primary-background"
+          class="inline-block rounded bg-primary-background px-4 py-2 text-primary-foreground hover:bg-primary-foreground/50 active:bg-primary-background"
         >
           Back to home page
         </a>

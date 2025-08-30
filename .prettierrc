@@ -11,8 +11,8 @@
   "endOfLine": "lf",
   "plugins": [
     "prettier-plugin-svelte",
-    "prettier-plugin-tailwindcss",
-    "@trivago/prettier-plugin-sort-imports"
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
   ],
   "importOrder": ["<THIRD_PARTY_MODULES>", "^\\$(.*)$", "^[./]"],
   "overrides": [
@@ -22,5 +22,6 @@
         "parser": "svelte"
       }
     }
-  ]
+  ],
+  "tailwindStylesheet": "./src/app.css"
 }
