@@ -13,19 +13,16 @@
   }: { game: Game; isCorrect: boolean; reveal: boolean; onguess: (game: Game) => void } = $props();
 
   let modalElement = $state<HTMLElement>();
-  let currentMedia = $state<{ type: 'trailer' | 'screenshot'; index: number }>({
-    type: game.trailers.length > 0 ? 'trailer' : 'screenshot',
-    index: 0,
-  });
+  let currentMediaType = $state<'trailer' | 'screenshot' | null>(null);
+  let currentMediaIndex = $state<number>(0);
   let currentModalScreenshot = $state<number>(0);
   let showModal = $state<boolean>(false);
 
   $effect(() => {
-    if (game) {
-      currentMedia = {
-        type: game.trailers.length > 0 ? 'trailer' : 'screenshot',
-        index: 0,
-      };
+    if (game.appid) {
+      currentMediaType =
+        game.trailers.length > 0 ? 'trailer' : game.screenshots.length > 0 ? 'screenshot' : null;
+      currentMediaIndex = 0;
     }
   });
 
@@ -48,18 +45,18 @@
   <div class="flex h-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2">
     <div class="flex w-8/12 flex-col space-y-2 pb-2">
       <h2 class="truncate px-4 pt-2 text-white md:text-3xl" title={game.name}>{game.name}</h2>
-      {#key game}
-        {#if currentMedia.type === 'screenshot'}
+      {#key game.appid}
+        {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
           <button
             class="block h-0 grow bg-black"
             onclick={() => {
-              currentModalScreenshot = currentMedia.index;
+              currentModalScreenshot = currentMediaIndex;
               showModal = true;
             }}
           >
             <img
-              src={currentMedia.index < game.screenshots.length
-                ? game.screenshots[currentMedia.index]
+              src={currentMediaIndex < game.screenshots.length
+                ? game.screenshots[currentMediaIndex]
                 : ''}
               alt="Screenshot"
               width="1920"
@@ -67,8 +64,9 @@
               class="h-full w-full object-contain"
             />
           </button>
-        {:else if currentMedia.type === 'trailer'}
-          {@const currentTrailer = game.trailers[currentMedia.index]}
+        {/if}
+        {#if currentMediaType === 'trailer' &&  game.trailers.length > 0}
+          {@const currentTrailer = game.trailers[currentMediaIndex]}
           <!-- svelte-ignore a11y_media_has_caption -->
           <video
             width="1920"
@@ -87,13 +85,13 @@
         <div class="flex overflow-x-auto">
           {#each game.trailers as trailer, i}
             <button
-              class="relative shrink-0 border-2 border-foreground/0 {currentMedia.type ===
-                'trailer' && currentMedia.index === i
+              class="relative shrink-0 border-2 border-foreground/0 {currentMediaType ===
+                'trailer' && currentMediaIndex === i
                 ? 'border-foreground/100'
                 : ''}"
               onclick={() => {
-                currentMedia.type = 'trailer';
-                currentMedia.index = i;
+                currentMediaType = 'trailer';
+                currentMediaIndex = i;
               }}
             >
               <img
@@ -110,13 +108,13 @@
           {/each}
           {#each game.screenshots as screenshot, i}
             <button
-              class="shrink-0 border-2 border-foreground/0 {currentMedia.type === 'screenshot' &&
-              currentMedia.index === i
+              class="shrink-0 border-2 border-foreground/0 {currentMediaType === 'screenshot' &&
+              currentMediaIndex === i
                 ? 'border-foreground/100'
                 : ''}"
               onclick={() => {
-                currentMedia.type = 'screenshot';
-                currentMedia.index = i;
+                currentMediaType = 'screenshot';
+                currentMediaIndex = i;
               }}
             >
               <img
@@ -143,7 +141,7 @@
       </div>
     </div>
     <div class="w-5/12 overflow-y-auto pb-2">
-      {#key game}
+      {#key game.appid}
         <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
       {/key}
       <div class="mt-2 space-y-2 pr-4 text-xs">

@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
-  import { getScore, makeSaveDataKey, STORE_PAGE_URL } from '$lib';
+  import { getScore, makeSaveDataKey, STORE_PAGE_URL, type Round } from '$lib';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconLeft from '$lib/components/icons/icon-left.svelte';
+  import IconLoader from '$lib/components/icons/icon-loader.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
   import type { Game } from '$lib/server/db/schema';
   import type { PageProps } from './$types';
@@ -20,12 +21,12 @@
   const saveDataKey = makeSaveDataKey(data.date);
 
   let results = $state<Results>([]);
-  let currentRound = $state<number>(0);
+  let currentRound = $state<number | null>(null);
   let reveal = $state<boolean>(false);
   let finished = $state<boolean>(false);
 
-  let round = $derived(data.rounds[currentRound]);
-  let maxScore = $derived<number>(getMaxScore(round.games));
+  let round = $derived<Round | null>(currentRound !== null ? data.rounds[currentRound] : null);
+  let maxScore = $derived<number>(round ? getMaxScore(round.games) : 0);
   let correctGuesses = $derived<number>(results.filter((value) => value).length);
 
   onMount(() => {
@@ -34,15 +35,17 @@
       saveData = saveDataString ? (JSON.parse(saveDataString) as SaveData) : {};
     } catch (err) {
       console.error(err);
-      return;
     }
-    if (saveData && saveData[saveDataKey]) {
+
+    if (saveData[saveDataKey]) {
       results = saveData[saveDataKey];
       if (results.length < data.rounds.length) {
         currentRound = results.length;
       } else {
         finished = true;
       }
+    } else {
+      currentRound = 0;
     }
   });
 
@@ -59,16 +62,13 @@
   }
 
   async function guess(game: Game) {
-    if (reveal) {
+    if (reveal || currentRound === null) {
       return;
     }
 
     results.push(isCorrect(game));
     reveal = true;
 
-    if (!saveData) {
-      saveData = {};
-    }
     saveData[saveDataKey] = results;
     localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
 
@@ -96,7 +96,7 @@
 </script>
 
 {#snippet resultsIndicator()}
-  <ul class="flex justify-stretch gap-2">
+  <ul class="flex w-full justify-stretch gap-2">
     {#each data.rounds as round, i}
       <div
         aria-label={i < results.length ? (results[i] ? 'Correct' : 'Incorrect') : 'No guess'}
@@ -119,11 +119,15 @@
 {/snippet}
 
 {#if !finished}
-  <main class="mx-auto flex h-full max-w-5xl flex-col gap-4 py-4">
-    {@render resultsIndicator()}
-    {#each round.games as game}
-      <GamePanel {game} isCorrect={isCorrect(game)} {reveal} onguess={guess} />
-    {/each}
+  <main class="mx-auto flex h-full max-w-5xl flex-col items-center justify-center gap-4 py-4">
+    {#if round}
+      {@render resultsIndicator()}
+      {#each round.games as game}
+        <GamePanel {game} isCorrect={isCorrect(game)} {reveal} onguess={guess} />
+      {/each}
+    {:else}
+      <IconLoader />
+    {/if}
   </main>
 {:else}
   <main class="flex h-full items-center justify-center">
