@@ -52,8 +52,9 @@ export default async function getRandomGames() {
       usedIds.push(id);
     }
 
-    console.log(games, games.length);
+    return games;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }

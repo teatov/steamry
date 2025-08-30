@@ -1,4 +1,5 @@
 import getRandomGames from '../src/lib/server/steam/get-random-games';
 
-await getRandomGames();
+const games = await getRandomGames();
+console.log(games, games?.length);
 process.exit(0);
