@@ -39,6 +39,11 @@ export default async function fetchGameInfo(appid: string): Promise<NewGame | nu
     return null;
   }
 
+  if (!appDetails.short_description) {
+    console.error(`App ${appid} has no description`);
+    return null;
+  }
+
   const reviewsUrl = new URL(`${APP_REVIEWS_URL}/${appid}`);
   reviewsUrl.searchParams.set('json', '1');
   reviewsUrl.searchParams.set('language', 'all');
@@ -78,11 +83,13 @@ export default async function fetchGameInfo(appid: string): Promise<NewGame | nu
     developers: appDetails.developers ? appDetails.developers : [],
     publishers: appDetails.publishers ? appDetails.publishers : [],
     categories: appDetails.categories
-      ? appDetails.categories.map((value) => value.description)
+      ? appDetails.categories.toSorted((a, b) => a.id - b.id).map((value) => value.description)
       : [],
-    genres: appDetails.genres ? appDetails.genres.map((value) => value.description) : [],
+    genres: appDetails.genres
+      ? appDetails.genres.toSorted((a, b) => a.id - b.id).map((value) => value.description)
+      : [],
     screenshots: appDetails.screenshots
-      ? appDetails.screenshots.map((value) => value.path_full)
+      ? appDetails.screenshots.toSorted((a, b) => a.id - b.id).map((value) => value.path_full)
       : [],
     contentDescriptors: appDetails.content_descriptors ? appDetails.content_descriptors.ids : [],
   };

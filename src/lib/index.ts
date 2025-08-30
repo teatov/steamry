@@ -6,6 +6,12 @@ export function getTodayDate() {
   return date;
 }
 
+export function getScore(game: Game) {
+  return (
+    Math.round((game.reviewsPositive / (game.reviewsNegative + game.reviewsPositive)) * 10000) / 100
+  );
+}
+
 export enum ContentDescriptor {
   SomeNudityOrSexualContent = 1,
   FrequentViolenceOrGore = 2,

@@ -3,14 +3,14 @@ import { db } from '../db';
 import * as schema from '../db/schema';
 import getRandomGames from '../steam/get-random-games';
 
-const GAMES_AMOUNT = 10;
+const ROUNDS = 10;
 const GAMES_PER_ROUND = 2;
 
 export default async function makeNewDaily(date: Date) {
   try {
     console.log(`\nMaking daily for ${date}`);
 
-    const games = await getRandomGames(GAMES_AMOUNT);
+    const games = await getRandomGames(ROUNDS * GAMES_PER_ROUND);
     if (!games) {
       throw new Error('No games!');
     }
