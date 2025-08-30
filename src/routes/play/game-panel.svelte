@@ -23,14 +23,16 @@
       currentMediaType =
         game.trailers.length > 0 ? 'trailer' : game.screenshots.length > 0 ? 'screenshot' : null;
       currentMediaIndex = 0;
+      showModal = false;
+      currentModalScreenshot = 0;
     }
   });
 
   const numberFormat = new Intl.NumberFormat('en-US');
 
-  function hideModal(event: KeyboardEvent) {
-    if (showModal && event.key === 'Escape') {
-      event.preventDefault();
+  function hideModal(e: KeyboardEvent) {
+    if (showModal && e.key === 'Escape') {
+      e.preventDefault();
       showModal = false;
     }
   }
@@ -65,7 +67,7 @@
             />
           </button>
         {/if}
-        {#if currentMediaType === 'trailer' &&  game.trailers.length > 0}
+        {#if currentMediaType === 'trailer' && game.trailers.length > 0}
           {@const currentTrailer = game.trailers[currentMediaIndex]}
           <!-- svelte-ignore a11y_media_has_caption -->
           <video
@@ -229,9 +231,9 @@
   <div
     bind:this={modalElement}
     class="fixed inset-0 z-50 flex items-center justify-center overflow-auto overscroll-contain bg-black/75"
-    onclick={(event) => {
-      if (event.target === modalElement) {
-        event.preventDefault();
+    onclick={(e) => {
+      if (e.target === modalElement) {
+        e.preventDefault();
         showModal = false;
       }
     }}

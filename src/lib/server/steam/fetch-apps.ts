@@ -52,6 +52,7 @@ function isAppListResponse(data: unknown): data is AppListResponse {
     'apps' in data.applist &&
     typeof data.applist.apps === 'object' &&
     data.applist.apps != null &&
-    Array.isArray(data.applist.apps)
+    Array.isArray(data.applist.apps) &&
+    data.applist.apps.length > 0
   );
 }

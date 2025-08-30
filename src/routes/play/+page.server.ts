@@ -17,7 +17,7 @@ async function getRounds(date: Date): Promise<Round[]> {
     with: { games: true },
   });
 
-  if (!daily || !daily.games) {
+  if (!daily || !daily.games || daily.games.length === 0) {
     return [];
   }
 

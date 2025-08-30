@@ -9,17 +9,14 @@ export default async function getRandomGames(
   amount: number,
 ): Promise<schema.NewGameInfoOnly[] | null> {
   try {
-    const minMaxIdResult = await db
+    const minMaxIdResult = (await db
       .select({
         minId: min(schema.steamApps.id),
         maxId: max(schema.steamApps.id),
       })
-      .from(schema.steamApps);
-    if (minMaxIdResult.length === 0) {
-      throw new Error('minMaxIdResult.length is 0');
-    }
+      .from(schema.steamApps))[0];
 
-    const { minId, maxId } = minMaxIdResult[0];
+    const { minId, maxId } = minMaxIdResult;
     if (minId === null || maxId === null) {
       throw new Error('minId or maxId is null');
     }

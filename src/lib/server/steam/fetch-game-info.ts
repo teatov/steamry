@@ -28,13 +28,14 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
 
   if (
     appDetails.content_descriptors &&
+    appDetails.content_descriptors.ids &&
     appDetails.content_descriptors.ids.includes(ContentDescriptor.FrequentNudityOrSexualContent)
   ) {
     console.error(`App ${appid} has FrequentNudityOrSexualContent`);
     return null;
   }
 
-  if (appDetails.release_date.coming_soon) {
+  if (!appDetails.release_date || appDetails.release_date.coming_soon) {
     console.error(`App ${appid} is not released`);
     return null;
   }
@@ -63,7 +64,10 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   }
 
   const reviewsSummary = reviewsResult.query_summary;
-  if (reviewsSummary.total_negative + reviewsSummary.total_positive === 0) {
+  if (
+    (!reviewsSummary.total_negative && !reviewsSummary.total_positive) ||
+    reviewsSummary.total_negative + reviewsSummary.total_positive === 0
+  ) {
     console.error(`App ${appid} has zero reviews`);
     return null;
   }
@@ -77,7 +81,9 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     price:
       appDetails.is_free || !appDetails.price_overview
         ? null
-        : appDetails.price_overview.initial_formatted || appDetails.price_overview.final_formatted,
+        : appDetails.price_overview.initial_formatted ||
+          appDetails.price_overview.final_formatted ||
+          null,
     releaseDate: appDetails.release_date.date,
     headerImage: appDetails.header_image,
     developers: appDetails.developers ? appDetails.developers : [],
@@ -116,7 +122,10 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
             return trailer;
           })
       : [],
-    contentDescriptors: appDetails.content_descriptors ? appDetails.content_descriptors.ids : [],
+    contentDescriptors:
+      appDetails.content_descriptors && appDetails.content_descriptors.ids
+        ? appDetails.content_descriptors.ids
+        : [],
   };
 }
 
@@ -127,7 +136,7 @@ type AppDetails = {
   name: string;
   steam_appid: number;
   is_free: boolean;
-  short_description: string;
+  short_description?: string;
   header_image: string;
   developers?: string[];
   publishers?: string[];
@@ -148,11 +157,11 @@ type AppDetails = {
     mp4?: Record<string, string>;
     highlight: boolean;
   }[];
-  release_date: {
+  release_date?: {
     coming_soon: boolean;
     date: string;
   };
-  content_descriptors?: { ids: ContentDescriptor[]; notes: string | null };
+  content_descriptors?: { ids?: ContentDescriptor[]; notes?: string | null };
 };
 
 type AppReviewsResponse = {

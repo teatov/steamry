@@ -26,7 +26,7 @@
   let finished = $state<boolean>(false);
 
   let round = $derived<Round | null>(currentRound !== null ? data.rounds[currentRound] : null);
-  let maxScore = $derived<number>(round ? getMaxScore(round.games) : 0);
+  let maxGameScore = $derived<number>(round ? getMaxScore(round.games) : 0);
   let correctGuesses = $derived<number>(results.filter((value) => value).length);
 
   onMount(() => {
@@ -50,7 +50,7 @@
   });
 
   function isCorrect(game: Game) {
-    return getScore(game) === maxScore;
+    return getScore(game) === maxGameScore;
   }
 
   function getMaxScore(games: Game[]) {
@@ -83,11 +83,11 @@
   }
 
   async function copyResults() {
+    const guesses = results.map((value) => (value ? '🟩' : '🟥')).join('');
+    const guessesAmount = `${correctGuesses}/${data.rounds.length}`;
+    const date = data.date.toISOString().split('T')[0];
+    const resulstsText = `${guesses} ${guessesAmount} | ${date} | ${env.PUBLIC_ORIGIN}`;
     try {
-      const guesses = results.map((value) => (value ? '🟩' : '🟥')).join('');
-      const guessesAmount = `${correctGuesses}/${data.rounds.length}`;
-      const date = data.date.toISOString().split('T')[0];
-      const resulstsText = `${guesses} ${guessesAmount} | ${date} | ${env.PUBLIC_ORIGIN}`;
       await navigator.clipboard.writeText(resulstsText);
     } catch (err) {
       console.error(err);
@@ -97,7 +97,7 @@
 
 {#snippet resultsIndicator()}
   <ul class="flex w-full justify-stretch gap-2">
-    {#each data.rounds as round, i}
+    {#each data.rounds as _, i}
       <div
         aria-label={i < results.length ? (results[i] ? 'Correct' : 'Incorrect') : 'No guess'}
         class="flex h-6 w-full items-center justify-center rounded text-white {i < results.length

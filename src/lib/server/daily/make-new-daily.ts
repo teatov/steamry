@@ -11,7 +11,7 @@ export default async function makeNewDaily(date: Date) {
     console.log(`\nMaking daily for ${date}`);
 
     const gameInfos = await getRandomGames(ROUNDS * GAMES_PER_ROUND);
-    if (!gameInfos) {
+    if (!gameInfos || gameInfos.length === 0) {
       throw new Error('No games!');
     }
 
