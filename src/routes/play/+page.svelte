@@ -126,7 +126,7 @@
   </main>
 {:else}
   <main class="flex h-full items-center justify-center">
-    <div class="w-full max-w-3xl">
+    <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
       {@render resultsIndicator()}
       <div class="mt-2 text-center text-4xl text-card-foreground">
         {correctGuesses}/{data.rounds.length}
@@ -169,7 +169,7 @@
                     ? 'text-accent-background-1'
                     : 'text-danger-foreground'}"
                 >
-                  {score}
+                  {score}%
                 </div>
               </div>
             {/each}

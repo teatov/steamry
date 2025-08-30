@@ -21,7 +21,7 @@
 <div class="relative h-0 grow break-words">
   <div class="flex h-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2">
     <div class="flex w-8/12 flex-col space-y-2 pb-2">
-      <h2 class="px-4 pt-2 text-3xl text-white">{game.name}</h2>
+      <h2 class="truncate px-4 pt-2 text-white md:text-3xl" title={game.name}>{game.name}</h2>
       {#key game.screenshots}
         <div class="h-0 grow bg-black">
           <img
@@ -67,18 +67,18 @@
       {#key game.headerImage}
         <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
       {/key}
-      <div class="mt-2 space-y-2 pr-4">
-        <p class="text-sm text-card-foreground">{@html game.description}</p>
-        <div class="flex gap-4 text-xs">
+      <div class="mt-2 space-y-2 pr-4 text-xs">
+        <p class="md:text-sm text-card-foreground">{@html game.description}</p>
+        <div class="flex flex-col gap-x-4 md:flex-row">
           <p class="text-mute-foreground uppercase">Total reviews:</p>
           <p>{numberFormat.format(game.reviewsNegative + game.reviewsPositive)}</p>
         </div>
-        <div class="flex gap-4 text-xs">
+        <div class="flex flex-col gap-x-4 md:flex-row">
           <p class="text-mute-foreground uppercase">Release date:</p>
           <p>{game.releaseDate}</p>
         </div>
         <div>
-          <div class="mt-2 flex gap-4 text-xs">
+          <div class="mt-2 flex flex-col gap-x-4 md:flex-row">
             <p class="text-mute-foreground uppercase">Developer:</p>
             <p>
               {#each game.developers as developer, i}
@@ -89,7 +89,7 @@
               {/each}
             </p>
           </div>
-          <div class="flex gap-4 text-xs">
+          <div class="flex flex-col gap-x-4 md:flex-row">
             <p class="text-mute-foreground uppercase">Publisher:</p>
             <p>
               {#each game.publishers as publisher, i}
@@ -102,8 +102,8 @@
           </div>
         </div>
         <div>
-          <p class="mt-2 text-xs text-mute-foreground uppercase">Genres:</p>
-          <ul class="flex flex-wrap gap-1 text-xs">
+          <p class="mt-2 text-mute-foreground uppercase">Genres:</p>
+          <ul class="flex flex-wrap gap-1">
             {#each game.genres as genre}
               <li class="rounded-xs bg-primary-background px-1.5 py-0.5 text-primary-foreground">
                 {genre}
@@ -111,7 +111,7 @@
             {/each}
           </ul>
         </div>
-        <ul class="space-y-1 text-xs">
+        <ul class="space-y-1">
           {#each game.categories as category}
             <li class="bg-primary-background/50 px-1.5 py-0.5 text-primary-foreground">
               {category}
