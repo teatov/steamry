@@ -1,5 +1,7 @@
 import type { Game } from './server/db/schema';
 
+export const STORE_PAGE_URL = 'https://store.steampowered.com/app';
+
 export function getTodayDate() {
   const date = new Date();
   date.setUTCHours(0, 0, 0, 0);
