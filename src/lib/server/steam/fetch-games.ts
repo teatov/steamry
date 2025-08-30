@@ -5,7 +5,7 @@ import * as schema from '../db/schema';
 const APP_LIST_URL = 'https://api.steampowered.com/ISteamApps/GetAppList/v2/';
 const CHUNK_SIZE = 20_000;
 
-async function fetchGames() {
+export default async function fetchGames() {
   try {
     const response = await fetch(APP_LIST_URL);
     if (!response.ok) {
@@ -55,6 +55,3 @@ function isAppListResponse(data: unknown): data is AppListResponse {
     Array.isArray(data.applist.apps)
   );
 }
-
-await fetchGames();
-process.exit(0);

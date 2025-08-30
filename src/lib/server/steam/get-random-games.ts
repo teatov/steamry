@@ -7,7 +7,7 @@ const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
 const GAMES_AMOUNT = 10;
 const MAX_ATTEMPTS = 200;
 
-async function getRandomGames() {
+export default async function getRandomGames() {
   try {
     const minMaxIdResult = await db
       .select({
@@ -110,9 +110,6 @@ async function getRandomGames() {
     console.error(error);
   }
 }
-
-await getRandomGames();
-process.exit(0);
 
 type AppDetailsResponse = Record<string, { success: boolean; data?: AppDetails }>;
 
