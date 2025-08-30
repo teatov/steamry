@@ -5,14 +5,15 @@ import * as schema from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-  const rounds = await getRounds();
+  const date = getTodayDate();
+  const rounds = await getRounds(date);
 
-  return { rounds };
+  return { rounds, date };
 };
 
-async function getRounds(): Promise<Round[]> {
+async function getRounds(date: Date): Promise<Round[]> {
   const daily = await db.query.dailies.findFirst({
-    where: eq(schema.dailies.date, getTodayDate()),
+    where: eq(schema.dailies.date, date),
     with: { gamesToDailies: { with: { game: true } } },
   });
 

@@ -1,12 +1,21 @@
 <script lang="ts">
-  import { getScore } from '$lib';
+  import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
+  import { getScore, getTodayDate, makeSaveDataKey } from '$lib';
   import type { Game } from '$lib/server/db/schema';
   import type { PageProps } from './$types';
   import GamePanel from './game-panel.svelte';
 
+  type Results = boolean[];
+  type SaveData = Record<string, Results>;
+  const SAVE_DATA = 'save_data';
+
   let { data }: PageProps = $props();
 
-  let results = $state<boolean[]>([]);
+  let saveData: SaveData = {};
+  const saveDataKey = makeSaveDataKey(data.date);
+
+  let results = $state<Results>([]);
   let currentRound = $state<number>(0);
   let reveal = $state<boolean>(false);
 
@@ -18,6 +27,22 @@
       }),
     ),
   );
+
+  onMount(() => {
+    const saveDataString = localStorage.getItem(SAVE_DATA);
+    try {
+      saveData = saveDataString ? (JSON.parse(saveDataString) as SaveData) : {};
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+    if (saveData && saveData[saveDataKey]) {
+      results = saveData[saveDataKey];
+      if (results.length < data.rounds.length) {
+        currentRound = results.length;
+      }
+    }
+  });
 
   function isCorrect(game: Game) {
     return getScore(game) === maxScore;
@@ -31,7 +56,14 @@
     results.push(isCorrect(game));
     reveal = true;
 
+    if (!saveData) {
+      saveData = {};
+    }
+    saveData[saveDataKey] = results;
+    localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
+
     await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
+
     reveal = false;
     if (currentRound + 1 < data.rounds.length) {
       currentRound++;
