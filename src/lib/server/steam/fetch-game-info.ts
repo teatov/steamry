@@ -1,10 +1,10 @@
 import { ContentDescriptor } from '$lib';
-import type { NewGame } from '../db/schema';
+import * as schema from '../db/schema';
 
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
 
-export default async function fetchGameInfo(appid: string): Promise<NewGame | null> {
+export default async function fetchGameInfo(appid: string): Promise<schema.NewGameInfoOnly | null> {
   const detailsUrl = new URL(APP_DETAILS_URL);
   detailsUrl.searchParams.set('appids', appid);
 
@@ -96,7 +96,9 @@ export default async function fetchGameInfo(appid: string): Promise<NewGame | nu
           .toSorted((a, b) => a.id - b.id)
           .filter((value) => value.highlight && (value.webm || value.mp4))
           .map((value) => {
-            const trailer: NewGame['trailers'][number] = { thumbnail: value.thumbnail };
+            const trailer: schema.NewGameInfoOnly['trailers'][number] = {
+              thumbnail: value.thumbnail,
+            };
             if (value.webm) {
               if (value.webm.max) {
                 trailer.webm = value.webm.max;

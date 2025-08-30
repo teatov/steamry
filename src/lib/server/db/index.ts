@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import { getTableColumns, SQL, sql } from 'drizzle-orm';
+import type { PgTable } from 'drizzle-orm/pg-core';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';

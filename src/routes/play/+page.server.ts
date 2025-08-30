@@ -14,20 +14,20 @@ export const load: PageServerLoad = async () => {
 async function getRounds(date: Date): Promise<Round[]> {
   const daily = await db.query.dailies.findFirst({
     where: eq(schema.dailies.date, date),
-    with: { gamesToDailies: { with: { game: true } } },
+    with: { games: true },
   });
 
-  if (!daily || !daily?.gamesToDailies) {
+  if (!daily || !daily.games) {
     return [];
   }
 
   const rounds: Record<number, Round> = {};
-  for (let i = 0; i < daily?.gamesToDailies.length; i++) {
-    const gamesToDailies = daily.gamesToDailies[i];
-    if (!rounds[gamesToDailies.round]) {
-      rounds[gamesToDailies.round] = { round: gamesToDailies.round, games: [] };
+  for (let i = 0; i < daily.games.length; i++) {
+    const game = daily.games[i];
+    if (!rounds[game.round]) {
+      rounds[game.round] = { round: game.round, games: [] };
     }
-    rounds[gamesToDailies.round].games.push(gamesToDailies.game);
+    rounds[game.round].games.push(game);
   }
 
   return Object.values(rounds).toSorted((a, b) => a.round - b.round);

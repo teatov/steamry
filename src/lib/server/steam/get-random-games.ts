@@ -5,7 +5,9 @@ import fetchGameInfo from './fetch-game-info';
 
 const MAX_ATTEMPTS = 200;
 
-export default async function getRandomGames(amount: number): Promise<schema.NewGame[] | null> {
+export default async function getRandomGames(
+  amount: number,
+): Promise<schema.NewGameInfoOnly[] | null> {
   try {
     const minMaxIdResult = await db
       .select({
@@ -22,7 +24,7 @@ export default async function getRandomGames(amount: number): Promise<schema.New
       throw new Error('minId or maxId is null');
     }
 
-    const games: schema.NewGame[] = [];
+    const games: schema.NewGameInfoOnly[] = [];
     let attempts = 0;
     const usedIds: number[] = [];
 
