@@ -10,10 +10,10 @@ export default async function getRandomGames() {
   try {
     const minMaxIdResult = await db
       .select({
-        minId: min(schema.steamApp.id),
-        maxId: max(schema.steamApp.id),
+        minId: min(schema.steamApps.id),
+        maxId: max(schema.steamApps.id),
       })
-      .from(schema.steamApp);
+      .from(schema.steamApps);
     if (minMaxIdResult.length === 0) {
       throw new Error('minMaxIdResult.length is 0');
     }
@@ -35,7 +35,7 @@ export default async function getRandomGames() {
         continue;
       }
 
-      const steamApp = await db.query.steamApp.findFirst({ where: eq(schema.steamApp.id, id) });
+      const steamApp = await db.query.steamApps.findFirst({ where: eq(schema.steamApps.id, id) });
       if (!steamApp) {
         continue;
       }

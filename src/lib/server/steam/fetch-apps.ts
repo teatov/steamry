@@ -21,12 +21,12 @@ export default async function fetchApps() {
 
     await db.transaction(async (tx) => {
       console.log('Truncating table...');
-      await tx.execute(sql`TRUNCATE TABLE ${schema.steamApp} RESTART IDENTITY`);
+      await tx.execute(sql`TRUNCATE TABLE ${schema.steamApps} RESTART IDENTITY`);
 
       for (let i = 0; i < steamApps.length; i += CHUNK_SIZE) {
         const end = Math.min(steamApps.length, i + CHUNK_SIZE);
         console.log(`Inserting ${i} - ${end}...`);
-        await tx.insert(schema.steamApp).values(steamApps.slice(i, end));
+        await tx.insert(schema.steamApps).values(steamApps.slice(i, end));
       }
     });
 

@@ -3,16 +3,16 @@ import type { ContentDescriptor } from '$lib';
 
 export const VARCHAR_LENGTH = 255;
 
-export const steamApp = pgTable('steam_app', {
+export const steamApps = pgTable('steam_apps', {
   id: serial().primaryKey(),
   appid: integer().unique().notNull(),
   name: varchar({ length: VARCHAR_LENGTH }).notNull(),
 });
 
-export type SteamApp = typeof steamApp.$inferSelect;
-export type NewSteamApp = typeof steamApp.$inferInsert;
+export type SteamApp = typeof steamApps.$inferSelect;
+export type NewSteamApp = typeof steamApps.$inferInsert;
 
-export const game = pgTable('game', {
+export const games = pgTable('games', {
   appid: integer().primaryKey(),
   name: text().notNull(),
   reviewsPositive: integer().notNull(),
@@ -29,5 +29,5 @@ export const game = pgTable('game', {
   contentDescriptors: json().$type<ContentDescriptor[]>().notNull(),
 });
 
-export type Game = typeof game.$inferSelect;
-export type NewGame = typeof game.$inferInsert;
+export type Game = typeof games.$inferSelect;
+export type NewGame = typeof games.$inferInsert;
