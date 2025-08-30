@@ -1,1 +1,26 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-background: #1b2838;
+  --color-foreground: #acb2b8;
+  --color-card-background-1: #16202d;
+  --color-card-background-2: #0e141c;
+  --color-card-foreground: #c6d4df;
+  --color-mute-foreground: #556772;
+  --color-primary-background: #21394c;
+  --color-primary-foreground: #66c0f4;
+  --color-accent-background-1: #75b022;
+  --color-accent-background-2: #588a1b;
+  --color-accent-foreground: #d2efa9;
+  --color-accent-background-hover-1: #8ed629;
+  --color-accent-background-hover-2: #6aa621;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+}

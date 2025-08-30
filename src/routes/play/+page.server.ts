@@ -10,14 +10,14 @@ export const load: PageServerLoad = async () => {
   return { rounds };
 };
 
-async function getRounds(): Promise<Round[] | null> {
+async function getRounds(): Promise<Round[]> {
   const daily = await db.query.dailies.findFirst({
     where: eq(schema.dailies.date, getTodayDate()),
     with: { gamesToDailies: { with: { game: true } } },
   });
 
   if (!daily || !daily?.gamesToDailies) {
-    return null;
+    return [];
   }
 
   const rounds: Record<number, Round> = {};
