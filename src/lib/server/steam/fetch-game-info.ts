@@ -1,4 +1,5 @@
-import { ContentDescriptor, type NewGame } from '../db/schema';
+import { ContentDescriptor } from '$lib';
+import type { NewGame } from '../db/schema';
 
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';

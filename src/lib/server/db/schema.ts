@@ -1,4 +1,5 @@
 import { pgTable, serial, integer, varchar, text, json } from 'drizzle-orm/pg-core';
+import type { ContentDescriptor } from '$lib';
 
 export const VARCHAR_LENGTH = 255;
 
@@ -10,14 +11,6 @@ export const steamApp = pgTable('steam_app', {
 
 export type SteamApp = typeof steamApp.$inferSelect;
 export type NewSteamApp = typeof steamApp.$inferInsert;
-
-export enum ContentDescriptor {
-  SomeNudityOrSexualContent = 1,
-  FrequentViolenceOrGore = 2,
-  AdultOnlySexualContent = 3,
-  FrequentNudityOrSexualContent = 4,
-  GeneralMatureContent = 5,
-}
 
 export const game = pgTable('game', {
   appid: integer().primaryKey(),
