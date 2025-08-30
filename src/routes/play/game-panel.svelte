@@ -43,8 +43,10 @@
   }
 </script>
 
-<div class="relative h-0 grow break-words">
-  <div class="flex h-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2">
+<div class="relative h-0 w-full grow break-words">
+  <div
+    class="flex h-full w-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2"
+  >
     <div class="flex w-8/12 flex-col space-y-2 pb-2">
       <h2 class="truncate px-4 pt-2 text-white md:text-3xl" title={game.name}>{game.name}</h2>
       {#key game.appid}
@@ -257,6 +259,9 @@
           class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
           onclick={() => changeModalScreenshot(-1)}>Prev</button
         >
+        <div class="text-sm text-card-foreground">
+          {currentModalScreenshot + 1}/{game.screenshots.length}
+        </div>
         <button
           class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
           onclick={() => changeModalScreenshot(1)}>Next</button
