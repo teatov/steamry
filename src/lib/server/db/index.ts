@@ -11,4 +11,4 @@ const client = postgres({
   port: Number(env.DB_PORT),
 });
 
-export const db = drizzle(client, { schema });
+export const db = drizzle(client, { schema, casing: 'snake_case' });
