@@ -30,7 +30,7 @@ export default async function fetchGameInfo(appid: string): Promise<NewGame | nu
     appDetails.content_descriptors &&
     appDetails.content_descriptors.ids.includes(ContentDescriptor.FrequentNudityOrSexualContent)
   ) {
-    console.error(`App ${appid} has FrequentNudityorSexualContent`);
+    console.error(`App ${appid} has FrequentNudityOrSexualContent`);
     return null;
   }
 

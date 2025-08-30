@@ -161,6 +161,7 @@
                   href={`${STORE_PAGE_URL}/${game.appid}`}
                   rel="nofollow, noopener, noreferrer"
                   class="truncate hover:underline"
+                  target="_blank"
                   title="Open Steam page"
                 >
                   {game.name}
