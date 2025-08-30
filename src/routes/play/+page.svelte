@@ -4,6 +4,7 @@
   import { getScore, makeSaveDataKey, STORE_PAGE_URL } from '$lib';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
+  import IconLeft from '$lib/components/icons/icon-left.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
   import type { Game } from '$lib/server/db/schema';
   import type { PageProps } from './$types';
@@ -179,8 +180,9 @@
       <div class="mt-6 text-right">
         <a
           href="/"
-          class="inline-block rounded bg-primary-background px-4 py-2 text-primary-foreground hover:bg-primary-foreground/50 active:bg-primary-background"
+          class="inline-block rounded bg-primary-background py-2 pr-4 pl-3 text-primary-foreground hover:bg-primary-foreground/50 active:bg-primary-background"
         >
+          <IconLeft />
           Back to home page
         </a>
       </div>
