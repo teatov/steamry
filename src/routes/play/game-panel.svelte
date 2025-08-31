@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getScore } from '$lib';
+  import { ensureHttps, getScore } from '$lib';
   import iconVideoImage from '$lib/assets/icon-video.png';
   import reviewNegativeImage from '$lib/assets/review-negative.png';
   import reviewPositiveImage from '$lib/assets/review-positive.png';
@@ -59,7 +59,7 @@
             >{#key currentMediaIndex}
               <img
                 src={currentMediaIndex < game.screenshots.length
-                  ? game.screenshots[currentMediaIndex].src
+                  ? ensureHttps(game.screenshots[currentMediaIndex].src)
                   : ''}
                 alt="Screenshot"
                 width="1920"
@@ -79,10 +79,10 @@
             class=" block h-0 w-full grow bg-black object-contain"
           >
             {#if currentTrailer.webm}
-              <source src={currentTrailer.webm.replace('http://', 'https://')} type="video/webm" />
+              <source src={ensureHttps(currentTrailer.webm)} type="video/webm" />
             {/if}
             {#if currentTrailer.mp4}
-              <source src={currentTrailer.mp4.replace('http://', 'https://')} type="video/mp4" />
+              <source src={ensureHttps(currentTrailer.mp4)} type="video/mp4" />
             {/if}
           </video>
         {/if}
@@ -122,7 +122,7 @@
               }}
             >
               <img
-                src={screenshot.thumbnail}
+                src={ensureHttps(screenshot.thumbnail)}
                 alt="Screenshot {i + 1}"
                 width="1920"
                 height="1080"
@@ -187,8 +187,7 @@
           <p class="text-mute-foreground uppercase">Genre:</p>
           <p>
             {#each game.genres as genre, i}
-              <span class="text-primary-foreground">{genre}</span
-              >{#if i < game.genres.length - 1}
+              <span class="text-primary-foreground">{genre}</span>{#if i < game.genres.length - 1}
                 ,&nbsp;
               {/if}
             {/each}
@@ -250,7 +249,7 @@
       {#key currentModalScreenshot}
         <img
           src={currentModalScreenshot < game.screenshots.length
-            ? game.screenshots[currentModalScreenshot].src
+            ? ensureHttps(game.screenshots[currentModalScreenshot].src)
             : ''}
           alt="Screenshot"
           width="1920"

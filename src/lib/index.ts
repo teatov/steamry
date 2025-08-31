@@ -24,6 +24,10 @@ export function makeSaveDataKey(date: Date) {
   return date.toISOString().split('T')[0];
 }
 
+export function ensureHttps(url: string) {
+  return url.replace('http://', 'https://');
+}
+
 export enum ContentDescriptor {
   SomeNudityOrSexualContent = 1,
   FrequentViolenceOrGore = 2,
