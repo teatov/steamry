@@ -3,7 +3,7 @@ import { db } from '../db';
 import * as schema from '../db/schema';
 import fetchGameInfo from './fetch-game-info';
 
-const MAX_ATTEMPTS = 200;
+const MAX_ATTEMPTS = 300;
 
 export default async function getRandomGames(
   amount: number,
