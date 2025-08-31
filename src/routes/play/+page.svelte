@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
-  import { getScore, makeSaveDataKey, STORE_PAGE_URL, type Round } from '$lib';
+  import { getScore, getTomorrowDate, makeSaveDataKey, STORE_PAGE_URL, type Round } from '$lib';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
@@ -193,10 +193,17 @@
           </li>
         {/each}
       </ul>
+      <div class="mt-4 text-center text-card-foreground">Next game will arrive at:</div>
+      <div class="text-center text-xl text-primary-foreground">
+        {getTomorrowDate(data.date).toLocaleString(undefined, {
+          timeStyle: 'short',
+          dateStyle: 'short',
+        })} (your timezone)
+      </div>
       <div class="mt-6 text-right">
         <a
           href="/"
-          class="inline-block rounded-xs bg-primary-background py-2 px-4 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          class="inline-block rounded-xs bg-primary-background px-4 py-2 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
         >
           Back to home page
         </a>

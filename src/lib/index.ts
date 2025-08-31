@@ -8,6 +8,12 @@ export function getTodayDate() {
   return date;
 }
 
+export function getTomorrowDate(date: Date) {
+  const tomorrow = new Date(date);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow;
+}
+
 export function getScore(game: Game) {
   return (
     Math.round((game.reviewsPositive / (game.reviewsNegative + game.reviewsPositive)) * 10000) / 100
