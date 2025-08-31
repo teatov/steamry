@@ -5,7 +5,6 @@
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconLeft from '$lib/components/icons/icon-left.svelte';
-  import IconLoader from '$lib/components/icons/icon-loader.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
   import type { Game } from '$lib/server/db/schema';
   import type { PageProps } from './$types';
@@ -140,8 +139,6 @@
       {#each round.games as game}
         <GamePanel {game} isCorrect={isCorrect(game)} {reveal} onguess={guess} />
       {/each}
-    {:else}
-      <IconLoader />
     {/if}
   </main>
 {:else}

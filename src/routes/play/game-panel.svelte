@@ -45,10 +45,9 @@
 
 <div class="relative h-0 w-full grow break-words">
   <div
-    class="flex h-full w-full grow gap-4 bg-linear-to-r from-card-background-1 to-card-background-2"
+    class="flex h-full w-full grow gap-3 bg-linear-to-r from-card-background-1 to-card-background-2"
   >
-    <div class="flex w-8/12 flex-col space-y-2 pb-2">
-      <h2 class="truncate px-4 pt-2 text-white md:text-3xl" title={game.name}>{game.name}</h2>
+    <div class="flex w-0 grow flex-col space-y-2 pb-2">
       {#key game.appid}
         {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
           <button
@@ -132,8 +131,9 @@
           {/each}
         </div>
       {/key}
-      <div class="flex justify-end">
-        <div class="flex items-center gap-2 bg-black p-1">
+      <div class="flex justify-between items-center">
+        <h2 class="truncate px-4 text-white md:text-xl" title={game.name}>{game.name}</h2>
+        <div class="flex shrink-0 items-center gap-2 bg-black p-1">
           <div class="px-3 text-sm text-card-foreground">
             {game.price || 'Free'}
           </div>
@@ -144,7 +144,7 @@
         </div>
       </div>
     </div>
-    <div class="w-5/12 overflow-y-auto pb-2">
+    <div class="w-5/12 shrink-0 overflow-y-auto pb-2">
       {#key game.appid}
         <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
       {/key}
