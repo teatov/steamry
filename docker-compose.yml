@@ -32,6 +32,8 @@ services:
       - ${PORT}:${PORT}
     networks:
       - steamry-network
+    depends_on:
+        - db
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://127.0.0.1:${PORT}/up || exit 1']
       interval: 1m30s
