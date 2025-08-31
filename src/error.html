@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Steamry</title>
+    <meta
+      name="description"
+      content="A daily Steam review ratio guessing game"
+    />
+    <style>
+      body {
+        position: relative;
+        height: 100vh;
+        background-color:  #1b2838;
+        color: #acb2b8;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      main {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+      }
+      .box {
+          background-color: #121a25;
+          padding: 1rem;
+          text-align: center;
+      }
+      h1 {
+        font-size: 3.75rem;
+        line-height: 1;
+        font-weight: 700;
+        color: #c85e2d;
+      }
+      p {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      a {
+        display: inline-block;
+        border-radius:0.125rem;
+        background-color: #21394c;
+        padding-inline: 1rem;
+        padding-block: 0.5rem;
+        color: #66c0f4;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: contents">
+      <main>
+        <div class="box">
+          <h1>%sveltekit.status%</h1>
+          <p>%sveltekit.error.message%</p>
+          <a href="/">Go back home...</a>
+        </div>
+      </main>
+      </div>
+    </div>
+  </body>
+</html>
