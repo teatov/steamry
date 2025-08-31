@@ -1,10 +1,16 @@
 import type { ServerInit } from '@sveltejs/kit';
 import { CronJob } from 'cron';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import generateDailies from '$lib/server/daily/generate-dailies';
+import { db } from '$lib/server/db';
 import fetchApps from '$lib/server/steam/fetch-apps';
 
 export const init: ServerInit = async () => {
   if (import.meta.env.PROD) {
+    console.log('Migrating...');
+    await migrate(db, { migrationsFolder: './drizzle' });
+    console.log('Migrations done!');
+
     await fetchApps();
     await generateDailies();
 
