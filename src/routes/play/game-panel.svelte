@@ -79,10 +79,10 @@
             class=" block h-0 w-full grow bg-black object-contain"
           >
             {#if currentTrailer.webm}
-              <source src={currentTrailer.webm} type="video/webm" />
+              <source src={currentTrailer.webm.replace('http://', 'https://')} type="video/webm" />
             {/if}
             {#if currentTrailer.mp4}
-              <source src={currentTrailer.mp4} type="video/mp4" />
+              <source src={currentTrailer.mp4.replace('http://', 'https://')} type="video/mp4" />
             {/if}
           </video>
         {/if}
