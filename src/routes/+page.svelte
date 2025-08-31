@@ -13,7 +13,7 @@
     <div class="mt-6 text-center">
       <a
         href="/play"
-        class="inline-block rounded-sm bg-linear-to-r from-accent-background-1 to-accent-background-2 px-8 py-2 text-xl text-accent-foreground text-shadow-[1px_1px_0px] text-shadow-black/30 hover:from-accent-background-hover-1 hover:to-accent-background-hover-2 hover:text-white"
+        class="inline-block rounded-xs bg-linear-to-r from-accent-background-1 to-accent-background-2 px-8 py-2 text-xl text-accent-foreground text-shadow-[1px_1px_0px] text-shadow-black/30 hover:from-accent-background-hover-1 hover:to-accent-background-hover-2 hover:text-white"
       >
         Play
       </a>

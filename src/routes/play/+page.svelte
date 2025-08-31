@@ -100,7 +100,7 @@
     {#each data.rounds as _, i}
       <div
         aria-label={i < results.length ? (results[i] ? 'Correct' : 'Incorrect') : 'No guess'}
-        class="flex h-6 w-full items-center justify-center rounded text-white {i < results.length
+        class="flex h-6 w-full items-center justify-center rounded-xs text-white {i < results.length
           ? results[i]
             ? 'bg-accent-background-1'
             : 'bg-danger-foreground'
@@ -138,7 +138,7 @@
         <button
           title="Copy results"
           aria-label="Copy results"
-          class="inline-block rounded bg-primary-background p-2 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
+          class="inline-block rounded-xs bg-primary-background p-2 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
           onclick={copyResults}
         >
           <IconCopy />
@@ -185,7 +185,7 @@
       <div class="mt-6 text-right">
         <a
           href="/"
-          class="inline-block rounded-sm bg-primary-background py-2 pr-4 pl-3 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          class="inline-block rounded-xs bg-primary-background py-2 pr-4 pl-3 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
         >
           <IconLeft />
           Back to home page

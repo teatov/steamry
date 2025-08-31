@@ -244,7 +244,7 @@
     aria-modal="true"
     tabindex="-1"
   >
-    <div class="rounded-sm bg-linear-to-r from-modal-background-1 to-modal-background-2 p-2">
+    <div class="rounded-xs bg-linear-to-r from-modal-background-1 to-modal-background-2 p-2">
       <img
         src={currentModalScreenshot < game.screenshots.length
           ? game.screenshots[currentModalScreenshot]
