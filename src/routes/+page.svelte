@@ -8,7 +8,7 @@
     <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white">
       <img src={logoImage} alt="Steamry logo" width="56" height="56" class="-mb-2 inline" />STEAMRY
     </h1>
-    <h2 class="mt-2 text-center text-card-foreground md:text-3xl">
+    <h2 class="mt-2 text-center text-card-foreground md:text-2xl">
       A daily Steam review ratio guessing game
     </h2>
     <p class="mt-6">
@@ -18,7 +18,7 @@
     </p>
     <p class="mt-2">Any game can appear, with the exception of:</p>
     <ul class="list-inside list-disc">
-      <li>Games with zero reviews</li>
+      <li>Games with less than 20 reviews</li>
       <li>
         Games marked as having "Frequent Nudity or Sexual Content" (so straight up porn won't
         appear)

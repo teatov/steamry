@@ -3,6 +3,7 @@ import * as schema from '../db/schema';
 
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
+const MIN_REVIEWS = 20;
 
 export default async function fetchGameInfo(appid: string): Promise<schema.NewGameInfoOnly | null> {
   const detailsUrl = new URL(APP_DETAILS_URL);
@@ -64,11 +65,8 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   }
 
   const reviewsSummary = reviewsResult.query_summary;
-  if (
-    (!reviewsSummary.total_negative && !reviewsSummary.total_positive) ||
-    reviewsSummary.total_negative + reviewsSummary.total_positive === 0
-  ) {
-    console.error(`App ${appid} has zero reviews`);
+  if (reviewsSummary.total_negative + reviewsSummary.total_positive < MIN_REVIEWS) {
+    console.error(`App ${appid} has less than ${MIN_REVIEWS} reviews`);
     return null;
   }
 
