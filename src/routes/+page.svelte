@@ -12,7 +12,9 @@
       A daily Steam review ratio guessing game
     </h2>
     <p class="mt-6">
-      Try to guess which game has a <strong>higher percentage of positive reviews</strong>.
+      Try to guess which game has a <span class="font-semibold text-primary-foreground"
+        >higher percentage of positive reviews</span
+      >.
     </p>
     <p class="mt-2">Any game can appear, with the exception of:</p>
     <ul class="list-inside list-disc">
@@ -21,7 +23,7 @@
         Games marked as having "Frequent Nudity or Sexual Content" (so straight up porn won't
         appear)
       </li>
-      <li>And also games that I could not fetch any info about for some reason</li>
+      <li>And also games that had issues with fetching info about them</li>
     </ul>
     <img src={wipImage} alt="Under construction" width="574" height="51" class="mx-auto" />
     <p class="text-center">
