@@ -1,14 +1,15 @@
 <script lang="ts">
+  import wipImage from '$lib/assets/barraconstruction.gif';
   import logoImage from '$lib/assets/logo.png';
 </script>
 
 <main class="flex h-full items-center justify-center">
   <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
     <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white">
-      <img src={logoImage} alt="Steamry logo" class="inline -mb-2" />STEAMRY
+      <img src={logoImage} alt="Steamry logo" width="56" height="56" class="-mb-2 inline" />STEAMRY
     </h1>
     <h2 class="mt-2 text-center text-card-foreground md:text-3xl">
-      The daily Steam review ratio guessing game
+      A daily Steam review ratio guessing game
     </h2>
     <p class="mt-6">
       Try to guess which game has a <strong>higher percentage of positive reviews</strong>.
@@ -22,6 +23,18 @@
       </li>
       <li>And also games that have issues fetching info about them</li>
     </ul>
+    <img src={wipImage} alt="Under construction" width="574" height="51" class="mx-auto" />
+    <p class="text-center">
+      Currently the game is at a very early stage, so any feedback and bug reports are appreciated!
+    </p>
+    <p class="text-center">
+      <a
+        href="https://teatov.xyz/"
+        target="_blank"
+        rel="nofollow, noopener, noreferrer"
+        class="font-semibold text-card-foreground hover:underline">Here's my page with links</a
+      > that you can use to contact me.
+    </p>
     <div class="mt-6 text-center">
       <a
         href="/play"
