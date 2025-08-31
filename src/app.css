@@ -18,9 +18,13 @@
   --color-modal-background-1: #356480;
   --color-modal-background-2: #1a303d;
   --color-modal-foreground: #294d61;
+  --color-ring: #66c0f4;
 }
 
 @layer base {
+  * {
+    @apply focus-visible:ring-ring focus-visible:ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-4;
+  }
   body {
     @apply bg-background text-foreground;
   }
