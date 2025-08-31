@@ -1,9 +1,8 @@
-import { ContentDescriptor } from '$lib';
+import { ContentDescriptor, MIN_REVIEWS } from '$lib';
 import * as schema from '../db/schema';
 
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
-const MIN_REVIEWS = 20;
 
 export default async function fetchGameInfo(appid: string): Promise<schema.NewGameInfoOnly | null> {
   const detailsUrl = new URL(APP_DETAILS_URL);

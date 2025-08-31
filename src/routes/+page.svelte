@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { MIN_REVIEWS } from '$lib';
   import wipImage from '$lib/assets/barraconstruction.gif';
   import logoImage from '$lib/assets/logo.png';
 </script>
@@ -18,7 +19,7 @@
     </p>
     <p class="mt-2">Any game can appear, with the exception of:</p>
     <ul class="list-inside list-disc">
-      <li>Games with less than 20 reviews</li>
+      <li>Games with less than {MIN_REVIEWS} reviews</li>
       <li>
         Games marked as having "Frequent Nudity or Sexual Content" (so straight up porn won't
         appear)
