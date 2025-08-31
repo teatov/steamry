@@ -1,24 +1,4 @@
 services:
-  db:
-    image: postgres:17
-    container_name: steamry-db
-    restart: unless-stopped
-    ports:
-      - ${DB_PORT:-5432}:5432
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_DATABASE}
-    volumes:
-      - steamry-db:/var/lib/postgresql
-    networks:
-      - steamry-network
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
   app:
     image: steamry-app:1.0.0
     container_name: steamry-app
@@ -31,19 +11,32 @@ services:
     ports:
       - ${PORT}:${PORT}
     networks:
-      - steamry-network
-    depends_on:
-        - db
+      - coolify
+
+  db:
+    image: postgres:17
+    container_name: steamry-db
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT:-5432}:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - steamry-db:/var/lib/postgresql
+    profiles:
+      - local
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://127.0.0.1:${PORT}/up || exit 1']
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
 networks:
-  steamry-network:
-    driver: bridge
+  coolify:
+    external: true
 
 volumes:
   steamry-db:
+    driver: local
