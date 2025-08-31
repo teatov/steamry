@@ -10,6 +10,8 @@ services:
     restart: unless-stopped
     ports:
       - ${PORT}:${PORT}
+    networks:
+      - steamry-network
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://127.0.0.1:${PORT}/up || exit 1']
       interval: 1m30s
@@ -27,15 +29,19 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
-    profiles:
-      - local
     volumes:
       - steamry-db:/var/lib/postgresql
+    networks:
+      - steamry-network
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_DATABASE}']
       interval: 5s
       timeout: 5s
       retries: 20
+
+networks:
+  steamry-network:
+    driver: bridge
 
 volumes:
   steamry-db:
