@@ -254,7 +254,7 @@
           alt="Screenshot"
           width="1920"
           height="1080"
-          class="aspect-video h-[calc(100vh-10rem)] w-full max-w-[calc(100vw-10rem)] bg-black object-contain"
+          class="aspect-video h-[calc(100vh-10rem)] w-full max-w-[calc(100vw-2rem)] bg-black object-contain"
         />
       {/key}
       <div class="mt-2 flex items-center justify-between">
