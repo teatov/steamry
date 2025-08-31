@@ -7,7 +7,10 @@
     <p class="mt-2">Any game can appear, with the exception of:</p>
     <ul class="list-inside list-disc">
       <li>Games with zero reviews</li>
-      <li>Games marked as having "Frequent Nudity or Sexual Content"</li>
+      <li>
+        Games marked as having "Frequent Nudity or Sexual Content" (so straight up porn won't
+        appear)
+      </li>
       <li>And also games that have issues fetching info about them</li>
     </ul>
     <div class="mt-6 text-center">
