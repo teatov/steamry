@@ -59,7 +59,7 @@
           >
             <img
               src={currentMediaIndex < game.screenshots.length
-                ? game.screenshots[currentMediaIndex]
+                ? game.screenshots[currentMediaIndex].src
                 : ''}
               alt="Screenshot"
               width="1920"
@@ -121,7 +121,7 @@
               }}
             >
               <img
-                src={screenshot}
+                src={screenshot.thumbnail}
                 alt="Screenshot {i + 1}"
                 width="1920"
                 height="1080"
@@ -247,7 +247,7 @@
     <div class="rounded-xs bg-linear-to-r from-modal-background-1 to-modal-background-2 p-2">
       <img
         src={currentModalScreenshot < game.screenshots.length
-          ? game.screenshots[currentModalScreenshot]
+          ? game.screenshots[currentModalScreenshot].src
           : ''}
         alt="Screenshot"
         width="1920"

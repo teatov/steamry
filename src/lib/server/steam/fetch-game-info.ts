@@ -95,7 +95,9 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
       ? appDetails.genres.toSorted((a, b) => a.id - b.id).map((value) => value.description)
       : [],
     screenshots: appDetails.screenshots
-      ? appDetails.screenshots.toSorted((a, b) => a.id - b.id).map((value) => value.path_full)
+      ? appDetails.screenshots
+          .toSorted((a, b) => a.id - b.id)
+          .map((value) => ({ thumbnail: value.path_thumbnail, src: value.path_full }))
       : [],
     trailers: appDetails.movies
       ? appDetails.movies
