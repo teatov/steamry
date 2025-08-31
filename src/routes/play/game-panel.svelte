@@ -151,16 +151,16 @@
       {/key}
       <div class="mt-2 space-y-2 pr-4 text-xs">
         <p class="text-card-foreground md:text-sm">{@html game.description}</p>
-        <div class="flex flex-col gap-x-4 md:flex-row">
+        <div class="flex flex-col gap-x-2 md:flex-row">
           <p class="text-mute-foreground uppercase">Total reviews:</p>
           <p>{numberFormat.format(game.reviewsNegative + game.reviewsPositive)}</p>
         </div>
-        <div class="flex flex-col gap-x-4 md:flex-row">
+        <div class="flex flex-col gap-x-2 md:flex-row">
           <p class="text-mute-foreground uppercase">Release date:</p>
           <p>{game.releaseDate}</p>
         </div>
         <div>
-          <div class="mt-2 flex flex-col gap-x-4 md:flex-row">
+          <div class="mt-2 flex flex-col gap-x-2 md:flex-row">
             <p class="text-mute-foreground uppercase">Developer:</p>
             <p>
               {#each game.developers as developer, i}
@@ -171,7 +171,7 @@
               {/each}
             </p>
           </div>
-          <div class="flex flex-col gap-x-4 md:flex-row">
+          <div class="flex flex-col gap-x-2 md:flex-row">
             <p class="text-mute-foreground uppercase">Publisher:</p>
             <p>
               {#each game.publishers as publisher, i}
@@ -183,15 +183,16 @@
             </p>
           </div>
         </div>
-        <div>
-          <p class="mt-2 text-mute-foreground uppercase">Genres:</p>
-          <ul class="flex flex-wrap gap-1">
-            {#each game.genres as genre}
-              <li class="rounded-xs bg-primary-background px-1.5 py-0.5 text-primary-foreground">
-                {genre}
-              </li>
+        <div class="flex flex-col gap-x-2 md:flex-row">
+          <p class="text-mute-foreground uppercase">Genre:</p>
+          <p>
+            {#each game.genres as genre, i}
+              <span class="text-primary-foreground">{genre}</span
+              >{#if i < game.genres.length - 1}
+                ,&nbsp;
+              {/if}
             {/each}
-          </ul>
+          </p>
         </div>
         <ul class="space-y-1">
           {#each game.categories as category}
