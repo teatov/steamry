@@ -165,7 +165,7 @@
               {#each game.developers as developer, i}
                 <span class="text-primary-foreground">{developer}</span
                 >{#if i < game.developers.length - 1}
-                  ,
+                  ,&nbsp;
                 {/if}
               {/each}
             </p>
@@ -176,7 +176,7 @@
               {#each game.publishers as publisher, i}
                 <span class="text-primary-foreground">{publisher}</span
                 >{#if i < game.publishers.length - 1}
-                  ,
+                  ,&nbsp;
                 {/if}
               {/each}
             </p>
