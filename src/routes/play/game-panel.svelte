@@ -56,16 +56,17 @@
               currentModalScreenshot = currentMediaIndex;
               showModal = true;
             }}
-          >
-            <img
-              src={currentMediaIndex < game.screenshots.length
-                ? game.screenshots[currentMediaIndex].src
-                : ''}
-              alt="Screenshot"
-              width="1920"
-              height="1080"
-              class="h-full w-full object-contain"
-            />
+            >{#key currentMediaIndex}
+              <img
+                src={currentMediaIndex < game.screenshots.length
+                  ? game.screenshots[currentMediaIndex].src
+                  : ''}
+                alt="Screenshot"
+                width="1920"
+                height="1080"
+                class="h-full w-full object-contain"
+              />
+            {/key}
           </button>
         {/if}
         {#if currentMediaType === 'trailer' && game.trailers.length > 0}
@@ -245,15 +246,17 @@
     tabindex="-1"
   >
     <div class="rounded-xs bg-linear-to-r from-modal-background-1 to-modal-background-2 p-2">
-      <img
-        src={currentModalScreenshot < game.screenshots.length
-          ? game.screenshots[currentModalScreenshot].src
-          : ''}
-        alt="Screenshot"
-        width="1920"
-        height="1080"
-        class="aspect-video h-[calc(100vh-10rem)] w-full max-w-[calc(100vw-10rem)] bg-black object-contain"
-      />
+      {#key currentModalScreenshot}
+        <img
+          src={currentModalScreenshot < game.screenshots.length
+            ? game.screenshots[currentModalScreenshot].src
+            : ''}
+          alt="Screenshot"
+          width="1920"
+          height="1080"
+          class="aspect-video h-[calc(100vh-10rem)] w-full max-w-[calc(100vw-10rem)] bg-black object-contain"
+        />
+      {/key}
       <div class="mt-2 flex items-center justify-between">
         <button
           class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
