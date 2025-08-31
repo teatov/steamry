@@ -21,7 +21,7 @@
         Games marked as having "Frequent Nudity or Sexual Content" (so straight up porn won't
         appear)
       </li>
-      <li>And also games that have issues fetching info about them</li>
+      <li>And also games that I could not fetch any info about for some reason</li>
     </ul>
     <img src={wipImage} alt="Under construction" width="574" height="51" class="mx-auto" />
     <p class="text-center">
