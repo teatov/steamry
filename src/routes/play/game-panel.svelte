@@ -131,8 +131,8 @@
           {/each}
         </div>
       {/key}
-      <div class="flex justify-between items-center">
-        <h2 class="truncate px-4 text-white md:text-xl" title={game.name}>{game.name}</h2>
+      <div class="flex flex-col items-end justify-between gap-2 md:flex-row md:items-center">
+        <h2 class="w-full truncate px-4 text-white md:text-xl" title={game.name}>{game.name}</h2>
         <div class="flex shrink-0 items-center gap-2 bg-black p-1">
           <div class="px-3 text-sm text-card-foreground">
             {game.price || 'Free'}
