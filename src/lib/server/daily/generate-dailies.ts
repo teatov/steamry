@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { getTodayDate } from '../..';
+import { getTodayDate, getTomorrowDate } from '../..';
 import { db } from '../db';
 import * as schema from '../db/schema';
 import makeNewDaily from './make-new-daily';
@@ -14,8 +14,7 @@ export default async function generateDailies() {
     \nDaily for ${today.toISOString().split('T')[0]} already exists`);
   }
 
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrow = getTomorrowDate(today);
   const tomorrowDaily = await db.query.dailies.findFirst({
     where: eq(schema.dailies.date, tomorrow),
   });
