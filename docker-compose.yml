@@ -10,8 +10,6 @@ services:
     restart: unless-stopped
     ports:
       - ${PORT}:${PORT}
-    networks:
-      - coolify
     healthcheck:
       test: ['CMD-SHELL', 'curl -f http://127.0.0.1:${PORT}/up || exit 1']
       interval: 1m30s
@@ -38,12 +36,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-
-networks:
-  coolify:
-    external: true
-    name: coolify
-    attachable: true
 
 volumes:
   steamry-db:
