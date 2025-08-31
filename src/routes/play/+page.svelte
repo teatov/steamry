@@ -196,7 +196,7 @@
       <div class="mt-6 text-right">
         <a
           href="/"
-          class="inline-block rounded-xs bg-primary-background py-2 pr-4 pl-3 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          class="inline-block rounded-xs bg-primary-background py-2 px-4 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
         >
           Back to home page
         </a>
