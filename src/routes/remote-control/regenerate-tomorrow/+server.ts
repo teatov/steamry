@@ -15,5 +15,5 @@ export const POST: RequestHandler = async ({ request }) => {
   const tomorrow = getTomorrowDate(getTodayDate());
   makeNewDaily(tomorrow);
 
-  return json({ message: `Started generating daily for ${tomorrow}...` });
+  return json({ message: `Started generating daily for ${tomorrow.toISOString()}...` });
 };

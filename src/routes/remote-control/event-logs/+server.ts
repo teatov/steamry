@@ -8,7 +8,7 @@ import type { RequestHandler } from './$types';
 // /remote-control/event-logs
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { key, from, to } = (await request.json()) as { key?: string; from: string; to: string };
+  const { key, from, to } = (await request.json()) as { key?: string; from?: string; to?: string };
   if (!key || key !== env.SECRET_KEY) {
     throw error(401);
   }
