@@ -25,6 +25,6 @@ export const POST: RequestHandler = async ({ request }) => {
     const eventLogs = await query;
     return json(eventLogs);
   } catch (err) {
-    throw error(500, { message: String(err) });
+    throw error(500, String(err));
   }
 };
