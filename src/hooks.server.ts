@@ -8,7 +8,7 @@ import fetchApps from '$lib/server/steam/fetch-apps';
 if (import.meta.env.PROD && !building) {
   console.log('Migrating...');
   await migrate(db, { migrationsFolder: './drizzle' });
-  console.log('Migrations done!');
+  console.log('Migrations done!\n');
 
   await fetchApps(true);
   await generateDailies();
