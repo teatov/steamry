@@ -47,7 +47,7 @@ export const games = pgTable(
     contentDescriptors: json().$type<ContentDescriptor[]>().notNull(),
     requiredAge: integer().notNull().default(0),
   },
-  (t) => [primaryKey({ columns: [t.dailyId, t.appid] })],
+  (t) => [primaryKey({ columns: [t.dailyId, t.round, t.appid] })],
 );
 
 export const gamesRelations = relations(games, ({ one }) => ({
