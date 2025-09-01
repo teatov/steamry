@@ -78,21 +78,29 @@
             </button>
           {/if}
           {#if currentMediaType === 'trailer' && game.trailers.length > 0}
-            {@const currentTrailer = game.trailers[currentMediaIndex]}
             <!-- svelte-ignore a11y_media_has_caption -->
-            <video
-              width="1920"
-              height="1080"
-              controls
-              class=" block h-0 w-full grow bg-black object-contain"
-            >
-              {#if currentTrailer.webm}
-                <source src={ensureHttps(currentTrailer.webm)} type="video/webm" />
-              {/if}
-              {#if currentTrailer.mp4}
-                <source src={ensureHttps(currentTrailer.mp4)} type="video/mp4" />
-              {/if}
-            </video>
+            {#key currentMediaIndex}
+              <video
+                width="1920"
+                height="1080"
+                controls
+                class=" block h-0 w-full grow bg-black object-contain"
+                poster={game.trailers[currentMediaIndex].thumbnail}
+              >
+                {#if game.trailers[currentMediaIndex].webm}
+                  <source
+                    src={ensureHttps(game.trailers[currentMediaIndex].webm!)}
+                    type="video/webm"
+                  />
+                {/if}
+                {#if game.trailers[currentMediaIndex].mp4}
+                  <source
+                    src={ensureHttps(game.trailers[currentMediaIndex].mp4!)}
+                    type="video/mp4"
+                  />
+                {/if}
+              </video>
+            {/key}
           {/if}
           <div class="flex overflow-x-auto">
             {#each game.trailers as trailer, i}
