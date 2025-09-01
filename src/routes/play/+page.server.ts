@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
     cookies.get('TZ') !== undefined && !Number.isNaN(Number(cookies.get('TZ')))
       ? Number(cookies.get('TZ'))
       : null;
-  if (timezone !== null && timezone <= 14 * 60) {
+  if (timezone !== null && timezone >= -14 * 60 && timezone <= 12 * 60) {
     date = getTimezoneDate(Number(cookies.get('TZ')));
   }
 
