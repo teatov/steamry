@@ -177,7 +177,7 @@
                   rel="nofollow, noopener, noreferrer"
                   class="truncate hover:underline"
                   target="_blank"
-                  title="Open Steam page"
+                  title="Open Steam store page"
                 >
                   {game.name}
                 </a>
