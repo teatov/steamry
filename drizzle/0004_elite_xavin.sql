@@ -1,0 +1,1 @@
+ALTER TABLE "games" ADD COLUMN "marked_as_nsfw" boolean DEFAULT false NOT NULL;

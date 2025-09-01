@@ -9,6 +9,7 @@ import {
   date,
   primaryKey,
   timestamp,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import type { ContentDescriptor } from '$lib';
 
@@ -46,6 +47,7 @@ export const games = pgTable(
     trailers: json().$type<{ thumbnail: string; webm?: string; mp4?: string }[]>().notNull(),
     contentDescriptors: json().$type<ContentDescriptor[]>().notNull(),
     requiredAge: integer().notNull().default(0),
+    markedAsNsfw: boolean().notNull().default(false),
   },
   (t) => [primaryKey({ columns: [t.dailyId, t.round, t.appid] })],
 );

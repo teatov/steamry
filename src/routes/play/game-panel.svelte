@@ -31,7 +31,8 @@
       currentMediaIndex = 0;
       showModal = false;
       currentModalScreenshot = 0;
-      showNsfwBlur = filterMildContentDescriptors(game.contentDescriptors).length > 0;
+      showNsfwBlur =
+        game.markedAsNsfw || filterMildContentDescriptors(game.contentDescriptors).length > 0;
     }
   });
 
