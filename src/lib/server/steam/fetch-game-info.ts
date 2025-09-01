@@ -125,6 +125,12 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
       appDetails.content_descriptors && appDetails.content_descriptors.ids
         ? appDetails.content_descriptors.ids
         : [],
+    requiredAge:
+      typeof appDetails.required_age === 'number'
+        ? appDetails.required_age
+        : Number.isInteger(Number(appDetails.required_age))
+          ? parseInt(appDetails.required_age)
+          : 0,
   };
 }
 
@@ -134,6 +140,7 @@ type AppDetails = {
   type: 'game' | 'dlc' | 'demo' | 'advertising' | 'mod' | 'video';
   name: string;
   steam_appid: number;
+  required_age: number | string;
   is_free: boolean;
   short_description?: string;
   header_image: string;

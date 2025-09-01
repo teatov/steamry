@@ -45,6 +45,7 @@ export const games = pgTable(
     screenshots: json().$type<{ thumbnail: string; src: string }[]>().notNull(),
     trailers: json().$type<{ thumbnail: string; webm?: string; mp4?: string }[]>().notNull(),
     contentDescriptors: json().$type<ContentDescriptor[]>().notNull(),
+    requiredAge: integer().notNull().default(0),
   },
   (t) => [primaryKey({ columns: [t.dailyId, t.appid] })],
 );

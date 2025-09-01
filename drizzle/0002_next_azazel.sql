@@ -1,0 +1,1 @@
+ALTER TABLE "games" ADD COLUMN "required_age" integer DEFAULT 0 NOT NULL;
