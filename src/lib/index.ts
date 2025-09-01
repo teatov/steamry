@@ -29,6 +29,34 @@ export function ensureHttps(url: string) {
   return url.replace('http://', 'https://');
 }
 
+export function getContentDescriptorText(descriptor: number): string {
+  switch (descriptor) {
+    case ContentDescriptor.SomeNudityOrSexualContent:
+      return 'Some Nudity or Sexual Content';
+    case ContentDescriptor.FrequentViolenceOrGore:
+      return 'Frequent Violence or Gore';
+    case ContentDescriptor.AdultOnlySexualContent:
+      return 'Adult Only Sexual Content';
+    case ContentDescriptor.FrequentNudityOrSexualContent:
+      return 'Frequent Nudity or Sexual Content';
+    case ContentDescriptor.GeneralMatureContent:
+      return 'General Mature Content';
+    default:
+      return descriptor.toString();
+  }
+}
+
+export function filterMildContentDescriptors(
+  descriptors: ContentDescriptor[],
+): ContentDescriptor[] {
+  return descriptors.filter((value) =>
+    [
+      ContentDescriptor.AdultOnlySexualContent,
+      ContentDescriptor.FrequentNudityOrSexualContent,
+    ].includes(value),
+  );
+}
+
 export enum ContentDescriptor {
   SomeNudityOrSexualContent = 1,
   FrequentViolenceOrGore = 2,

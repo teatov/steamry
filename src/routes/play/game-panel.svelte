@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { ensureHttps, getScore } from '$lib';
+  import {
+    ensureHttps,
+    filterMildContentDescriptors,
+    getContentDescriptorText,
+    getScore,
+  } from '$lib';
   import iconVideoImage from '$lib/assets/icon-video.png';
   import reviewNegativeImage from '$lib/assets/review-negative.png';
   import reviewPositiveImage from '$lib/assets/review-positive.png';
@@ -17,6 +22,7 @@
   let currentMediaIndex = $state<number>(0);
   let currentModalScreenshot = $state<number>(0);
   let showModal = $state<boolean>(false);
+  let showNsfwBlur = $state<boolean>(false);
 
   $effect(() => {
     if (game.appid) {
@@ -25,6 +31,7 @@
       currentMediaIndex = 0;
       showModal = false;
       currentModalScreenshot = 0;
+      showNsfwBlur = filterMildContentDescriptors(game.contentDescriptors).length > 0;
     }
   });
 
@@ -48,90 +55,106 @@
     class="flex h-full w-full grow gap-3 bg-linear-to-r from-card-background-1 to-card-background-2"
   >
     <div class="flex w-0 grow flex-col space-y-2 pb-2">
-      {#key game.appid}
-        {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
+      <div class="relative flex grow flex-col space-y-2">
+        {#key game.appid}
+          {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
+            <button
+              class="block h-0 grow bg-black"
+              onclick={() => {
+                currentModalScreenshot = currentMediaIndex;
+                showModal = true;
+              }}
+              >{#key currentMediaIndex}
+                <img
+                  src={currentMediaIndex < game.screenshots.length
+                    ? ensureHttps(game.screenshots[currentMediaIndex].src)
+                    : ''}
+                  alt="Screenshot"
+                  width="1920"
+                  height="1080"
+                  class="h-full w-full object-contain"
+                />
+              {/key}
+            </button>
+          {/if}
+          {#if currentMediaType === 'trailer' && game.trailers.length > 0}
+            {@const currentTrailer = game.trailers[currentMediaIndex]}
+            <!-- svelte-ignore a11y_media_has_caption -->
+            <video
+              width="1920"
+              height="1080"
+              controls
+              class=" block h-0 w-full grow bg-black object-contain"
+            >
+              {#if currentTrailer.webm}
+                <source src={ensureHttps(currentTrailer.webm)} type="video/webm" />
+              {/if}
+              {#if currentTrailer.mp4}
+                <source src={ensureHttps(currentTrailer.mp4)} type="video/mp4" />
+              {/if}
+            </video>
+          {/if}
+          <div class="flex overflow-x-auto">
+            {#each game.trailers as trailer, i}
+              <button
+                class="relative shrink-0 border-2 border-foreground/0 {currentMediaType ===
+                  'trailer' && currentMediaIndex === i
+                  ? 'border-foreground/100'
+                  : ''}"
+                onclick={() => {
+                  currentMediaType = 'trailer';
+                  currentMediaIndex = i;
+                }}
+              >
+                <img
+                  src={trailer.thumbnail}
+                  alt="Trailer {i + 1}"
+                  width="1920"
+                  height="1080"
+                  class="block h-12 w-auto object-contain"
+                />
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <img src={iconVideoImage} alt="" width="32" height="32" />
+                </div>
+              </button>
+            {/each}
+            {#each game.screenshots as screenshot, i}
+              <button
+                class="shrink-0 border-2 border-foreground/0 {currentMediaType === 'screenshot' &&
+                currentMediaIndex === i
+                  ? 'border-foreground/100'
+                  : ''}"
+                onclick={() => {
+                  currentMediaType = 'screenshot';
+                  currentMediaIndex = i;
+                }}
+              >
+                <img
+                  src={ensureHttps(screenshot.thumbnail)}
+                  alt="Screenshot {i + 1}"
+                  width="1920"
+                  height="1080"
+                  class="block h-12 w-auto object-contain"
+                />
+              </button>
+            {/each}
+          </div>
+        {/key}
+        {#if showNsfwBlur}
           <button
-            class="block h-0 grow bg-black"
-            onclick={() => {
-              currentModalScreenshot = currentMediaIndex;
-              showModal = true;
-            }}
-            >{#key currentMediaIndex}
-              <img
-                src={currentMediaIndex < game.screenshots.length
-                  ? ensureHttps(game.screenshots[currentMediaIndex].src)
-                  : ''}
-                alt="Screenshot"
-                width="1920"
-                height="1080"
-                class="h-full w-full object-contain"
-              />
-            {/key}
+            class="absolute inset-0 flex flex-col items-center justify-center bg-card-background-2/50 text-card-foreground backdrop-blur-lg"
+            onclick={() => (showNsfwBlur = false)}
+          >
+            <p>This game is marked as having:</p>
+            <ul class="list-inside list-disc text-left">
+              {#each game.contentDescriptors as descriptor}
+                <li>{getContentDescriptorText(descriptor)}</li>
+              {/each}
+            </ul>
+            <p class="pt-4 font-semibold">Click to remove blur</p>
           </button>
         {/if}
-        {#if currentMediaType === 'trailer' && game.trailers.length > 0}
-          {@const currentTrailer = game.trailers[currentMediaIndex]}
-          <!-- svelte-ignore a11y_media_has_caption -->
-          <video
-            width="1920"
-            height="1080"
-            controls
-            class=" block h-0 w-full grow bg-black object-contain"
-          >
-            {#if currentTrailer.webm}
-              <source src={ensureHttps(currentTrailer.webm)} type="video/webm" />
-            {/if}
-            {#if currentTrailer.mp4}
-              <source src={ensureHttps(currentTrailer.mp4)} type="video/mp4" />
-            {/if}
-          </video>
-        {/if}
-        <div class="flex overflow-x-auto">
-          {#each game.trailers as trailer, i}
-            <button
-              class="relative shrink-0 border-2 border-foreground/0 {currentMediaType ===
-                'trailer' && currentMediaIndex === i
-                ? 'border-foreground/100'
-                : ''}"
-              onclick={() => {
-                currentMediaType = 'trailer';
-                currentMediaIndex = i;
-              }}
-            >
-              <img
-                src={trailer.thumbnail}
-                alt="Trailer {i + 1}"
-                width="1920"
-                height="1080"
-                class="block h-12 w-auto object-contain"
-              />
-              <div class="absolute inset-0 flex items-center justify-center">
-                <img src={iconVideoImage} alt="" width="32" height="32" />
-              </div>
-            </button>
-          {/each}
-          {#each game.screenshots as screenshot, i}
-            <button
-              class="shrink-0 border-2 border-foreground/0 {currentMediaType === 'screenshot' &&
-              currentMediaIndex === i
-                ? 'border-foreground/100'
-                : ''}"
-              onclick={() => {
-                currentMediaType = 'screenshot';
-                currentMediaIndex = i;
-              }}
-            >
-              <img
-                src={ensureHttps(screenshot.thumbnail)}
-                alt="Screenshot {i + 1}"
-                width="1920"
-                height="1080"
-                class="block h-12 w-auto object-contain"
-              />
-            </button>
-          {/each}
-        </div>
-      {/key}
+      </div>
       <div class="flex flex-col items-end justify-between gap-2 md:flex-row md:items-center">
         <h2 class="w-full truncate px-4 text-white md:text-xl" title={game.name}>{game.name}</h2>
         <div class="flex shrink-0 items-center gap-2 bg-black p-1">
