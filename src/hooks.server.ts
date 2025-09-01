@@ -14,14 +14,14 @@ if (import.meta.env.PROD && !building) {
   await generateDailies();
 
   CronJob.from({
-    cronTime: '00 12 00 * * *',
+    cronTime: '00 06 00 * * *',
     onTick: generateDailies,
     start: true,
     utcOffset: 0,
   });
 
   CronJob.from({
-    cronTime: '00 06 00 * * mon',
+    cronTime: '00 01 00 * * mon',
     onTick: fetchApps,
     start: true,
     utcOffset: 0,

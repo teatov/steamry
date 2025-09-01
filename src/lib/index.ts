@@ -3,16 +3,26 @@ import type { Game } from './server/db/schema';
 export const STORE_PAGE_URL = 'https://store.steampowered.com/app';
 export const MIN_REVIEWS = 20;
 
-export function getTodayDate() {
-  const date = new Date();
+export function getDateDay(dateTime: Date) {
+  const date = new Date(dateTime);
   date.setUTCHours(0, 0, 0, 0);
   return date;
+}
+
+export function getTodayDate() {
+  return getDateDay(new Date());
 }
 
 export function getTomorrowDate(date: Date, shift: number = 1) {
   const tomorrow = new Date(date);
   tomorrow.setDate(tomorrow.getDate() + shift);
   return tomorrow;
+}
+
+export function getTimezoneDate(offsetMinutes: number) {
+  const date = new Date();
+  date.setTime(date.getTime() - offsetMinutes * 60 * 1000);
+  return getDateDay(date);
 }
 
 export function getScore(game: Game) {

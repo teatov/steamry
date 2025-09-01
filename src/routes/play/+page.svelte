@@ -163,7 +163,7 @@
   <main class="flex h-full items-center justify-center">
     <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
       {@render resultsIndicator()}
-      <div class="mt-2 text-center text-4xl text-card-foreground">
+      <div class="mt-2 text-center text-4xl font-semibold text-card-foreground">
         {correctGuesses}/{data.rounds.length}
         <button
           title="Copy results"
@@ -212,13 +212,6 @@
           </li>
         {/each}
       </ul>
-      <div class="mt-4 text-center text-card-foreground">Next game will arrive at:</div>
-      <div class="text-center text-xl text-primary-foreground">
-        {getTomorrowDate(data.date).toLocaleString(undefined, {
-          timeStyle: 'short',
-          dateStyle: 'short',
-        })} (your timezone)
-      </div>
       <div class="mt-6 text-right">
         <a
           href="/"

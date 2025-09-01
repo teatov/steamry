@@ -18,11 +18,13 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
   }
 
   const date = new Date(data.date);
+  const todayDate = getTodayDate();
 
   if (
     !(
-      date.getTime() === getTodayDate().getTime() ||
-      date.getTime() === getTomorrowDate(getTodayDate(), -1).getTime()
+      date.getTime() === todayDate.getTime() ||
+      date.getTime() === getTomorrowDate(todayDate).getTime() ||
+      date.getTime() === getTomorrowDate(todayDate, -1).getTime()
     )
   ) {
     throw error(400);
