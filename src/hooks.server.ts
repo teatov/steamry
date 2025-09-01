@@ -21,7 +21,7 @@ if (import.meta.env.PROD && !building) {
   });
 
   CronJob.from({
-    cronTime: '00 06 00 * * 1',
+    cronTime: '00 06 00 * * mon',
     onTick: fetchApps,
     start: true,
     utcOffset: 0,
