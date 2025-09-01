@@ -1,6 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
+import { STORE_PAGE_URL } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
@@ -31,5 +32,14 @@ export const POST: RequestHandler = async ({ request }) => {
 
   daily.games = daily.games.toSorted((a, b) => a.round - b.round);
 
-  return json(daily);
+  return json({
+    storePages: daily.games.reduce(
+      (acc, curr) => {
+        acc[curr.name] = `${STORE_PAGE_URL}/${curr.appid}`;
+        return acc;
+      },
+      {} as Record<string, string>,
+    ),
+    daily,
+  });
 };
