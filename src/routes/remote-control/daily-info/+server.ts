@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { asc, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
@@ -17,11 +17,11 @@ export const POST: RequestHandler = async ({ request }) => {
     throw error(402, "Field 'date' is missing");
   }
 
-  let daily: (schema.Daily & { games: Partial<schema.Game>[] }) | undefined;
+  let daily: (schema.Daily & { games: schema.Game[] }) | undefined;
   try {
     daily = await db.query.dailies.findFirst({
       where: eq(schema.dailies.date, new Date(date)),
-      with: { games: { orderBy: asc(schema.games.round) } },
+      with: { games: true },
     });
   } catch (err) {
     throw error(500, String(err));
@@ -30,6 +30,8 @@ export const POST: RequestHandler = async ({ request }) => {
   if (!daily) {
     throw error(404, `Daily for ${new Date(date).toISOString()} not found`);
   }
+
+  daily.games = daily.games.toSorted((a, b) => a.round - b.round);
 
   return json(daily);
 };
