@@ -8,6 +8,7 @@ import {
   json,
   date,
   primaryKey,
+  timestamp,
 } from 'drizzle-orm/pg-core';
 import type { ContentDescriptor } from '$lib';
 
@@ -70,3 +71,13 @@ export const dailiesRelations = relations(dailies, ({ many }) => ({
 
 export type Daily = typeof dailies.$inferSelect;
 export type NewDaily = typeof dailies.$inferInsert;
+
+export const eventLogs = pgTable('event_logs', {
+  id: serial().primaryKey(),
+  createdAt: timestamp({ mode: 'date' }).notNull().defaultNow(),
+  type: varchar({ length: VARCHAR_LENGTH }).notNull(),
+  data: json(),
+});
+
+export type EventLog = typeof eventLogs.$inferSelect;
+export type NewEventLog = typeof eventLogs.$inferInsert;

@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { getTodayDate, getTomorrowDate } from '$lib';
 import makeNewDaily from '$lib/server/daily/make-new-daily';
@@ -13,7 +13,7 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 
   const tomorrow = getTomorrowDate(getTodayDate());
-  await makeNewDaily(tomorrow);
+  makeNewDaily(tomorrow);
 
-  return new Response(':)');
+  return json({ message: `Started generating daily for ${tomorrow}...` });
 };

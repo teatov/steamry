@@ -1,6 +1,7 @@
 import { count, sql } from 'drizzle-orm';
 import { db } from '../db';
 import * as schema from '../db/schema';
+import { saveEventLog } from '../event-logs';
 
 const APP_LIST_URL = 'https://api.steampowered.com/ISteamApps/GetAppList/v2/';
 const CHUNK_SIZE = 20_000;
@@ -38,9 +39,16 @@ export default async function fetchApps(onlyIfEmpty: boolean = false) {
       }
     });
 
+    await saveEventLog('fetch-apps-finished', { appsTotal: steamApps.length });
+
     console.log('Done!');
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+    try {
+      await saveEventLog('fetch-apps-failed', { message: String(err) });
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 

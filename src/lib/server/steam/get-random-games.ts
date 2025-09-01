@@ -1,6 +1,7 @@
 import { eq, max, min } from 'drizzle-orm';
 import { db } from '../db';
 import * as schema from '../db/schema';
+import { saveEventLog } from '../event-logs';
 import fetchGameInfo from './fetch-game-info';
 
 const MAX_ATTEMPTS = 300;
@@ -9,12 +10,14 @@ export default async function getRandomGames(
   amount: number,
 ): Promise<schema.NewGameInfoOnly[] | null> {
   try {
-    const minMaxIdResult = (await db
-      .select({
-        minId: min(schema.steamApps.id),
-        maxId: max(schema.steamApps.id),
-      })
-      .from(schema.steamApps))[0];
+    const minMaxIdResult = (
+      await db
+        .select({
+          minId: min(schema.steamApps.id),
+          maxId: max(schema.steamApps.id),
+        })
+        .from(schema.steamApps)
+    )[0];
 
     const { minId, maxId } = minMaxIdResult;
     if (minId === null || maxId === null) {
@@ -25,8 +28,12 @@ export default async function getRandomGames(
     let attempts = 0;
     const usedIds: number[] = [];
 
-    while (games.length < amount && attempts < MAX_ATTEMPTS) {
+    while (games.length < amount) {
       attempts += 1;
+      if (attempts > MAX_ATTEMPTS) {
+        throw new Error(`Exceeded ${MAX_ATTEMPTS} attempts`);
+      }
+
       const id = Math.floor(Math.random() * (maxId - minId + 1)) + minId;
 
       if (usedIds.includes(id)) {
@@ -50,8 +57,13 @@ export default async function getRandomGames(
     }
 
     return games;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
+    try {
+      await saveEventLog('get-random-games-failed', { message: String(err) });
+    } catch (e) {
+      console.error(e);
+    }
     return null;
   }
 }
