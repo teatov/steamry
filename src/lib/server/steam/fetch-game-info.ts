@@ -3,6 +3,7 @@ import * as schema from '../db/schema';
 
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
+const WAIT_TIME_SECONDS = 60;
 
 export default async function fetchGameInfo(appid: string): Promise<schema.NewGameInfoOnly | null> {
   const detailsUrl = new URL(APP_DETAILS_URL);
@@ -11,6 +12,10 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   const detailsResponse = await fetch(detailsUrl);
   if (!detailsResponse.ok) {
     console.error(`App ${appid} details ${detailsResponse.status} ${detailsResponse.statusText}`);
+    if (detailsResponse.status === 429) {
+      console.log(`Waiting ${WAIT_TIME_SECONDS}s due to rate limit...`);
+      await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_SECONDS * 1000));
+    }
     return null;
   }
 
@@ -54,6 +59,10 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   const reviewsResponse = await fetch(reviewsUrl);
   if (!reviewsResponse.ok) {
     console.error(`App ${appid} details ${reviewsResponse.status} ${reviewsResponse.statusText}`);
+    if (detailsResponse.status === 429) {
+      console.log(`Waiting ${WAIT_TIME_SECONDS}s due to rate limit...`);
+      await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_SECONDS * 1000));
+    }
     return null;
   }
 
