@@ -29,7 +29,12 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 
   try {
-    return json(await query);
+    return json(
+      (await query).map((result) => ({
+        ...result,
+        guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
+      })),
+    );
   } catch (err) {
     throw error(500, String(err));
   }
