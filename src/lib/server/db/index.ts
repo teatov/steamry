@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-if (!import.meta.env.PROD) {
+if (!import.meta.env || !import.meta.env.PROD) {
   dotenv.config();
 }
 
