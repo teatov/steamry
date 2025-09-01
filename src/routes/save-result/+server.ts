@@ -1,12 +1,17 @@
 import { error } from '@sveltejs/kit';
 import crypto from 'crypto';
 import { eq } from 'drizzle-orm';
+import { env } from '$env/dynamic/private';
 import { getTodayDate, getTomorrowDate, type ResultBody } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, getClientAddress }) => {
+  if (request.headers.get('origin') !== env.ORIGIN) {
+    throw error(403);
+  }
+
   const data = await request.json();
   if (!isResult(data)) {
     throw error(400);
@@ -20,7 +25,7 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
       date.getTime() === getTomorrowDate(getTodayDate(), -1).getTime()
     )
   ) {
-    throw error(403);
+    throw error(400);
   }
 
   const daily = await db.query.dailies.findFirst({
