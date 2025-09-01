@@ -14,11 +14,12 @@ export const POST: RequestHandler = async ({ request }) => {
   if (!key || key !== env.REMOTE_CONTROL_KEY) {
     throw error(401);
   }
-  if (!appid) {
-    throw error(400, "Field 'appid' is missing");
+  if (!appid || !data) {
+    throw error(400, "Field 'appid' or 'data' are missing");
   }
-  if (!data) {
-    throw error(400, "Field 'data' is missing");
+  const keys = Object.keys(data) as (keyof schema.Game)[];
+  if (keys.includes('appid') || keys.includes('dailyId') || keys.includes('round')) {
+    throw error(400, "Cannot modify 'appid', 'dailyId' or 'round'");
   }
 
   try {
