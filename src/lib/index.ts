@@ -31,6 +31,14 @@ export function getScore(game: Game) {
   );
 }
 
+export function getMaxScore(games: Game[]) {
+  return getScore(
+    games.reduce(function (prev, current) {
+      return prev && getScore(prev) > getScore(current) ? prev : current;
+    }),
+  );
+}
+
 export function makeSaveDataKey(date: Date) {
   return date.toISOString().split('T')[0];
 }

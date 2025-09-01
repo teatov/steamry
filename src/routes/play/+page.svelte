@@ -2,8 +2,8 @@
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
   import {
+    getMaxScore,
     getScore,
-    getTomorrowDate,
     makeSaveDataKey,
     STORE_PAGE_URL,
     type ResultBody,
@@ -55,14 +55,6 @@
 
   function isCorrect(game: Game) {
     return getScore(game) === maxGameScore;
-  }
-
-  function getMaxScore(games: Game[]) {
-    return getScore(
-      games.reduce(function (prev, current) {
-        return prev && getScore(prev) > getScore(current) ? prev : current;
-      }),
-    );
   }
 
   async function guess(game: Game) {
