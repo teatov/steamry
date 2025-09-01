@@ -21,7 +21,7 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   }
 
   const appDetails = detailsResult[appid].data;
-  if (appDetails.type != 'game') {
+  if (appDetails.type !== 'game') {
     console.error(`App ${appid} is not a game`);
     return null;
   }
@@ -58,7 +58,7 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   }
 
   const reviewsResult = (await reviewsResponse.json()) as AppReviewsResponse;
-  if (reviewsResult.success != 1 || !reviewsResult.query_summary) {
+  if (reviewsResult.success !== 1 || !reviewsResult.query_summary) {
     console.error(`App ${appid} reviews fetch failed`);
     return null;
   }

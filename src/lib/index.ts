@@ -9,9 +9,9 @@ export function getTodayDate() {
   return date;
 }
 
-export function getTomorrowDate(date: Date) {
+export function getTomorrowDate(date: Date, shift: number = 1) {
   const tomorrow = new Date(date);
-  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate() + shift);
   return tomorrow;
 }
 
@@ -66,3 +66,5 @@ export enum ContentDescriptor {
 }
 
 export type Round = { round: number; games: Game[] };
+
+export type ResultBody = { guesses: boolean[]; date: string };

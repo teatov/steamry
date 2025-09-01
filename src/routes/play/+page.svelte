@@ -1,7 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
-  import { getScore, getTomorrowDate, makeSaveDataKey, STORE_PAGE_URL, type Round } from '$lib';
+  import {
+    getScore,
+    getTomorrowDate,
+    makeSaveDataKey,
+    STORE_PAGE_URL,
+    type ResultBody,
+    type Round,
+  } from '$lib';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
@@ -9,8 +16,7 @@
   import type { PageProps } from './$types';
   import GamePanel from './game-panel.svelte';
 
-  type Results = boolean[];
-  type SaveData = Record<string, Results>;
+  type SaveData = Record<string, boolean[]>;
   const SAVE_DATA = 'save_data';
 
   let { data }: PageProps = $props();
@@ -18,14 +24,14 @@
   let saveData: SaveData = {};
   const saveDataKey = makeSaveDataKey(data.date);
 
-  let results = $state<Results>([]);
+  let guesses = $state<boolean[]>([]);
   let currentRound = $state<number | null>(null);
   let reveal = $state<boolean>(false);
   let finished = $state<boolean>(false);
 
   let round = $derived<Round | null>(currentRound !== null ? data.rounds[currentRound] : null);
   let maxGameScore = $derived<number>(round ? getMaxScore(round.games) : 0);
-  let correctGuesses = $derived<number>(results.filter((value) => value).length);
+  let correctGuesses = $derived<number>(guesses.filter((value) => value).length);
 
   onMount(() => {
     const saveDataString = localStorage.getItem(SAVE_DATA);
@@ -36,9 +42,9 @@
     }
 
     if (saveData[saveDataKey]) {
-      results = saveData[saveDataKey];
-      if (results.length < data.rounds.length) {
-        currentRound = results.length;
+      guesses = saveData[saveDataKey];
+      if (guesses.length < data.rounds.length) {
+        currentRound = guesses.length;
       } else {
         finished = true;
       }
@@ -64,11 +70,22 @@
       return;
     }
 
-    results.push(isCorrect(game));
+    guesses.push(isCorrect(game));
     reveal = true;
 
-    saveData[saveDataKey] = results;
+    saveData[saveDataKey] = guesses;
     localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
+
+    if (currentRound + 1 >= data.rounds.length) {
+      const resultBody: ResultBody = { date: data.date.toISOString(), guesses };
+      fetch('/save-result', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resultBody),
+      });
+    }
 
     await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
 
@@ -81,10 +98,10 @@
   }
 
   async function copyResults() {
-    const guesses = results.map((value) => (value ? '🟩' : '🟥')).join('');
-    const guessesAmount = `${correctGuesses}/${data.rounds.length}`;
+    const guessEmojis = guesses.map((value) => (value ? '🟩' : '🟥')).join('');
+    const guessesTotal = `${correctGuesses}/${data.rounds.length}`;
     const date = data.date.toISOString().split('T')[0];
-    const resulstsText = `${guesses} ${guessesAmount} | ${date} | ${env.PUBLIC_ORIGIN}`;
+    const resulstsText = `${guessEmojis} ${guessesTotal} | ${date} | ${env.PUBLIC_ORIGIN}`;
     try {
       await navigator.clipboard.writeText(resulstsText);
     } catch (err) {
@@ -97,15 +114,15 @@
   <ul class="flex w-full justify-stretch gap-2">
     {#each data.rounds as _, i}
       <div
-        aria-label={i < results.length ? (results[i] ? 'Correct' : 'Incorrect') : 'No guess'}
-        class="flex h-6 w-full items-center justify-center rounded-xs text-white {i < results.length
-          ? results[i]
+        aria-label={i < guesses.length ? (guesses[i] ? 'Correct' : 'Incorrect') : 'No guess'}
+        class="flex h-6 w-full items-center justify-center rounded-xs text-white {i < guesses.length
+          ? guesses[i]
             ? 'bg-accent-background-1'
             : 'bg-danger-foreground'
           : 'bg-card-background-2'}"
       >
-        {#if i < results.length}
-          {#if results[i]}
+        {#if i < guesses.length}
+          {#if guesses[i]}
             <IconCheck />
           {:else}
             <IconX />
@@ -159,12 +176,12 @@
         {#each data.rounds as round, i}
           {@const roundMaxScore = getMaxScore(round.games)}
           <li
-            aria-label={results[i] ? 'Correct' : 'Incorrect'}
-            class="flex gap-8 px-2 {results[i]
+            aria-label={guesses[i] ? 'Correct' : 'Incorrect'}
+            class="flex gap-8 px-2 {guesses[i]
               ? 'bg-accent-background-1/25'
               : 'bg-danger-foreground/25'}"
           >
-            {#if results[i]}
+            {#if guesses[i]}
               <IconCheck />
             {:else}
               <IconX />

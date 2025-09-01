@@ -61,13 +61,13 @@ type AppListResponse = {
 function isAppListResponse(data: unknown): data is AppListResponse {
   return (
     typeof data === 'object' &&
-    data != null &&
+    data !== null &&
     'applist' in data &&
     typeof data.applist === 'object' &&
-    data.applist != null &&
+    data.applist !== null &&
     'apps' in data.applist &&
     typeof data.applist.apps === 'object' &&
-    data.applist.apps != null &&
+    data.applist.apps !== null &&
     Array.isArray(data.applist.apps) &&
     data.applist.apps.length > 0
   );

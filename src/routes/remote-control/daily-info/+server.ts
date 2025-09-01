@@ -13,7 +13,7 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 
   if (!date) {
-    throw error(402, "Field 'date' is missing");
+    throw error(400, "Field 'date' is missing");
   }
 
   let daily: (schema.Daily & { games: schema.Game[] }) | undefined;

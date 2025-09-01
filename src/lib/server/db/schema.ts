@@ -73,11 +73,28 @@ export const dailiesRelations = relations(dailies, ({ many }) => ({
 export type Daily = typeof dailies.$inferSelect;
 export type NewDaily = typeof dailies.$inferInsert;
 
+export const results = pgTable(
+  'results',
+  {
+    dailyId: integer()
+      .notNull()
+      .references(() => dailies.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    ipHashed: text().notNull(),
+    createdAt: timestamp({ mode: 'date' }).notNull().defaultNow(),
+    correctGuesses: integer().notNull(),
+    guesses: json().$type<boolean[]>().notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.dailyId, t.ipHashed] })],
+);
+
+export type Result = typeof results.$inferSelect;
+export type NewResult = typeof results.$inferInsert;
+
 export const eventLogs = pgTable('event_logs', {
   id: serial().primaryKey(),
   createdAt: timestamp({ mode: 'date' }).notNull().defaultNow(),
   type: varchar({ length: VARCHAR_LENGTH }).notNull(),
-  data: json(),
+  data: json().notNull(),
 });
 
 export type EventLog = typeof eventLogs.$inferSelect;
