@@ -11,7 +11,7 @@ export default async function generateDailies() {
     await makeNewDaily(today);
   } else {
     console.log(`
-    \nDaily for ${today.toISOString().split('T')[0]} already exists`);
+    \nDaily for ${today.toISOString()} already exists`);
   }
 
   const tomorrow = getTomorrowDate(today);
@@ -21,6 +21,6 @@ export default async function generateDailies() {
   if (!tomorrowDaily) {
     await makeNewDaily(tomorrow);
   } else {
-    console.log(`\nDaily for ${tomorrow.toISOString().split('T')[0]} already exists`);
+    console.log(`\nDaily for ${tomorrow.toISOString()} already exists`);
   }
 }

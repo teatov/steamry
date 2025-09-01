@@ -9,7 +9,7 @@ const GAMES_PER_ROUND = 2;
 
 export default async function makeNewDaily(date: Date) {
   try {
-    console.log(`\nMaking daily for ${date.toISOString().split('T')[0]}`);
+    console.log(`\nMaking daily for ${date.toISOString()}`);
 
     const gameInfos = await getRandomGames(ROUNDS * GAMES_PER_ROUND);
     if (!gameInfos || gameInfos.length === 0) {
