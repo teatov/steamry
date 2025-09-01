@@ -10,7 +10,7 @@ if (import.meta.env.PROD && !building) {
   await migrate(db, { migrationsFolder: './drizzle' });
   console.log('Migrations done!');
 
-  await fetchApps();
+  await fetchApps(true);
   await generateDailies();
 
   CronJob.from({

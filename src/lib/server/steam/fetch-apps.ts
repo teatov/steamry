@@ -1,12 +1,20 @@
-import { sql } from 'drizzle-orm';
+import { count, sql } from 'drizzle-orm';
 import { db } from '../db';
 import * as schema from '../db/schema';
 
 const APP_LIST_URL = 'https://api.steampowered.com/ISteamApps/GetAppList/v2/';
 const CHUNK_SIZE = 20_000;
 
-export default async function fetchApps() {
+export default async function fetchApps(onlyIfEmpty: boolean = false) {
   try {
+    if (onlyIfEmpty) {
+      const { rows } = (await db.select({ rows: count() }).from(schema.steamApps))[0];
+      if (rows > 0) {
+        console.log('Steam apps already fetched!');
+        return;
+      }
+    }
+
     const response = await fetch(APP_LIST_URL);
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText}`);
