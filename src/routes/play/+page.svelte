@@ -76,7 +76,9 @@
     saveData[saveDataKey] = guesses;
     localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
 
-    if (currentRound + 1 >= data.rounds.length) {
+    const canAdvance = currentRound + 1 < data.rounds.length;
+
+    if (!canAdvance) {
       const resultBody: ResultBody = { date: data.date.toISOString(), guesses };
       fetch('/save-result', {
         method: 'POST',
@@ -90,7 +92,7 @@
     await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
 
     reveal = false;
-    if (currentRound + 1 < data.rounds.length) {
+    if (canAdvance) {
       currentRound++;
     } else {
       finished = true;
