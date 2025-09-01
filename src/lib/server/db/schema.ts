@@ -79,8 +79,8 @@ export const results = pgTable(
     dailyId: integer()
       .notNull()
       .references(() => dailies.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-    ipHashed: text().notNull(),
     createdAt: timestamp({ mode: 'date' }).notNull().defaultNow(),
+    ipHashed: text().notNull(),
     correctGuesses: integer().notNull(),
     guesses: json().$type<boolean[]>().notNull(),
   },

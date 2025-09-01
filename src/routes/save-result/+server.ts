@@ -51,7 +51,9 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
     throw error(400);
   }
 
-  const ipHashed = crypto.createHash('sha1').update(getClientAddress()).digest('base64');
+  const cipher = crypto.createCipheriv('aes-256-cbc', env.SECRET_KEY, env.SECRET_IV);
+  const cipherUpdated = cipher.update(getClientAddress(), 'utf8', 'base64');
+  const ipHashed = cipherUpdated + cipher.final('base64');
 
   await db
     .insert(schema.results)

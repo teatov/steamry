@@ -7,7 +7,7 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
   const { key, from, to } = (await request.json()) as { key?: string; from?: string; to?: string };
-  if (!key || key !== env.SECRET_KEY) {
+  if (!key || key !== env.REMOTE_CONTROL_KEY) {
     throw error(401);
   }
 
