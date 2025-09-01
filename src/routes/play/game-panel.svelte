@@ -154,12 +154,16 @@
             class="absolute inset-0 flex flex-col items-center justify-center bg-card-background-2/50 text-card-foreground backdrop-blur-lg"
             onclick={() => (showNsfwBlur = false)}
           >
-            <p>This game is marked as having:</p>
-            <ul class="list-inside list-disc text-left">
-              {#each game.contentDescriptors as descriptor}
-                <li>{getContentDescriptorText(descriptor)}</li>
-              {/each}
-            </ul>
+            {#if game.contentDescriptors.length > 0}
+              <p>This game is marked as having:</p>
+              <ul class="list-inside list-disc text-left">
+                {#each game.contentDescriptors as descriptor}
+                  <li>{getContentDescriptorText(descriptor)}</li>
+                {/each}
+              </ul>
+            {:else}
+              <p>This game is marked as Not Safe For Work.</p>
+            {/if}
             <p class="pt-4 font-semibold">Click to remove blur</p>
           </button>
         {/if}
