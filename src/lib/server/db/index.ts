@@ -3,7 +3,9 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from './schema';
 
-dotenv.config();
+if (!import.meta.env.PROD) {
+  dotenv.config();
+}
 
 const client = postgres({
   database: process.env.DB_DATABASE!,
