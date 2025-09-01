@@ -4,6 +4,10 @@
   import logoImage from '$lib/assets/logo.png';
 </script>
 
+<svelte:head>
+  <title>Steamry - A daily Steam review ratio guessing game</title>
+</svelte:head>
+
 <main class="flex h-full items-center justify-center">
   <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
     <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white">

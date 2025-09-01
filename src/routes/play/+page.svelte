@@ -104,6 +104,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Steamry - Daily</title>
+</svelte:head>
+
 {#snippet resultsIndicator()}
   <ul class="flex w-full justify-stretch gap-2">
     {#each data.rounds as _, i}
