@@ -7,7 +7,11 @@
   let { children } = $props();
 
   onMount(() => {
-    Cookies.set(TZ_COOKIE, new Date().getTimezoneOffset().toString(), { expires: 365 });
+    Cookies.set(TZ_COOKIE, new Date().getTimezoneOffset().toString(), {
+      expires: 365,
+      sameSite: 'strict',
+      secure: true,
+    });
   });
 </script>
 
