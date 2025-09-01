@@ -204,6 +204,7 @@
           </li>
         {/each}
       </ul>
+      <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
       <div class="mt-6 text-right">
         <a
           href="/"
