@@ -8,6 +8,6 @@
   stroke-width="2"
   stroke-linecap="round"
   stroke-linejoin="round"
-  class="inline -mt-1"
+  class="-mt-1 inline"
   ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg
 >

@@ -5,8 +5,6 @@ import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
 
-// /remote-control/event-logs
-
 export const POST: RequestHandler = async ({ request }) => {
   const { key, from, to } = (await request.json()) as { key?: string; from?: string; to?: string };
   if (!key || key !== env.SECRET_KEY) {

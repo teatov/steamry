@@ -5,8 +5,6 @@ import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
 
-// /remote-control/daily-info
-
 export const POST: RequestHandler = async ({ request }) => {
   const { key, date } = (await request.json()) as { key?: string; date?: string };
   if (!key || key !== env.SECRET_KEY) {
