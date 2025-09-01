@@ -57,29 +57,29 @@
     <div class="flex w-0 grow flex-col space-y-2 pb-2">
       <div class="relative flex grow flex-col space-y-2">
         {#key game.appid}
-          {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
-            <button
-              class="block h-0 grow bg-black"
-              onclick={() => {
-                currentModalScreenshot = currentMediaIndex;
-                showModal = true;
-              }}
-              >{#key currentMediaIndex}
-                <img
-                  src={currentMediaIndex < game.screenshots.length
-                    ? ensureHttps(game.screenshots[currentMediaIndex].src)
-                    : ''}
-                  alt="Screenshot"
-                  width="1920"
-                  height="1080"
-                  class="h-full w-full object-contain"
-                />
-              {/key}
-            </button>
-          {/if}
-          {#if currentMediaType === 'trailer' && game.trailers.length > 0}
-            <!-- svelte-ignore a11y_media_has_caption -->
-            {#key currentMediaIndex}
+          {#key currentMediaIndex}
+            {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
+              <button
+                class="block h-0 grow bg-black"
+                onclick={() => {
+                  currentModalScreenshot = currentMediaIndex;
+                  showModal = true;
+                }}
+                >{#key currentMediaIndex}
+                  <img
+                    src={currentMediaIndex < game.screenshots.length
+                      ? ensureHttps(game.screenshots[currentMediaIndex].src)
+                      : ''}
+                    alt="Screenshot"
+                    width="1920"
+                    height="1080"
+                    class="h-full w-full object-contain"
+                  />
+                {/key}
+              </button>
+            {/if}
+            {#if currentMediaType === 'trailer' && game.trailers.length > 0}
+              <!-- svelte-ignore a11y_media_has_caption -->
               <video
                 width="1920"
                 height="1080"
@@ -100,8 +100,8 @@
                   />
                 {/if}
               </video>
-            {/key}
-          {/if}
+            {/if}
+          {/key}
           <div class="flex overflow-x-auto">
             {#each game.trailers as trailer, i}
               <button
