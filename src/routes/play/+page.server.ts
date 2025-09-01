@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { getTimezoneDate, getTodayDate, type Round } from '$lib';
+import { getTimezoneDate, getTodayDate, TZ_COOKIE, type Round } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
@@ -8,11 +8,11 @@ export const load: PageServerLoad = async ({ cookies }) => {
   let date = getTodayDate();
 
   const timezone =
-    cookies.get('TZ') !== undefined && !Number.isNaN(Number(cookies.get('TZ')))
-      ? Number(cookies.get('TZ'))
+    cookies.get(TZ_COOKIE) !== undefined && !Number.isNaN(Number(cookies.get(TZ_COOKIE)))
+      ? Number(cookies.get(TZ_COOKIE))
       : null;
   if (timezone !== null && timezone >= -14 * 60 && timezone <= 12 * 60) {
-    date = getTimezoneDate(Number(cookies.get('TZ')));
+    date = getTimezoneDate(Number(cookies.get(TZ_COOKIE)));
   }
 
   const rounds = await getRounds(date);

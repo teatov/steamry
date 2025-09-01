@@ -2,6 +2,7 @@ import type { Game } from './server/db/schema';
 
 export const STORE_PAGE_URL = 'https://store.steampowered.com/app';
 export const MIN_REVIEWS = 20;
+export const TZ_COOKIE = 'TZ';
 
 export function getDateDay(dateTime: Date) {
   const date = new Date(dateTime);
