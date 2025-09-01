@@ -60,7 +60,7 @@
           {#key currentMediaIndex}
             {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
               <button
-                class="block h-0 grow bg-black"
+                class="block h-0 grow cursor-zoom-in bg-black"
                 onclick={() => {
                   currentModalScreenshot = currentMediaIndex;
                   showModal = true;
@@ -70,7 +70,7 @@
                     src={currentMediaIndex < game.screenshots.length
                       ? ensureHttps(game.screenshots[currentMediaIndex].src)
                       : ''}
-                    alt="Screenshot"
+                    alt="Screenshot {currentMediaIndex + 1}"
                     width="1920"
                     height="1080"
                     class="h-full w-full object-contain"
@@ -294,7 +294,7 @@
           onclick={() => changeModalScreenshot(-1)}>Prev</button
         >
         <div class="text-sm text-card-foreground">
-          {currentModalScreenshot + 1}/{game.screenshots.length}
+          {currentModalScreenshot + 1} of {game.screenshots.length} screenshots
         </div>
         <button
           class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
