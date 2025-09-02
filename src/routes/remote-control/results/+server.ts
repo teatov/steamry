@@ -15,6 +15,7 @@ export const POST: RequestHandler = async ({ request }) => {
     .select({
       date: schema.dailies.date,
       createdAt: schema.results.createdAt,
+      ipHashed: schema.results.ipHashed,
       correctGuesses: schema.results.correctGuesses,
       guesses: schema.results.guesses,
     })
@@ -33,9 +34,20 @@ export const POST: RequestHandler = async ({ request }) => {
       (await query).map((result) => ({
         ...result,
         guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
+        ipHashed: hashSum(result.ipHashed),
       })),
     );
   } catch (err) {
     throw error(500, String(err));
   }
 };
+
+function hashSum(string: string) {
+  let hash = 0;
+  for (let i = 0; i < string.length; i++) {
+    const char = string.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+  return hash;
+}
