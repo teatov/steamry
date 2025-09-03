@@ -6,7 +6,12 @@ import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { key, from, to } = (await request.json()) as { key?: string; from?: string; to?: string };
+  const { key, from, to, date } = (await request.json()) as {
+    key?: string;
+    from?: string;
+    to?: string;
+    date?: string;
+  };
   if (!key || key !== env.REMOTE_CONTROL_KEY) {
     throw error(401);
   }
@@ -27,6 +32,9 @@ export const POST: RequestHandler = async ({ request }) => {
   }
   if (to) {
     query.where(lte(schema.results.createdAt, new Date(to)));
+  }
+  if (date) {
+    query.where(eq(schema.dailies.date, new Date(date)));
   }
 
   try {
