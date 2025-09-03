@@ -4,19 +4,28 @@ import * as schema from '../db/schema';
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
 const WAIT_TIME_SECONDS = 60;
+const RETRY_ATTEMPTS = 15;
 
 export default async function fetchGameInfo(appid: string): Promise<schema.NewGameInfoOnly | null> {
   const detailsUrl = new URL(APP_DETAILS_URL);
   detailsUrl.searchParams.set('appids', appid);
 
-  const detailsResponse = await fetch(detailsUrl);
-  if (!detailsResponse.ok) {
-    console.error(`App ${appid} details ${detailsResponse.status} ${detailsResponse.statusText}`);
-    if (detailsResponse.status === 429) {
-      console.log(`Waiting ${WAIT_TIME_SECONDS}s due to rate limit...`);
-      await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_SECONDS * 1000));
+  let detailsResponse: Response | null = null;
+  let detailsAttempts = 0;
+  while (detailsResponse === null) {
+    detailsAttempts++;
+    const response = await fetch(detailsUrl);
+    if (response.ok) {
+      detailsResponse = response;
+    } else {
+      console.error(`App ${appid} details ${response.status} ${response.statusText}`);
+      if (response.status === 429 && detailsAttempts <= RETRY_ATTEMPTS) {
+        console.log(`Waiting ${WAIT_TIME_SECONDS}s due to rate limit...`);
+        await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_SECONDS * 1000));
+      } else {
+        return null;
+      }
     }
-    return null;
   }
 
   const detailsResult = (await detailsResponse.json()) as AppDetailsResponse;
@@ -56,14 +65,22 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
   reviewsUrl.searchParams.set('purchase_type', 'all');
   reviewsUrl.searchParams.set('num_per_page', '0');
 
-  const reviewsResponse = await fetch(reviewsUrl);
-  if (!reviewsResponse.ok) {
-    console.error(`App ${appid} details ${reviewsResponse.status} ${reviewsResponse.statusText}`);
-    if (detailsResponse.status === 429) {
-      console.log(`Waiting ${WAIT_TIME_SECONDS}s due to rate limit...`);
-      await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_SECONDS * 1000));
+  let reviewsResponse: Response | null = null;
+  let reviewsAttempts = 0;
+  while (reviewsResponse === null) {
+    reviewsAttempts++;
+    const response = await fetch(reviewsUrl);
+    if (response.ok) {
+      reviewsResponse = response;
+    } else {
+      console.error(`App ${appid} reviews ${response.status} ${response.statusText}`);
+      if (response.status === 429 && reviewsAttempts <= RETRY_ATTEMPTS) {
+        console.log(`Waiting ${WAIT_TIME_SECONDS}s due to rate limit...`);
+        await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_SECONDS * 1000));
+      } else {
+        return null;
+      }
     }
-    return null;
   }
 
   const reviewsResult = (await reviewsResponse.json()) as AppReviewsResponse;
