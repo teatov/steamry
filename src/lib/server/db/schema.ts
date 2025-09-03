@@ -3,7 +3,6 @@ import {
   pgTable,
   serial,
   integer,
-  varchar,
   text,
   json,
   date,
@@ -13,12 +12,10 @@ import {
 } from 'drizzle-orm/pg-core';
 import type { ContentDescriptor } from '$lib';
 
-export const VARCHAR_LENGTH = 255;
-
 export const steamApps = pgTable('steam_apps', {
   id: serial().primaryKey(),
   appid: integer().unique().notNull(),
-  name: varchar({ length: VARCHAR_LENGTH }).notNull(),
+  name: text().notNull(),
 });
 
 export type SteamApp = typeof steamApps.$inferSelect;
@@ -95,7 +92,7 @@ export type NewResult = typeof results.$inferInsert;
 export const eventLogs = pgTable('event_logs', {
   id: serial().primaryKey(),
   createdAt: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  type: varchar({ length: VARCHAR_LENGTH }).notNull(),
+  type: text().notNull(),
   data: json().notNull(),
 });
 

@@ -3,8 +3,9 @@ import { db } from '../db';
 import * as schema from '../db/schema';
 import { saveEventLog } from '../event-logs';
 
-const APP_LIST_URL = 'https://api.steampowered.com/ISteamApps/GetAppList/v2/';
+const APP_LIST_URL = 'https://api.steampowered.com/IStoreService/GetAppList/v1/';
 const CHUNK_SIZE = 20_000;
+const RETRY_ATTEMPTS = 15;
 
 export default async function fetchApps(onlyIfEmpty: boolean = false) {
   try {
@@ -16,17 +17,48 @@ export default async function fetchApps(onlyIfEmpty: boolean = false) {
       }
     }
 
-    const response = await fetch(APP_LIST_URL);
-    if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+    let attempts = 0;
+    let finished = false;
+    let lastAppid = 0;
+    let steamApps: AppListResponse['response']['apps'] = [];
+
+    while (!finished) {
+      attempts++;
+      console.log(`Fetching ${CHUNK_SIZE} starting from ${lastAppid}`);
+      const detailsUrl = new URL(APP_LIST_URL);
+      detailsUrl.searchParams.set('key', process.env.STEAM_API_KEY!);
+      detailsUrl.searchParams.set('last_appid', lastAppid.toString());
+      detailsUrl.searchParams.set('max_results', CHUNK_SIZE.toString());
+      detailsUrl.searchParams.set('include_games', true.toString());
+      detailsUrl.searchParams.set('include_software', true.toString());
+
+      const response = await fetch(detailsUrl);
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      if (!isAppListResponse(result)) {
+        console.log(detailsUrl.href);
+        console.log(result);
+        if (attempts <= RETRY_ATTEMPTS) {
+          console.log('Unexpected response data. Retrying...');
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          continue;
+        } else {
+          throw new Error('Unexpected response data');
+        }
+      }
+
+      attempts = 0;
+      steamApps = steamApps.concat(result.response.apps);
+      finished = !result.response.have_more_results;
+      if (!finished && result.response.last_appid) {
+        lastAppid = result.response.last_appid;
+      }
     }
 
-    const result = await response.json();
-    if (!isAppListResponse(result)) {
-      throw new Error('Unexpected response data');
-    }
-
-    const steamApps = result.applist.apps;
+    console.log(`Total apps: ${steamApps.length}\n`);
 
     await db.transaction(async (tx) => {
       console.log('Truncating table...');
@@ -53,8 +85,10 @@ export default async function fetchApps(onlyIfEmpty: boolean = false) {
 }
 
 type AppListResponse = {
-  applist: {
-    apps: { appid: number; name: string }[];
+  response: {
+    apps: { appid: number; name: string; last_modified: number; price_change_number: number }[];
+    have_more_results?: boolean;
+    last_appid?: number;
   };
 };
 
@@ -62,13 +96,17 @@ function isAppListResponse(data: unknown): data is AppListResponse {
   return (
     typeof data === 'object' &&
     data !== null &&
-    'applist' in data &&
-    typeof data.applist === 'object' &&
-    data.applist !== null &&
-    'apps' in data.applist &&
-    typeof data.applist.apps === 'object' &&
-    data.applist.apps !== null &&
-    Array.isArray(data.applist.apps) &&
-    data.applist.apps.length > 0
+    'response' in data &&
+    typeof data.response === 'object' &&
+    data.response !== null &&
+    (!('have_more_results' in data.response) ||
+      ('have_more_results' in data.response &&
+        typeof data.response.have_more_results === 'boolean' &&
+        'last_appid' in data.response &&
+        typeof data.response.last_appid === 'number')) &&
+    'apps' in data.response &&
+    typeof data.response.apps === 'object' &&
+    data.response.apps !== null &&
+    Array.isArray(data.response.apps)
   );
 }
