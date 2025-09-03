@@ -36,6 +36,13 @@
       "when": 1756738277050,
       "tag": "0004_elite_xavin",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1756904329858,
+      "tag": "0005_misty_polaris",
+      "breakpoints": true
     }
   ]
 }
