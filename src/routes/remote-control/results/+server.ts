@@ -1,5 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { gte, lte, eq } from 'drizzle-orm';
+import HumanHasher from 'humanhash';
 import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
@@ -37,25 +38,17 @@ export const POST: RequestHandler = async ({ request }) => {
     query.where(eq(schema.dailies.date, new Date(date)));
   }
 
+  const humanhash = new HumanHasher()
+
   try {
     return json(
       (await query).map((result) => ({
         ...result,
         guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
-        ipHashed: hashSum(result.ipHashed),
+        ipHashed: humanhash.humanize(result.ipHashed),
       })),
     );
   } catch (err) {
     throw error(500, String(err));
   }
 };
-
-function hashSum(string: string) {
-  let hash = 0;
-  for (let i = 0; i < string.length; i++) {
-    const char = string.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash;
-  }
-  return hash;
-}
