@@ -23,10 +23,10 @@ export const POST: RequestHandler = async ({ request }) => {
     .leftJoin(schema.dailies, eq(schema.results.dailyId, schema.dailies.id))
     .$dynamic();
   if (from) {
-    query.where(gte(schema.eventLogs.createdAt, new Date(from)));
+    query.where(gte(schema.results.createdAt, new Date(from)));
   }
   if (to) {
-    query.where(lte(schema.eventLogs.createdAt, new Date(to)));
+    query.where(lte(schema.results.createdAt, new Date(to)));
   }
 
   try {
