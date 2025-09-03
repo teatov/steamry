@@ -21,7 +21,9 @@
         >higher percentage of positive reviews</span
       >.
     </p>
-    <p class="mt-2">Any game can appear, with the exception of:</p>
+    <p class="mt-2">
+      Any game can appear, <span class="font-semibold">with the exception of</span>:
+    </p>
     <ul class="list-inside list-disc">
       <li>Games with less than {MIN_REVIEWS} reviews</li>
       <li>
