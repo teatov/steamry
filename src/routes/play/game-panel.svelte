@@ -10,7 +10,7 @@
   import reviewPositiveImage from '$lib/assets/review-positive.png';
   import type { Game } from '$lib/server/db/schema';
 
-  const TRAILERS_IN_FRONT = 3;
+  const TRAILERS_IN_FRONT = 2;
 
   let {
     game,
