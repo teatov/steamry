@@ -60,7 +60,7 @@ export default async function getRandomGames(
   } catch (err) {
     console.error(err);
     try {
-      await saveEventLog('get-random-games-failed', { message: String(err) });
+      await saveEventLog('get-random-games-failed', { message: String(err).substring(0, 10_000) });
     } catch (e) {
       console.error(e);
     }

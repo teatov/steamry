@@ -30,13 +30,13 @@ export default async function makeNewDaily(date: Date) {
       await tx.insert(schema.games).values(games);
     });
 
-    await saveEventLog('make-new-daily-finished', { date, daily, games });
+    await saveEventLog('make-new-daily-finished', daily);
 
     console.log('Finished!');
   } catch (err) {
     console.error(err);
     try {
-      await saveEventLog('make-new-daily-failed', { message: String(err) });
+      await saveEventLog('make-new-daily-failed', { message: String(err).substring(0, 10_000) });
     } catch (e) {
       console.error(e);
     }

@@ -77,7 +77,7 @@ export default async function fetchApps(onlyIfEmpty: boolean = false) {
   } catch (err) {
     console.error(err);
     try {
-      await saveEventLog('fetch-apps-failed', { message: String(err) });
+      await saveEventLog('fetch-apps-failed', { message: String(err).substring(0, 10_000) });
     } catch (e) {
       console.error(e);
     }
