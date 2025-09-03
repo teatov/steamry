@@ -1,17 +1,19 @@
 import { error, json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import { getTodayDate, getTomorrowDate } from '$lib';
 import makeNewDaily from '$lib/server/daily/make-new-daily';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { key } = (await request.json()) as { key?: string };
+  const { key, date } = (await request.json()) as { key?: string; date?: string };
   if (!key || key !== env.REMOTE_CONTROL_KEY) {
     throw error(401);
   }
 
-  const tomorrow = getTomorrowDate(getTodayDate());
-  makeNewDaily(tomorrow);
+  if (!date || isNaN(new Date(date).getTime())) {
+    throw error(400, "Field 'date' is missing");
+  }
 
-  return json({ message: `Started generating daily for ${tomorrow.toISOString()}...` });
+  makeNewDaily(new Date(date));
+
+  return json({ message: `Started generating daily for ${new Date(date).toISOString()}...` });
 };
