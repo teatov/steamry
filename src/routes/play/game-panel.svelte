@@ -10,6 +10,8 @@
   import reviewPositiveImage from '$lib/assets/review-positive.png';
   import type { Game } from '$lib/server/db/schema';
 
+  const TRAILERS_IN_FRONT = 3;
+
   let {
     game,
     isCorrect,
@@ -104,7 +106,7 @@
             {/if}
           {/key}
           <div class="flex overflow-x-auto">
-            {#each game.trailers as trailer, i}
+            {#each game.trailers.slice(0, TRAILERS_IN_FRONT) as trailer, i}
               <button
                 class="relative shrink-0 border-2 border-foreground/0 {currentMediaType ===
                   'trailer' && currentMediaIndex === i
@@ -145,6 +147,29 @@
                   height="1080"
                   class="block h-12 w-auto object-contain"
                 />
+              </button>
+            {/each}
+            {#each game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length) as trailer, i}
+              <button
+                class="relative shrink-0 border-2 border-foreground/0 {currentMediaType ===
+                  'trailer' && currentMediaIndex === i
+                  ? 'border-foreground/100'
+                  : ''}"
+                onclick={() => {
+                  currentMediaType = 'trailer';
+                  currentMediaIndex = i;
+                }}
+              >
+                <img
+                  src={trailer.thumbnail}
+                  alt="Trailer {i + 1}"
+                  width="1920"
+                  height="1080"
+                  class="block h-12 w-auto object-contain"
+                />
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <img src={iconVideoImage} alt="" width="32" height="32" />
+                </div>
               </button>
             {/each}
           </div>
