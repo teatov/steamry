@@ -1,4 +1,5 @@
 import { eq, max, min } from 'drizzle-orm';
+import { MAX_ERROR_LENGTH } from '$lib';
 import { db } from '../db';
 import * as schema from '../db/schema';
 import { saveEventLog } from '../event-logs';
@@ -60,7 +61,9 @@ export default async function getRandomGames(
   } catch (err) {
     console.error(err);
     try {
-      await saveEventLog('get-random-games-failed', { message: String(err).substring(0, 10_000) });
+      await saveEventLog('get-random-games-failed', {
+        message: String(err).substring(0, MAX_ERROR_LENGTH),
+      });
     } catch (e) {
       console.error(e);
     }

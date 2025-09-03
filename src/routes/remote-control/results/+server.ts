@@ -2,6 +2,7 @@ import { error, json } from '@sveltejs/kit';
 import { gte, lte, eq } from 'drizzle-orm';
 import HumanHasher from 'humanhash';
 import { env } from '$env/dynamic/private';
+import { MAX_ERROR_LENGTH } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
@@ -38,7 +39,7 @@ export const POST: RequestHandler = async ({ request }) => {
     query.where(eq(schema.dailies.date, new Date(date)));
   }
 
-  const humanhash = new HumanHasher()
+  const humanhash = new HumanHasher();
 
   try {
     return json(
@@ -49,6 +50,6 @@ export const POST: RequestHandler = async ({ request }) => {
       })),
     );
   } catch (err) {
-    throw error(500, String(err));
+    throw error(500, String(err).substring(0, MAX_ERROR_LENGTH));
   }
 };

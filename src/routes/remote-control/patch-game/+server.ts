@@ -4,6 +4,7 @@ import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
+import { MAX_ERROR_LENGTH } from '$lib';
 
 export const POST: RequestHandler = async ({ request }) => {
   const { key, appid, data } = (await request.json()) as {
@@ -27,6 +28,6 @@ export const POST: RequestHandler = async ({ request }) => {
       await db.update(schema.games).set(data).where(eq(schema.games.appid, appid)).returning(),
     );
   } catch (err) {
-    throw error(500, String(err));
+    throw error(500, String(err).substring(0, MAX_ERROR_LENGTH));
   }
 };

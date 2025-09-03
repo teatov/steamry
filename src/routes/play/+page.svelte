@@ -34,8 +34,8 @@
   let correctGuesses = $derived<number>(guesses.filter((value) => value).length);
 
   onMount(() => {
-    const saveDataString = localStorage.getItem(SAVE_DATA);
     try {
+      const saveDataString = localStorage.getItem(SAVE_DATA);
       saveData = saveDataString ? (JSON.parse(saveDataString) as SaveData) : {};
     } catch (err) {
       console.error(err);

@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
-import { STORE_PAGE_URL } from '$lib';
+import { MAX_ERROR_LENGTH, STORE_PAGE_URL } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
@@ -23,7 +23,7 @@ export const POST: RequestHandler = async ({ request }) => {
       with: { games: true },
     });
   } catch (err) {
-    throw error(500, String(err));
+    throw error(500, String(err).substring(0, MAX_ERROR_LENGTH));
   }
 
   if (!daily) {
