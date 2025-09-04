@@ -24,7 +24,7 @@
 
 <main class="flex h-full items-center justify-center">
   <div class="w-full max-w-xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
-    <div class="mb-4 flex justify-between">
+    <div class="mb-4 flex items-start justify-between">
       <h1 class="text-center text-xl text-card-foreground md:text-3xl">Previous dailies</h1>
       <a
         href="/"

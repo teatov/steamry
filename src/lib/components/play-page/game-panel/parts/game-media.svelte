@@ -111,7 +111,7 @@
   <div class="flex grow overflow-x-auto">
     {#each mediaList as mediaListItem, i}
       <button
-        class="relative shrink-0 border-2 border-foreground/0 focus-visible:border-ring/100 focus-visible:ring-0 {mediaListItem ===
+        class="relative shrink-0 border-2 border-foreground/0 focus-visible:border-ring/100 focus-visible:ring-0 focus-visible:ring-offset-0 {mediaListItem ===
         currentMedia
           ? 'border-foreground/100'
           : ''}"
