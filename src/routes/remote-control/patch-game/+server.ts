@@ -19,8 +19,8 @@ export const POST: RequestHandler = async ({ request }) => {
     throw error(400, "Field 'appid' or 'data' are missing");
   }
   const keys = Object.keys(data) as (keyof schema.Game)[];
-  if (keys.includes('appid') || keys.includes('dailyId') || keys.includes('round')) {
-    throw error(400, "Cannot modify 'appid', 'dailyId' or 'round'");
+  if (keys.includes('dailyId') || keys.includes('round')) {
+    throw error(400, "Cannot modify 'dailyId' or 'round'");
   }
 
   try {

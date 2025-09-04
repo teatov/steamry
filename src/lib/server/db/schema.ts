@@ -46,6 +46,7 @@ export const games = pgTable(
     contentDescriptors: json().$type<ContentDescriptor[]>().notNull(),
     requiredAge: integer().notNull().default(0),
     markedAsNsfw: boolean().notNull().default(false),
+    isHandPicked: boolean().notNull().default(false),
   },
   (t) => [primaryKey({ columns: [t.dailyId, t.round, t.appid] })],
 );

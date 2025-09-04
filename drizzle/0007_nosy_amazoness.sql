@@ -1,0 +1,1 @@
+ALTER TABLE "games" ADD COLUMN "is_hand_picked" boolean DEFAULT false NOT NULL;

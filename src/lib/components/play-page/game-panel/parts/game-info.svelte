@@ -8,6 +8,14 @@
   <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
 {/key}
 <div class="mt-2 space-y-2 pr-4 text-xs">
+  {#if game.isHandPicked}
+    <p
+      class="text-sm font-semibold text-danger-foreground underline decoration-dashed cursor-help"
+      title="This game wasn't picked randomly, and instead was added manually"
+    >
+      Hand-picked
+    </p>
+  {/if}
   <p class="text-card-foreground md:text-sm">{@html game.description}</p>
   <div class="flex flex-col gap-x-2 md:flex-row">
     <p class="text-mute-foreground uppercase">Total reviews:</p>
