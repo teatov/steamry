@@ -6,14 +6,14 @@ export const TZ_COOKIE = 'TZ';
 export const MAX_ERROR_LENGTH = 10_000;
 export const SAVE_DATA = 'save_data';
 
-export function getDateDay(dateTime: Date) {
+export function floorDate(dateTime: Date) {
   const date = new Date(dateTime);
   date.setUTCHours(0, 0, 0, 0);
   return date;
 }
 
 export function getTodayDate() {
-  return getDateDay(new Date());
+  return floorDate(new Date());
 }
 
 export function getTomorrowDate(date: Date, shift: number = 1) {
@@ -25,7 +25,7 @@ export function getTomorrowDate(date: Date, shift: number = 1) {
 export function getTimezoneDate(offsetMinutes: number) {
   const date = new Date();
   date.setTime(date.getTime() - offsetMinutes * 60 * 1000);
-  return getDateDay(date);
+  return floorDate(date);
 }
 
 export function getScore(game: Game) {
