@@ -43,6 +43,13 @@
       "when": 1756904329858,
       "tag": "0005_misty_polaris",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1756970682158,
+      "tag": "0006_acoustic_jubilee",
+      "breakpoints": true
     }
   ]
 }

@@ -41,6 +41,18 @@
       </p>
     </div>
   </div>
+  {#if game.tags && game.tags.length > 0}
+    <div>
+      <p class="text-mute-foreground">Popular user-defined tags for this product:</p>
+      <p class="flex flex-wrap gap-0.75 text-[0.7rem]">
+        {#each game.tags as tag, i}
+          <span class="rounded-xs bg-primary-background px-1 py-0.25 text-primary-foreground"
+            >{tag}</span
+          >
+        {/each}
+      </p>
+    </div>
+  {/if}
   <div class="flex flex-col gap-x-2 md:flex-row">
     <p class="text-mute-foreground uppercase">Genre:</p>
     <p>
@@ -51,7 +63,7 @@
       {/each}
     </p>
   </div>
-  <ul class="space-y-1">
+  <ul class="space-y-1 text-[0.7rem]">
     {#each game.categories as category}
       <li class="bg-primary-background/50 px-1.5 py-0.5 text-primary-foreground">
         {category}

@@ -3,6 +3,7 @@ import * as schema from '../db/schema';
 
 const APP_DETAILS_URL = 'https://store.steampowered.com/api/appdetails';
 const APP_REVIEWS_URL = 'https://store.steampowered.com/appreviews';
+const STEAMSPY_API_URL = 'https://steamspy.com/api.php';
 const WAIT_TIME_SECONDS = 60;
 const RETRY_ATTEMPTS = 15;
 
@@ -95,6 +96,24 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     return null;
   }
 
+  let tags: string[] | null = null;
+
+  const tagsUrl = new URL(STEAMSPY_API_URL);
+  tagsUrl.searchParams.set('request', 'appdetails');
+  tagsUrl.searchParams.set('appid', appid);
+
+  const tagsResponse = await fetch(tagsUrl);
+  if (tagsResponse.ok) {
+    try {
+      const tagsResult = (await tagsResponse.json()) as SteamSpyResponse;
+      tags = Object.keys(tagsResult.tags);
+    } catch (err) {
+      console.error(err);
+    }
+  } else {
+    console.error(`App ${appid} tags ${tagsResponse.status} ${tagsResponse.statusText}`);
+  }
+
   return {
     appid: appDetails.steam_appid,
     name: appDetails.name,
@@ -111,6 +130,7 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     headerImage: appDetails.header_image,
     developers: appDetails.developers ? appDetails.developers : [],
     publishers: appDetails.publishers ? appDetails.publishers : [],
+    tags,
     categories: appDetails.categories
       ? appDetails.categories.toSorted((a, b) => a.id - b.id).map((value) => value.description)
       : [],
@@ -204,4 +224,10 @@ type AppReviewsResponse = {
     total_negative: number;
     total_reviews: number;
   };
+};
+
+type SteamSpyResponse = {
+  appid: number;
+  name: string;
+  tags: Record<string, number>;
 };
