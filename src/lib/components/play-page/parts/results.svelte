@@ -8,7 +8,9 @@
     makeSaveDataKey,
     STORE_PAGE_URL,
     type Round,
+    type SaveData,
   } from '$lib';
+  import DailyList from '$lib/components/daily-list.svelte';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
@@ -22,6 +24,7 @@
     isReplay,
     nextDailyExists,
     previousDailyExists,
+    saveData,
   }: {
     rounds: Round[];
     guesses: boolean[];
@@ -30,6 +33,7 @@
     isReplay: boolean;
     nextDailyExists: boolean;
     previousDailyExists: boolean;
+    saveData: SaveData;
   } = $props();
 
   async function copyResults() {
@@ -102,22 +106,18 @@
     {:else}
       {@const nextDate = getTomorrowDate(date)}
       {@const previousDate = getTomorrowDate(date, -1)}
-      <div class="mt-4 flex flex-wrap justify-center gap-2 text-center">
+      <div class="mt-4 flex flex-col justify-center flex-wrap gap-2 md:flex-row">
         {#if previousDailyExists}
-          <a
-            href="/replay/{makeSaveDataKey(previousDate)}"
-            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground visited:bg-mute-background hover:bg-primary-foreground/50 hover:text-white"
-          >
-            Play previous - {formatDate(previousDate)}
-          </a>
+          <div class="md:w-0 md:grow max-w-xl">
+            <div>Previous daily</div>
+            <DailyList dailies={[{ date: previousDate }]} {saveData} />
+          </div>
         {/if}
         {#if nextDailyExists}
-          <a
-            href="/replay/{makeSaveDataKey(nextDate)}"
-            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground visited:bg-mute-background hover:bg-primary-foreground/50 hover:text-white"
-          >
-            Play next - {formatDate(nextDate)}
-          </a>
+          <div class="md:w-0 md:grow max-w-xl">
+            <div>Next daily</div>
+            <DailyList dailies={[{ date: nextDate }]} {saveData} />
+          </div>
         {/if}
       </div>
     {/if}

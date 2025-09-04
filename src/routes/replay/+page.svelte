@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { formatDate, makeSaveDataKey, SAVE_DATA, type SaveData } from '$lib';
+  import { SAVE_DATA, type SaveData } from '$lib';
+  import DailyList from '$lib/components/daily-list.svelte';
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
@@ -23,7 +24,7 @@
 
 <main class="flex h-full items-center justify-center">
   <div class="w-full max-w-xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
-    <div class="flex justify-between">
+    <div class="mb-4 flex justify-between">
       <h1 class="text-center text-xl text-card-foreground md:text-3xl">Previous dailies</h1>
       <a
         href="/"
@@ -32,27 +33,6 @@
         Back to home page
       </a>
     </div>
-    <ul class="mt-4 space-y-1">
-      {#each data.dailies as daily}
-        {@const saveDataKey = makeSaveDataKey(daily.date)}
-        <li>
-          <a
-            href="/replay/{saveDataKey}"
-            class="group flex justify-between bg-primary-background px-4 py-1 visited:bg-mute-background hover:bg-primary-foreground/50"
-          >
-            <div class="text-primary-foreground/100 group-hover:text-white">
-              {formatDate(daily.date)}
-            </div>
-            {#if saveData[saveDataKey] && saveData[saveDataKey].length === daily.roundsTotal}
-              <div class="text-card-foreground group-hover:text-white">
-                {saveData[saveDataKey].filter((value) => value).length}/{daily.roundsTotal}
-              </div>
-            {:else}
-              <div class="text-card-foreground/50">Not played</div>
-            {/if}
-          </a>
-        </li>
-      {/each}
-    </ul>
+    <DailyList dailies={data.dailies} {saveData} />
   </div>
 </main>

@@ -132,5 +132,6 @@
     {isReplay}
     {nextDailyExists}
     {previousDailyExists}
+    {saveData}
   />
 {/if}
