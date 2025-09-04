@@ -1,28 +1,48 @@
 <script lang="ts">
   import { ensureHttps, filterMildContentDescriptors, getContentDescriptorText } from '$lib';
   import iconVideoImage from '$lib/assets/icon-video.png';
+  import IconLeft from '$lib/components/icons/icon-left.svelte';
+  import IconRight from '$lib/components/icons/icon-right.svelte';
   import type { Game } from '$lib/server/db/schema';
+
+  type MediaListItem = {
+    screenshot?: Game['screenshots'][number];
+    trailer?: Game['trailers'][number];
+    index: number;
+  };
 
   const TRAILERS_IN_FRONT = 2;
 
   let { game }: { game: Game } = $props();
 
-  let modalElement = $state<HTMLElement>();
-  let currentMediaType = $state<'trailer' | 'screenshot' | null>(null);
+  let mediaList = $state<MediaListItem[]>([]);
   let currentMediaIndex = $state<number>(0);
+
+  let currentMedia = $derived<MediaListItem>(mediaList[currentMediaIndex]);
+
+  let modalElement = $state<HTMLElement>();
   let currentModalScreenshot = $state<number>(0);
   let showModal = $state<boolean>(false);
   let showNsfwBlur = $state<boolean>(false);
 
   $effect(() => {
     if (game.appid) {
-      currentMediaType =
-        game.trailers.length > 0 ? 'trailer' : game.screenshots.length > 0 ? 'screenshot' : null;
+      mediaList = [
+        ...makeTrailerList(game.trailers.slice(0, TRAILERS_IN_FRONT)),
+        ...makeScreenshotList(game.screenshots),
+        ...makeTrailerList(game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length)),
+      ];
       currentMediaIndex = 0;
-      showModal = false;
       currentModalScreenshot = 0;
+      showModal = false;
       showNsfwBlur =
         game.markedAsNsfw || filterMildContentDescriptors(game.contentDescriptors).length > 0;
+    }
+  });
+
+  $effect(() => {
+    if (currentMedia) {
+      document.getElementById(makeMediaButtonIndex(currentMediaIndex))?.scrollIntoView();
     }
   });
 
@@ -37,22 +57,36 @@
     currentModalScreenshot =
       (currentModalScreenshot + game.screenshots.length + offset) % game.screenshots.length;
   }
+
+  function changeCurrentMedia(offset: number) {
+    currentMediaIndex = (currentMediaIndex + mediaList.length + offset) % mediaList.length;
+  }
+
+  function makeMediaButtonIndex(index: number) {
+    return `${game.appid}-${index}`;
+  }
+
+  function makeTrailerList(list: Game['trailers']) {
+    return list.map((value, index) => ({ trailer: value, index }) as MediaListItem);
+  }
+
+  function makeScreenshotList(list: Game['screenshots']) {
+    return list.map((value, index) => ({ screenshot: value, index }) as MediaListItem);
+  }
 </script>
 
 {#key currentMediaIndex}
-  {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
+  {#if currentMedia && currentMedia.screenshot}
     <button
       class="block h-0 grow cursor-zoom-in bg-black"
       onclick={() => {
-        currentModalScreenshot = currentMediaIndex;
+        currentModalScreenshot = currentMedia.index;
         showModal = true;
       }}
       >{#key currentMediaIndex}
         <img
-          src={currentMediaIndex < game.screenshots.length
-            ? ensureHttps(game.screenshots[currentMediaIndex].src)
-            : ''}
-          alt="Screenshot {currentMediaIndex + 1}"
+          src={ensureHttps(currentMedia.screenshot.src)}
+          alt=""
           width="1920"
           height="1080"
           class="h-full w-full object-contain"
@@ -60,92 +94,66 @@
       {/key}
     </button>
   {/if}
-  {#if currentMediaType === 'trailer' && game.trailers.length > 0}
+  {#if currentMedia && currentMedia.trailer}
     <!-- svelte-ignore a11y_media_has_caption -->
     <video
       width="1920"
       height="1080"
       controls
       class=" block h-0 w-full grow bg-black object-contain"
-      poster={game.trailers[currentMediaIndex].thumbnail}
+      poster={currentMedia.trailer.thumbnail}
     >
-      {#if game.trailers[currentMediaIndex].webm}
-        <source src={ensureHttps(game.trailers[currentMediaIndex].webm!)} type="video/webm" />
+      {#if currentMedia.trailer.webm}
+        <source src={ensureHttps(currentMedia.trailer.webm)} type="video/webm" />
       {/if}
-      {#if game.trailers[currentMediaIndex].mp4}
-        <source src={ensureHttps(game.trailers[currentMediaIndex].mp4!)} type="video/mp4" />
+      {#if currentMedia.trailer.mp4}
+        <source src={ensureHttps(currentMedia.trailer.mp4)} type="video/mp4" />
       {/if}
     </video>
   {/if}
 {/key}
-<div class="flex overflow-x-auto">
-  {#each game.trailers.slice(0, TRAILERS_IN_FRONT) as trailer, i}
-    <button
-      class="relative shrink-0 border-2 border-foreground/0 {currentMediaType === 'trailer' &&
-      currentMediaIndex === i
-        ? 'border-foreground/100'
-        : ''}"
-      onclick={() => {
-        currentMediaType = 'trailer';
-        currentMediaIndex = i;
-      }}
-    >
-      <img
-        src={trailer.thumbnail}
-        alt="Trailer {i + 1}"
-        width="1920"
-        height="1080"
-        class="block h-12 w-auto object-contain"
-      />
-      <div class="absolute inset-0 flex items-center justify-center">
-        <img src={iconVideoImage} alt="" width="32" height="32" />
-      </div>
-    </button>
-  {/each}
-  {#each game.screenshots as screenshot, i}
-    <button
-      class="shrink-0 border-2 border-foreground/0 {currentMediaType === 'screenshot' &&
-      currentMediaIndex === i
-        ? 'border-foreground/100'
-        : ''}"
-      onclick={() => {
-        currentMediaType = 'screenshot';
-        currentMediaIndex = i;
-      }}
-    >
-      <img
-        src={ensureHttps(screenshot.thumbnail)}
-        alt="Screenshot {i + 1}"
-        width="1920"
-        height="1080"
-        class="block h-12 w-auto object-contain"
-      />
-    </button>
-  {/each}
-  {#each game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length) as trailer, i}
-    <button
-      class="relative shrink-0 border-2 border-foreground/0 {currentMediaType === 'trailer' &&
-      currentMediaIndex === i
-        ? 'border-foreground/100'
-        : ''}"
-      onclick={() => {
-        currentMediaType = 'trailer';
-        currentMediaIndex = i;
-      }}
-    >
-      <img
-        src={trailer.thumbnail}
-        alt="Trailer {i + 1}"
-        width="1920"
-        height="1080"
-        class="block h-12 w-auto object-contain"
-      />
-      <div class="absolute inset-0 flex items-center justify-center">
-        <img src={iconVideoImage} alt="" width="32" height="32" />
-      </div>
-    </button>
-  {/each}
+
+<div class="flex">
+  <button
+    class="rounded-xs bg-primary-background text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
+    onclick={() => changeCurrentMedia(-1)}><IconLeft /></button
+  >
+  <div class="flex grow overflow-x-auto">
+    {#each mediaList as mediaListItem, i}
+      <button
+        class="relative shrink-0 border-2 border-foreground/0 {mediaListItem === currentMedia
+          ? 'border-foreground/100'
+          : ''}"
+        onclick={() => {
+          currentMediaIndex = i;
+        }}
+        id={makeMediaButtonIndex(i)}
+      >
+        <img
+          src={ensureHttps(
+            mediaListItem.screenshot
+              ? mediaListItem.screenshot.thumbnail
+              : mediaListItem.trailer?.thumbnail ?? '',
+          )}
+          alt=""
+          width="1920"
+          height="1080"
+          class="block h-12 w-auto object-contain"
+        />
+        {#if mediaListItem.trailer}
+          <div class="absolute inset-0 flex items-center justify-center">
+            <img src={iconVideoImage} alt="" width="32" height="32" />
+          </div>
+        {/if}
+      </button>
+    {/each}
+  </div>
+  <button
+    class="rounded-xs bg-primary-background text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
+    onclick={() => changeCurrentMedia(1)}><IconRight /></button
+  >
 </div>
+
 {#if showNsfwBlur}
   <button
     class="absolute inset-0 flex flex-col items-center justify-center bg-card-background-2/50 text-card-foreground backdrop-blur-lg"
@@ -183,10 +191,10 @@
     <div class="rounded-xs bg-linear-to-r from-modal-background-1 to-modal-background-2 p-2">
       {#key currentModalScreenshot}
         <img
-          src={currentModalScreenshot < game.screenshots.length
+          src={game.screenshots[currentModalScreenshot]
             ? ensureHttps(game.screenshots[currentModalScreenshot].src)
             : ''}
-          alt="Screenshot"
+          alt=""
           width="1920"
           height="1080"
           class="aspect-video h-[calc(100vh-10rem)] w-full max-w-[calc(100vw-2rem)] bg-black object-contain"
