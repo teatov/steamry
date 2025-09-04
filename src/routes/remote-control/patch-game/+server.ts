@@ -1,10 +1,10 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
+import { MAX_ERROR_LENGTH } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
-import { MAX_ERROR_LENGTH } from '$lib';
 
 export const POST: RequestHandler = async ({ request }) => {
   const { key, appid, data } = (await request.json()) as {

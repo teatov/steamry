@@ -39,113 +39,113 @@
   }
 </script>
 
-  {#key currentMediaIndex}
-    {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
-      <button
-        class="block h-0 grow cursor-zoom-in bg-black"
-        onclick={() => {
-          currentModalScreenshot = currentMediaIndex;
-          showModal = true;
-        }}
-        >{#key currentMediaIndex}
-          <img
-            src={currentMediaIndex < game.screenshots.length
-              ? ensureHttps(game.screenshots[currentMediaIndex].src)
-              : ''}
-            alt="Screenshot {currentMediaIndex + 1}"
-            width="1920"
-            height="1080"
-            class="h-full w-full object-contain"
-          />
-        {/key}
-      </button>
-    {/if}
-    {#if currentMediaType === 'trailer' && game.trailers.length > 0}
-      <!-- svelte-ignore a11y_media_has_caption -->
-      <video
+{#key currentMediaIndex}
+  {#if currentMediaType === 'screenshot' && game.screenshots.length > 0}
+    <button
+      class="block h-0 grow cursor-zoom-in bg-black"
+      onclick={() => {
+        currentModalScreenshot = currentMediaIndex;
+        showModal = true;
+      }}
+      >{#key currentMediaIndex}
+        <img
+          src={currentMediaIndex < game.screenshots.length
+            ? ensureHttps(game.screenshots[currentMediaIndex].src)
+            : ''}
+          alt="Screenshot {currentMediaIndex + 1}"
+          width="1920"
+          height="1080"
+          class="h-full w-full object-contain"
+        />
+      {/key}
+    </button>
+  {/if}
+  {#if currentMediaType === 'trailer' && game.trailers.length > 0}
+    <!-- svelte-ignore a11y_media_has_caption -->
+    <video
+      width="1920"
+      height="1080"
+      controls
+      class=" block h-0 w-full grow bg-black object-contain"
+      poster={game.trailers[currentMediaIndex].thumbnail}
+    >
+      {#if game.trailers[currentMediaIndex].webm}
+        <source src={ensureHttps(game.trailers[currentMediaIndex].webm!)} type="video/webm" />
+      {/if}
+      {#if game.trailers[currentMediaIndex].mp4}
+        <source src={ensureHttps(game.trailers[currentMediaIndex].mp4!)} type="video/mp4" />
+      {/if}
+    </video>
+  {/if}
+{/key}
+<div class="flex overflow-x-auto">
+  {#each game.trailers.slice(0, TRAILERS_IN_FRONT) as trailer, i}
+    <button
+      class="relative shrink-0 border-2 border-foreground/0 {currentMediaType === 'trailer' &&
+      currentMediaIndex === i
+        ? 'border-foreground/100'
+        : ''}"
+      onclick={() => {
+        currentMediaType = 'trailer';
+        currentMediaIndex = i;
+      }}
+    >
+      <img
+        src={trailer.thumbnail}
+        alt="Trailer {i + 1}"
         width="1920"
         height="1080"
-        controls
-        class=" block h-0 w-full grow bg-black object-contain"
-        poster={game.trailers[currentMediaIndex].thumbnail}
-      >
-        {#if game.trailers[currentMediaIndex].webm}
-          <source src={ensureHttps(game.trailers[currentMediaIndex].webm!)} type="video/webm" />
-        {/if}
-        {#if game.trailers[currentMediaIndex].mp4}
-          <source src={ensureHttps(game.trailers[currentMediaIndex].mp4!)} type="video/mp4" />
-        {/if}
-      </video>
-    {/if}
-  {/key}
-  <div class="flex overflow-x-auto">
-    {#each game.trailers.slice(0, TRAILERS_IN_FRONT) as trailer, i}
-      <button
-        class="relative shrink-0 border-2 border-foreground/0 {currentMediaType === 'trailer' &&
-        currentMediaIndex === i
-          ? 'border-foreground/100'
-          : ''}"
-        onclick={() => {
-          currentMediaType = 'trailer';
-          currentMediaIndex = i;
-        }}
-      >
-        <img
-          src={trailer.thumbnail}
-          alt="Trailer {i + 1}"
-          width="1920"
-          height="1080"
-          class="block h-12 w-auto object-contain"
-        />
-        <div class="absolute inset-0 flex items-center justify-center">
-          <img src={iconVideoImage} alt="" width="32" height="32" />
-        </div>
-      </button>
-    {/each}
-    {#each game.screenshots as screenshot, i}
-      <button
-        class="shrink-0 border-2 border-foreground/0 {currentMediaType === 'screenshot' &&
-        currentMediaIndex === i
-          ? 'border-foreground/100'
-          : ''}"
-        onclick={() => {
-          currentMediaType = 'screenshot';
-          currentMediaIndex = i;
-        }}
-      >
-        <img
-          src={ensureHttps(screenshot.thumbnail)}
-          alt="Screenshot {i + 1}"
-          width="1920"
-          height="1080"
-          class="block h-12 w-auto object-contain"
-        />
-      </button>
-    {/each}
-    {#each game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length) as trailer, i}
-      <button
-        class="relative shrink-0 border-2 border-foreground/0 {currentMediaType === 'trailer' &&
-        currentMediaIndex === i
-          ? 'border-foreground/100'
-          : ''}"
-        onclick={() => {
-          currentMediaType = 'trailer';
-          currentMediaIndex = i;
-        }}
-      >
-        <img
-          src={trailer.thumbnail}
-          alt="Trailer {i + 1}"
-          width="1920"
-          height="1080"
-          class="block h-12 w-auto object-contain"
-        />
-        <div class="absolute inset-0 flex items-center justify-center">
-          <img src={iconVideoImage} alt="" width="32" height="32" />
-        </div>
-      </button>
-    {/each}
-  </div>
+        class="block h-12 w-auto object-contain"
+      />
+      <div class="absolute inset-0 flex items-center justify-center">
+        <img src={iconVideoImage} alt="" width="32" height="32" />
+      </div>
+    </button>
+  {/each}
+  {#each game.screenshots as screenshot, i}
+    <button
+      class="shrink-0 border-2 border-foreground/0 {currentMediaType === 'screenshot' &&
+      currentMediaIndex === i
+        ? 'border-foreground/100'
+        : ''}"
+      onclick={() => {
+        currentMediaType = 'screenshot';
+        currentMediaIndex = i;
+      }}
+    >
+      <img
+        src={ensureHttps(screenshot.thumbnail)}
+        alt="Screenshot {i + 1}"
+        width="1920"
+        height="1080"
+        class="block h-12 w-auto object-contain"
+      />
+    </button>
+  {/each}
+  {#each game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length) as trailer, i}
+    <button
+      class="relative shrink-0 border-2 border-foreground/0 {currentMediaType === 'trailer' &&
+      currentMediaIndex === i
+        ? 'border-foreground/100'
+        : ''}"
+      onclick={() => {
+        currentMediaType = 'trailer';
+        currentMediaIndex = i;
+      }}
+    >
+      <img
+        src={trailer.thumbnail}
+        alt="Trailer {i + 1}"
+        width="1920"
+        height="1080"
+        class="block h-12 w-auto object-contain"
+      />
+      <div class="absolute inset-0 flex items-center justify-center">
+        <img src={iconVideoImage} alt="" width="32" height="32" />
+      </div>
+    </button>
+  {/each}
+</div>
 {#if showNsfwBlur}
   <button
     class="absolute inset-0 flex flex-col items-center justify-center bg-card-background-2/50 text-card-foreground backdrop-blur-lg"
