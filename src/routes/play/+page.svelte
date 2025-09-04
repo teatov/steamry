@@ -1,5 +1,5 @@
 <script lang="ts">
-  import GamePage from '$lib/components/game-page/game-page.svelte';
+  import PlayPage from '$lib/components/play-page/play-page.svelte';
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
@@ -9,4 +9,4 @@
   <title>Steamry - Daily</title>
 </svelte:head>
 
-<GamePage rounds={data.rounds} date={data.date} />
+<PlayPage rounds={data.rounds} date={data.date} />
