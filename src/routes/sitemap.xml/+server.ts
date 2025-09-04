@@ -5,6 +5,6 @@ import { env } from '$env/dynamic/private';
 export const GET: RequestHandler = async () => {
   return await sitemap.response({
     origin: env.ORIGIN,
-    excludeRoutePatterns: ['^/play*'],
+    excludeRoutePatterns: ['^/play*', '^/replay*'],
   });
 };

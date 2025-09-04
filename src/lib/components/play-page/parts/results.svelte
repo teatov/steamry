@@ -1,6 +1,14 @@
 <script lang="ts">
   import { env } from '$env/dynamic/public';
-  import { getMaxScore, getScore, STORE_PAGE_URL, type Round } from '$lib';
+  import {
+    formatDate,
+    getMaxScore,
+    getScore,
+    getTomorrowDate,
+    makeSaveDataKey,
+    STORE_PAGE_URL,
+    type Round,
+  } from '$lib';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
@@ -11,7 +19,18 @@
     guesses,
     correctGuesses,
     date,
-  }: { rounds: Round[]; guesses: boolean[]; correctGuesses: number; date: Date } = $props();
+    isReplay,
+    nextDailyExists,
+    previousDailyExists,
+  }: {
+    rounds: Round[];
+    guesses: boolean[];
+    correctGuesses: number;
+    date: Date;
+    isReplay: boolean;
+    nextDailyExists: boolean;
+    previousDailyExists: boolean;
+  } = $props();
 
   async function copyResults() {
     const guessEmojis = guesses.map((value) => (value ? '🟩' : '🟥')).join('');
@@ -78,7 +97,38 @@
         </li>
       {/each}
     </ul>
-    <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
+    {#if !isReplay}
+      <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
+    {:else}
+      {@const nextDate = getTomorrowDate(date)}
+      {@const previousDate = getTomorrowDate(date, -1)}
+      <div class="mt-4 flex flex-wrap justify-center gap-2 text-center">
+        {#if previousDailyExists}
+          <a
+            href="/replay/{makeSaveDataKey(previousDate)}"
+            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          >
+            Play previous - {formatDate(previousDate)}
+          </a>
+        {/if}
+        {#if nextDailyExists}
+          <a
+            href="/replay/{makeSaveDataKey(nextDate)}"
+            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          >
+            Play next - {formatDate(nextDate)}
+          </a>
+        {/if}
+      </div>
+    {/if}
+    <div class="mt-4 text-center">
+      <a
+        href="/replay"
+        class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+      >
+        {#if !isReplay}Play previous dailies{:else}Go to previous dailies{/if}
+      </a>
+    </div>
     <div class="mt-6 text-right">
       <a
         href="/"

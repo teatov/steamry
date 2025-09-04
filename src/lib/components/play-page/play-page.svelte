@@ -1,18 +1,35 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getMaxScore, getScore, makeSaveDataKey, type ResultBody, type Round } from '$lib';
+  import {
+    getMaxScore,
+    getScore,
+    makeSaveDataKey,
+    SAVE_DATA,
+    type ResultBody,
+    type Round,
+    type SaveData,
+  } from '$lib';
   import type { Game } from '$lib/server/db/schema';
   import GamePanel from './game-panel/game-panel.svelte';
   import ErrorMessage from './parts/error-message.svelte';
   import ResultsIndicator from './parts/results-indicator.svelte';
   import Results from './parts/results.svelte';
 
-  type SaveData = Record<string, boolean[]>;
-  const SAVE_DATA = 'save_data';
+  let {
+    rounds,
+    date,
+    isReplay = false,
+    nextDailyExists = false,
+    previousDailyExists = false,
+  }: {
+    rounds: Round[];
+    date: Date;
+    isReplay?: boolean;
+    nextDailyExists?: boolean;
+    previousDailyExists?: boolean;
+  } = $props();
 
-  let { rounds, date }: { rounds: Round[]; date: Date } = $props();
-
-  let saveData: SaveData = {};
+  let saveData = $state<SaveData>({});
   const saveDataKey = makeSaveDataKey(date);
 
   let guesses = $state<boolean[]>([]);
@@ -32,7 +49,7 @@
       console.error(err);
     }
 
-    if (saveData[saveDataKey]) {
+    if (saveData[saveDataKey] && !isReplay) {
       guesses = saveData[saveDataKey];
       if (guesses.length < rounds.length) {
         currentRound = guesses.length;
@@ -56,12 +73,14 @@
     guesses.push(isCorrect(game));
     reveal = true;
 
-    saveData[saveDataKey] = guesses;
-    localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
-
     const canAdvance = currentRound + 1 < rounds.length;
 
-    if (!canAdvance) {
+    if (!isReplay || !canAdvance) {
+      saveData[saveDataKey] = guesses;
+      localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
+    }
+
+    if (!canAdvance && !isReplay) {
       const resultBody: ResultBody = { date: date.toISOString(), guesses };
       fetch('/save-result', {
         method: 'POST',
@@ -88,12 +107,30 @@
 {:else if !finished}
   <main class="mx-auto flex h-full max-w-5xl flex-col items-center justify-center gap-4 py-4">
     {#if round}
-      <ResultsIndicator {rounds} {guesses} />
+      <div class="flex w-full flex-col items-end gap-2 md:flex-row md:items-center">
+        <ResultsIndicator {rounds} {guesses} />
+        {#if isReplay}
+          <a
+            href="/replay"
+            class="inline-block shrink-0 rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+          >
+            Go to previous dailies
+          </a>
+        {/if}
+      </div>
       {#each round.games as game}
         <GamePanel {game} isCorrect={isCorrect(game)} {reveal} onguess={guess} />
       {/each}
     {/if}
   </main>
 {:else}
-  <Results {rounds} {guesses} {correctGuesses} {date} />
+  <Results
+    {rounds}
+    {guesses}
+    {correctGuesses}
+    {date}
+    {isReplay}
+    {nextDailyExists}
+    {previousDailyExists}
+  />
 {/if}

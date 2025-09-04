@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /play
+Disallow: /replay
 
 Sitemap: https://steamry.com/sitemap.xml

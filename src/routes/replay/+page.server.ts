@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { desc, lt } from 'drizzle-orm';
 import getClientDate from '$lib/server/daily/get-client-date';
 import getRounds from '$lib/server/daily/get-rounds';
 import { db } from '$lib/server/db';
@@ -7,12 +7,13 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ cookies }) => {
   const date = getClientDate(cookies);
-  const daily = await db.query.dailies.findFirst({
-    where: eq(schema.dailies.date, date),
+  const dailies = await db.query.dailies.findMany({
+    orderBy: desc(schema.dailies.date),
+    where: lt(schema.dailies.date, date),
     with: { games: true },
   });
 
-  const rounds = await getRounds(daily);
-
-  return { rounds, date };
+  return {
+    dailies: dailies.map((daily) => ({ date: daily.date, roundsTotal: getRounds(daily).length })),
+  };
 };

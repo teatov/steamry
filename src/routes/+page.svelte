@@ -52,6 +52,14 @@
         Play
       </a>
     </div>
+    <div class="mt-4 text-center">
+      <a
+        href="/replay"
+        class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+      >
+        Play previous dailies
+      </a>
+    </div>
     <p class="mt-6">
       Inspired by <a
         href="https://scrandle.com/"

@@ -4,6 +4,7 @@ export const STORE_PAGE_URL = 'https://store.steampowered.com/app';
 export const MIN_REVIEWS = 20;
 export const TZ_COOKIE = 'TZ';
 export const MAX_ERROR_LENGTH = 10_000;
+export const SAVE_DATA = 'save_data';
 
 export function getDateDay(dateTime: Date) {
   const date = new Date(dateTime);
@@ -49,6 +50,10 @@ export function ensureHttps(url: string) {
   return url.replace('http://', 'https://');
 }
 
+export function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { dateStyle: 'long' });
+}
+
 export function getContentDescriptorText(descriptor: number): string {
   switch (descriptor) {
     case ContentDescriptor.SomeNudityOrSexualContent:
@@ -88,3 +93,5 @@ export enum ContentDescriptor {
 export type Round = { round: number; games: Game[] };
 
 export type ResultBody = { guesses: boolean[]; date: string };
+
+export type SaveData = Record<string, boolean[]>;
