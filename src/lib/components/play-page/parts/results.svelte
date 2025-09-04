@@ -83,7 +83,7 @@
               <a
                 href={`${STORE_PAGE_URL}/${game.appid}`}
                 rel="nofollow, noopener, noreferrer"
-                class="truncate hover:underline"
+                class="truncate underline hover:text-white"
                 target="_blank"
                 title="Open Steam store page"
               >
@@ -106,15 +106,15 @@
     {:else}
       {@const nextDate = getTomorrowDate(date)}
       {@const previousDate = getTomorrowDate(date, -1)}
-      <div class="mt-4 flex flex-col justify-center flex-wrap gap-2 md:flex-row">
+      <div class="mt-4 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
         {#if previousDailyExists}
-          <div class="md:w-0 md:grow max-w-xl">
+          <div class="max-w-xl md:w-0 md:grow">
             <div>Previous daily</div>
             <DailyList dailies={[{ date: previousDate }]} {saveData} />
           </div>
         {/if}
         {#if nextDailyExists}
-          <div class="md:w-0 md:grow max-w-xl">
+          <div class="max-w-xl md:w-0 md:grow">
             <div>Next daily</div>
             <DailyList dailies={[{ date: nextDate }]} {saveData} />
           </div>

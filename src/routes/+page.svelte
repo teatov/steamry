@@ -32,17 +32,15 @@
       </li>
       <li>And also games that had issues with fetching info about them</li>
     </ul>
-    <img src={wipImage} alt="Under construction" width="574" height="51" class="mx-auto" />
-    <p class="text-center">
-      Currently the game is at a very early stage, so any feedback and bug reports are appreciated!
-    </p>
-    <p class="text-center">
+    <p class="mt-2">
+      <span class="font-semibold">All reviews are considered:</span> all time, all languages,
+      including "received for free" and
       <a
-        href="https://teatov.xyz/"
+        href="https://partner.steamgames.com/doc/store/reviews#ReviewBombing"
         target="_blank"
         rel="nofollow, noopener, noreferrer"
-        class="font-semibold text-card-foreground hover:underline">Here's my page with links</a
-      > that you can use to contact me.
+        class="text-card-foreground underline hover:text-white">"off-topic"</a
+      >.
     </p>
     <div class="mt-6 text-center">
       <a
@@ -65,16 +63,21 @@
         href="https://scrandle.com/"
         target="_blank"
         rel="nofollow, noopener, noreferrer"
-        class="font-semibold text-card-foreground hover:underline">Scrandle</a
+        class="text-card-foreground underline hover:text-white">Scrandle</a
       >. Not affiliated with Valve Corporation.
     </p>
     <p>
-      Source code is available on
+      Made by <a
+        href="https://bsky.app/profile/teatov.xyz"
+        target="_blank"
+        rel="nofollow, noopener, noreferrer"
+        class="text-card-foreground underline hover:text-white">Teatov</a
+      >. Source code is available on
       <a
         href="https://github.com/teatov/steamry"
         target="_blank"
         rel="nofollow, noopener, noreferrer"
-        class="font-semibold text-card-foreground hover:underline">GitHub</a
+        class="text-card-foreground underline hover:text-white">GitHub</a
       >. Thanks.
     </p>
   </div>
