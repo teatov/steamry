@@ -1,0 +1,37 @@
+import { error, json } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { env } from '$env/dynamic/private';
+import { MAX_ERROR_LENGTH } from '$lib';
+import { db } from '$lib/server/db';
+import * as schema from '$lib/server/db/schema';
+import { refetchDailyInfo } from '$lib/server/steam/refetch-daily-info';
+import type { RequestHandler } from './$types';
+
+export const POST: RequestHandler = async ({ request }) => {
+  const { key, date } = (await request.json()) as { key?: string; date?: string };
+  if (!key || key !== env.REMOTE_CONTROL_KEY) {
+    throw error(401);
+  }
+
+  if (!date || isNaN(new Date(date).getTime())) {
+    throw error(400, "Field 'date' is missing");
+  }
+
+  let daily: (schema.Daily & { games: schema.Game[] }) | undefined;
+  try {
+    daily = await db.query.dailies.findFirst({
+      where: eq(schema.dailies.date, new Date(date)),
+      with: { games: true },
+    });
+  } catch (err) {
+    throw error(500, String(err).substring(0, MAX_ERROR_LENGTH));
+  }
+
+  if (!daily) {
+    throw error(404, `Daily for ${new Date(date).toISOString()} not found`);
+  }
+
+  refetchDailyInfo(daily.games);
+
+  return json({ message: `Started refetching game info for ${new Date(date).toISOString()}...` });
+};
