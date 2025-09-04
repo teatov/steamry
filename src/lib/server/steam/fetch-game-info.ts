@@ -147,7 +147,10 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     trailers: appDetails.movies
       ? appDetails.movies
           .toSorted((a, b) => a.id - b.id)
-          .filter((value) => value.highlight && (value.webm || value.mp4))
+          .toSorted((a, b) =>
+            a.highlight && !b.highlight ? -1 : !a.highlight && b.highlight ? 1 : 0,
+          )
+          .filter((value) => value.webm || value.mp4)
           .map((value) => {
             const trailer: schema.NewGameInfoOnly['trailers'][number] = {
               thumbnail: value.thumbnail,
