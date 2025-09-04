@@ -36,7 +36,7 @@ export const POST: RequestHandler = async ({ request }) => {
   return json({
     storePages: daily.games.reduce(
       (acc, curr) => {
-        acc[curr.name +" "+ index] = `${STORE_PAGE_URL}/${curr.appid}`;
+        acc[curr.name + ' ' + index] = `${STORE_PAGE_URL}/${curr.appid}`;
         index++;
         return acc;
       },
