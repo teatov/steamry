@@ -24,11 +24,11 @@
     </h3>
     <div class="flex gap-6 text-2xl text-white">
       <div class="flex items-center gap-2">
-        <img src={reviewPositiveImage} alt="Positive" width="40" height="40" class="size-8" />
+        <img src={reviewPositiveImage} alt="" width="40" height="40" class="size-8" />
         {numberFormat.format(game.reviewsPositive)}
       </div>
       <div class="flex items-center gap-2">
-        <img src={reviewNegativeImage} alt="Negative" width="40" height="40" class="size-8" />
+        <img src={reviewNegativeImage} alt="" width="40" height="40" class="size-8" />
         {numberFormat.format(game.reviewsNegative)}
       </div>
     </div>

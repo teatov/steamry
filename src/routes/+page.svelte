@@ -11,7 +11,7 @@
 <main class="flex h-full items-center justify-center">
   <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
     <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white">
-      <img src={logoImage} alt="Steamry logo" width="56" height="56" class="-mb-2 inline" />STEAMRY
+      <img src={logoImage} alt="" width="56" height="56" class="-mb-2 inline" />STEAMRY
     </h1>
     <h2 class="mt-2 text-center text-card-foreground md:text-2xl">
       A daily Steam review ratio guessing game
