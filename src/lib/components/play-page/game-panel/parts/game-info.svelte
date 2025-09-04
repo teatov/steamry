@@ -4,50 +4,45 @@
   let { game, numberFormat }: { game: Game; numberFormat: Intl.NumberFormat } = $props();
 </script>
 
+{#snippet infoItem(label: string, text?: string, items?: string[])}
+  <div class="flex flex-col gap-x-2 md:flex-row">
+    <p class="text-mute-foreground uppercase">{label}:</p>
+    {#if text}
+      <p>{text}</p>
+    {/if}
+    {#if items}
+      <p>
+        {#each items as item, i}
+          <span class="text-primary-foreground">{item}</span>{#if i < items.length - 1}
+            ,&nbsp;
+          {/if}
+        {/each}
+      </p>
+    {/if}
+  </div>
+{/snippet}
+
 {#key game.appid}
   <img src={game.headerImage} alt={game.name} width="460" height="215" class="w-full" />
 {/key}
 <div class="mt-2 space-y-2 pr-4 text-xs">
   {#if game.isHandPicked}
     <p
-      class="text-sm font-semibold text-danger-foreground underline decoration-dashed cursor-help"
+      class="cursor-help text-sm font-semibold text-danger-foreground underline decoration-dashed"
       title="This game wasn't picked randomly, and instead was added manually"
     >
       Hand-picked
     </p>
   {/if}
   <p class="text-card-foreground md:text-sm">{@html game.description}</p>
-  <div class="flex flex-col gap-x-2 md:flex-row">
-    <p class="text-mute-foreground uppercase">Total reviews:</p>
-    <p>{numberFormat.format(game.reviewsNegative + game.reviewsPositive)}</p>
-  </div>
-  <div class="flex flex-col gap-x-2 md:flex-row">
-    <p class="text-mute-foreground uppercase">Release date:</p>
-    <p>{game.releaseDate}</p>
-  </div>
+  {@render infoItem(
+    'Total reviews',
+    numberFormat.format(game.reviewsNegative + game.reviewsPositive),
+  )}
+  {@render infoItem('Release date', game.releaseDate)}
   <div>
-    <div class="mt-2 flex flex-col gap-x-2 md:flex-row">
-      <p class="text-mute-foreground uppercase">Developer:</p>
-      <p>
-        {#each game.developers as developer, i}
-          <span class="text-primary-foreground">{developer}</span
-          >{#if i < game.developers.length - 1}
-            ,&nbsp;
-          {/if}
-        {/each}
-      </p>
-    </div>
-    <div class="flex flex-col gap-x-2 md:flex-row">
-      <p class="text-mute-foreground uppercase">Publisher:</p>
-      <p>
-        {#each game.publishers as publisher, i}
-          <span class="text-primary-foreground">{publisher}</span
-          >{#if i < game.publishers.length - 1}
-            ,&nbsp;
-          {/if}
-        {/each}
-      </p>
-    </div>
+    {@render infoItem('Developer', undefined, game.developers)}
+    {@render infoItem('Publisher', undefined, game.publishers)}
   </div>
   {#if game.tags && game.tags.length > 0}
     <div>
@@ -61,17 +56,8 @@
       </p>
     </div>
   {/if}
-  <div class="flex flex-col gap-x-2 md:flex-row">
-    <p class="text-mute-foreground uppercase">Genre:</p>
-    <p>
-      {#each game.genres as genre, i}
-        <span class="text-primary-foreground">{genre}</span>{#if i < game.genres.length - 1}
-          ,&nbsp;
-        {/if}
-      {/each}
-    </p>
-  </div>
-  <ul class="space-y-1 text-[0.7rem]">
+  {@render infoItem('Genre', undefined, game.genres)}
+  <ul class="flex flex-wrap gap-1 text-[0.7rem]">
     {#each game.categories as category}
       <li class="bg-primary-background/50 px-1.5 py-0.5 text-primary-foreground">
         {category}

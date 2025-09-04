@@ -10,6 +10,8 @@
     type SaveData,
   } from '$lib';
   import type { Game } from '$lib/server/db/schema';
+  import Button from '../ui/button.svelte';
+  import Container from '../ui/container.svelte';
   import GamePanel from './game-panel/game-panel.svelte';
   import ErrorMessage from './parts/error-message.svelte';
   import ResultsIndicator from './parts/results-indicator.svelte';
@@ -105,24 +107,19 @@
 {#if rounds.length === 0}
   <ErrorMessage />
 {:else if !finished}
-  <main class="mx-auto flex h-full max-w-5xl flex-col items-center justify-center gap-4 py-4">
+  <Container class="mx-auto max-w-5xl gap-4 py-4">
     {#if round}
       <div class="flex w-full flex-col items-end gap-2 md:flex-row md:items-center">
         <ResultsIndicator {rounds} {guesses} />
         {#if isReplay}
-          <a
-            href="/replay"
-            class="inline-block shrink-0 rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
-          >
-            Go to previous dailies
-          </a>
+          <Button href="/replay" size="sm" class="shrink-0">Back to previous dailies</Button>
         {/if}
       </div>
       {#each round.games as game}
         <GamePanel {game} isCorrect={isCorrect(game)} {reveal} onguess={guess} />
       {/each}
     {/if}
-  </main>
+  </Container>
 {:else}
   <Results
     {rounds}

@@ -3,6 +3,7 @@
   import iconVideoImage from '$lib/assets/icon-video.png';
   import IconLeft from '$lib/components/icons/icon-left.svelte';
   import IconRight from '$lib/components/icons/icon-right.svelte';
+  import Button from '$lib/components/ui/button.svelte';
   import type { Game } from '$lib/server/db/schema';
 
   type MediaListItem = {
@@ -104,10 +105,7 @@
 {/key}
 
 <div class="flex">
-  <button
-    class="rounded-xs bg-primary-background text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
-    onclick={() => changeCurrentMedia(-1)}><IconLeft /></button
-  >
+  <Button class="px-0 py-0" onclick={() => changeCurrentMedia(-1)}><IconLeft /></Button>
   <div class="flex grow overflow-x-auto">
     {#each mediaList as mediaListItem, i}
       <button
@@ -139,10 +137,7 @@
       </button>
     {/each}
   </div>
-  <button
-    class="rounded-xs bg-primary-background text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
-    onclick={() => changeCurrentMedia(1)}><IconRight /></button
-  >
+  <Button class="px-0 py-0" onclick={() => changeCurrentMedia(1)}><IconRight /></Button>
 </div>
 
 {#if showNsfwBlur}
@@ -192,16 +187,14 @@
         />
       {/key}
       <div class="mt-2 flex items-center justify-between">
-        <button
-          class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
-          onclick={() => changeModalScreenshot(-1)}>Prev</button
+        <Button size="sm" class="bg-modal-foreground" onclick={() => changeModalScreenshot(-1)}
+          >Prev</Button
         >
         <div class="text-sm text-card-foreground">
           {currentModalScreenshot + 1} of {game.screenshots.length} screenshots
         </div>
-        <button
-          class="rounded-xs bg-modal-foreground px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
-          onclick={() => changeModalScreenshot(1)}>Next</button
+        <Button size="sm" class="bg-modal-foreground" onclick={() => changeModalScreenshot(1)}
+          >Next</Button
         >
       </div>
     </div>

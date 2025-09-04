@@ -14,6 +14,10 @@
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
+  import Button from '$lib/components/ui/button.svelte';
+  import Card from '$lib/components/ui/card.svelte';
+  import Container from '$lib/components/ui/container.svelte';
+  import Link from '$lib/components/ui/link.svelte';
   import ResultsIndicator from './results-indicator.svelte';
 
   let {
@@ -49,20 +53,16 @@
   }
 </script>
 
-<main class="flex h-full items-center justify-center">
-  <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
+<Container>
+  <Card>
     <ResultsIndicator {rounds} {guesses} />
     <div class="mt-2 text-center text-4xl font-semibold text-card-foreground">
       {correctGuesses}/{rounds.length}
-      <button
-        title="Copy results"
-        aria-label="Copy results"
-        class="inline-block rounded-xs bg-primary-background p-2 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white active:bg-primary-background active:text-primary-foreground"
-        onclick={copyResults}
-      >
+      <Button title="Copy results" aria-label="Copy results" size="icon" onclick={copyResults}>
         <IconCopy />
-      </button>
+      </Button>
     </div>
+
     <ul class="mt-6 space-y-1 text-card-foreground">
       {#each rounds as round, i}
         {@const roundMaxScore = getMaxScore(round.games)}
@@ -80,15 +80,13 @@
           {#each round.games as game}
             {@const score = getScore(game)}
             <div class="flex w-0 grow justify-between gap-2">
-              <a
+              <Link
                 href={`${STORE_PAGE_URL}/${game.appid}`}
-                rel="nofollow, noopener, noreferrer"
-                class="truncate underline hover:text-white"
-                target="_blank"
+                class="truncate"
                 title="Open Steam store page"
               >
                 {game.name}
-              </a>
+              </Link>
               <div
                 class="font-semibold {score === roundMaxScore
                   ? 'text-accent-background-1'
@@ -101,6 +99,7 @@
         </li>
       {/each}
     </ul>
+
     {#if !isReplay}
       <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
     {:else}
@@ -121,21 +120,14 @@
         {/if}
       </div>
     {/if}
+
     <div class="mt-4 text-center">
-      <a
-        href="/replay"
-        class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
-      >
+      <Button href="/replay" size="sm">
         {#if !isReplay}Play previous dailies{:else}Go to previous dailies{/if}
-      </a>
+      </Button>
     </div>
     <div class="mt-6 text-right">
-      <a
-        href="/"
-        class="inline-block rounded-xs bg-primary-background px-4 py-2 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
-      >
-        Back to home page
-      </a>
+      <Button href="/">Back to home page</Button>
     </div>
-  </div>
-</main>
+  </Card>
+</Container>

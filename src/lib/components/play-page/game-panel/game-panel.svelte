@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Button from '$lib/components/ui/button.svelte';
   import type { Game } from '$lib/server/db/schema';
   import GameInfo from './parts/game-info.svelte';
   import GameMedia from './parts/game-media.svelte';
@@ -30,10 +31,7 @@
           <div class="px-3 text-sm text-card-foreground">
             {game.price || 'Free'}
           </div>
-          <button
-            class="rounded-xs bg-linear-to-r from-accent-background-1 to-accent-background-2 px-4 py-1 text-accent-foreground text-shadow-[1px_1px_0px] text-shadow-black/30 hover:from-accent-background-hover-1 hover:to-accent-background-hover-2 hover:text-white"
-            onclick={() => onguess(game)}>Guess!</button
-          >
+          <Button size="sm" variant="accent" onclick={() => onguess(game)}>Guess!</Button>
         </div>
       </div>
     </div>

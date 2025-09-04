@@ -1,15 +1,18 @@
 <script lang="ts">
   import { MIN_REVIEWS } from '$lib';
-  import wipImage from '$lib/assets/barraconstruction.gif';
   import logoImage from '$lib/assets/logo.png';
+  import Button from '$lib/components/ui/button.svelte';
+  import Card from '$lib/components/ui/card.svelte';
+  import Container from '$lib/components/ui/container.svelte';
+  import Link from '$lib/components/ui/link.svelte';
 </script>
 
 <svelte:head>
   <title>Steamry - A daily Steam review ratio guessing game</title>
 </svelte:head>
 
-<main class="flex h-full items-center justify-center">
-  <div class="w-full max-w-3xl bg-linear-to-r from-card-background-1 to-card-background-2 p-4">
+<Container>
+  <Card>
     <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white">
       <img src={logoImage} alt="" width="56" height="56" />STEAMRY
     </h1>
@@ -35,50 +38,23 @@
     <p class="mt-2">
       <span class="font-semibold">All reviews are considered:</span> all time, all languages,
       including "received for free" and
-      <a
-        href="https://partner.steamgames.com/doc/store/reviews#ReviewBombing"
-        target="_blank"
-        rel="nofollow, noopener, noreferrer"
-        class="text-card-foreground underline hover:text-white">"off-topic"</a
+      <Link href="https://partner.steamgames.com/doc/store/reviews#ReviewBombing">"off-topic"</Link
       >.
     </p>
     <div class="mt-6 text-center">
-      <a
-        href="/play"
-        class="inline-block rounded-xs bg-linear-to-r from-accent-background-1 to-accent-background-2 px-8 py-2 text-xl text-accent-foreground text-shadow-[1px_1px_0px] text-shadow-black/30 hover:from-accent-background-hover-1 hover:to-accent-background-hover-2 hover:text-white"
-      >
-        Play
-      </a>
+      <Button href="/play" variant="accent" size="lg">Play</Button>
     </div>
     <div class="mt-4 text-center">
-      <a
-        href="/replay"
-        class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
-      >
-        Play previous dailies
-      </a>
+      <Button href="/replay" size="sm">Play previous dailies</Button>
     </div>
     <p class="mt-6">
-      Inspired by <a
-        href="https://scrandle.com/"
-        target="_blank"
-        rel="nofollow, noopener, noreferrer"
-        class="text-card-foreground underline hover:text-white">Scrandle</a
-      >. Not affiliated with Valve Corporation.
+      Inspired by <Link href="https://scrandle.com/">Scrandle</Link>. Not affiliated with Valve
+      Corporation.
     </p>
     <p>
-      Made by <a
-        href="https://bsky.app/profile/teatov.xyz"
-        target="_blank"
-        rel="nofollow, noopener, noreferrer"
-        class="text-card-foreground underline hover:text-white">Teatov</a
-      >. Source code is available on
-      <a
-        href="https://github.com/teatov/steamry"
-        target="_blank"
-        rel="nofollow, noopener, noreferrer"
-        class="text-card-foreground underline hover:text-white">GitHub</a
-      >. Thanks.
+      Made by <Link href="https://bsky.app/profile/teatov.xyz">Teatov</Link>. Source code is
+      available on
+      <Link href="https://github.com/teatov/steamry">GitHub</Link>. Thanks.
     </p>
-  </div>
-</main>
+  </Card>
+</Container>
