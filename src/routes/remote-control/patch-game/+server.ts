@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
 import { MAX_ERROR_LENGTH } from '$lib';
 import { db } from '$lib/server/db';
@@ -7,9 +7,10 @@ import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { key, appid, data } = (await request.json()) as {
+  const { key, appid, data, dailyId } = (await request.json()) as {
     key?: string;
     appid?: number;
+    dailyId?: number;
     data?: Partial<schema.Game>;
   };
   if (!key || key !== env.REMOTE_CONTROL_KEY) {
@@ -25,7 +26,16 @@ export const POST: RequestHandler = async ({ request }) => {
 
   try {
     return json(
-      await db.update(schema.games).set(data).where(eq(schema.games.appid, appid)).returning(),
+      await db
+        .update(schema.games)
+        .set(data)
+        .where(
+          and(
+            eq(schema.games.appid, appid),
+            dailyId ? eq(schema.games.dailyId, dailyId) : undefined,
+          ),
+        )
+        .returning(),
     );
   } catch (err) {
     throw error(500, String(err).substring(0, MAX_ERROR_LENGTH));
