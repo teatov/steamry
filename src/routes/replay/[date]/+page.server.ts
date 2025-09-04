@@ -14,8 +14,10 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     throw error(400, 'Invalid date');
   }
 
+  const clientDate = getClientDate(cookies);
+
   const daily = await db.query.dailies.findFirst({
-    where: and(eq(schema.dailies.date, date), lt(schema.dailies.date, getClientDate(cookies))),
+    where: and(eq(schema.dailies.date, date), lt(schema.dailies.date, clientDate)),
     with: { games: true },
   });
 
@@ -26,10 +28,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
   }
 
   const nextDaily = await db.query.dailies.findFirst({
-    where: and(
-      eq(schema.dailies.date, getTomorrowDate(date)),
-      lt(schema.dailies.date, getClientDate(cookies)),
-    ),
+    where: and(eq(schema.dailies.date, getTomorrowDate(date)), lt(schema.dailies.date, clientDate)),
   });
   const previousDaily = await db.query.dailies.findFirst({
     where: eq(schema.dailies.date, getTomorrowDate(date, -1)),
