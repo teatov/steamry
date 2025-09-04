@@ -123,7 +123,7 @@
 
     <div class="mt-4 text-center">
       <Button href="/replay" size="sm">
-        {#if !isReplay}Play previous dailies{:else}Go to previous dailies{/if}
+        {#if !isReplay}Play previous dailies{:else}Back to previous dailies{/if}
       </Button>
     </div>
     <div class="mt-6 text-right">
