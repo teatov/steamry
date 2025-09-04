@@ -5,6 +5,10 @@
   import Container from '$lib/components/ui/container.svelte';
 </script>
 
+<svelte:head>
+  <title>A mishap...</title>
+</svelte:head>
+
 <Container>
   <Card class="text-center" size="auto">
     <h1 class="text-6xl font-bold text-danger-foreground">{page.status}</h1>
