@@ -15,7 +15,11 @@
 
   let { game }: { game: Game } = $props();
 
-  let mediaList = $state<MediaListItem[]>([]);
+  let mediaList = $state<MediaListItem[]>([
+    ...makeTrailerList(game.trailers.slice(0, TRAILERS_IN_FRONT)),
+    ...makeScreenshotList(game.screenshots),
+    ...makeTrailerList(game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length)),
+  ]);
   let currentMediaIndex = $state<number>(0);
 
   let currentMedia = $derived<MediaListItem>(mediaList[currentMediaIndex]);
@@ -23,22 +27,9 @@
   let modalElement = $state<HTMLElement>();
   let currentModalScreenshot = $state<number>(0);
   let showModal = $state<boolean>(false);
-  let showNsfwBlur = $state<boolean>(false);
-
-  $effect(() => {
-    if (game.appid) {
-      mediaList = [
-        ...makeTrailerList(game.trailers.slice(0, TRAILERS_IN_FRONT)),
-        ...makeScreenshotList(game.screenshots),
-        ...makeTrailerList(game.trailers.slice(TRAILERS_IN_FRONT, game.trailers.length)),
-      ];
-      currentMediaIndex = 0;
-      currentModalScreenshot = 0;
-      showModal = false;
-      showNsfwBlur =
-        game.markedAsNsfw || filterMildContentDescriptors(game.contentDescriptors).length > 0;
-    }
-  });
+  let showNsfwBlur = $state<boolean>(
+    game.markedAsNsfw || filterMildContentDescriptors(game.contentDescriptors).length > 0,
+  );
 
   $effect(() => {
     if (currentMedia) {
@@ -83,15 +74,14 @@
         currentModalScreenshot = currentMedia.index;
         showModal = true;
       }}
-      >{#key currentMediaIndex}
-        <img
-          src={ensureHttps(currentMedia.screenshot.src)}
-          alt=""
-          width="1920"
-          height="1080"
-          class="h-full w-full object-contain"
-        />
-      {/key}
+    >
+      <img
+        src={ensureHttps(currentMedia.screenshot.src)}
+        alt=""
+        width="1920"
+        height="1080"
+        class="h-full w-full object-contain"
+      />
     </button>
   {/if}
   {#if currentMedia && currentMedia.trailer}
