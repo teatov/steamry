@@ -121,7 +121,8 @@
   <div class="flex grow overflow-x-auto">
     {#each mediaList as mediaListItem, i}
       <button
-        class="relative shrink-0 border-2 border-foreground/0 {mediaListItem === currentMedia
+        class="relative shrink-0 border-2 border-foreground/0 focus-visible:border-ring/100 focus-visible:ring-0 {mediaListItem ===
+        currentMedia
           ? 'border-foreground/100'
           : ''}"
         onclick={() => {
@@ -133,7 +134,7 @@
           src={ensureHttps(
             mediaListItem.screenshot
               ? mediaListItem.screenshot.thumbnail
-              : mediaListItem.trailer?.thumbnail ?? '',
+              : (mediaListItem.trailer?.thumbnail ?? ''),
           )}
           alt=""
           width="1920"
