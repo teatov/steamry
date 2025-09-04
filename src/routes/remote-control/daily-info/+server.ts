@@ -31,17 +31,9 @@ export const POST: RequestHandler = async ({ request }) => {
   }
 
   daily.games = daily.games.toSorted((a, b) => a.round - b.round);
-  let index = 0;
 
   return json({
-    storePages: daily.games.reduce(
-      (acc, curr) => {
-        acc[curr.name + ' ' + index] = `${STORE_PAGE_URL}/${curr.appid}`;
-        index++;
-        return acc;
-      },
-      {} as Record<string, string>,
-    ),
+    storePages: daily.games.map((game) => [game.round, `${STORE_PAGE_URL}/${game.appid}`]),
     daily,
   });
 };
