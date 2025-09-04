@@ -106,7 +106,7 @@
         {#if previousDailyExists}
           <a
             href="/replay/{makeSaveDataKey(previousDate)}"
-            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground visited:bg-mute-background hover:bg-primary-foreground/50 hover:text-white"
           >
             Play previous - {formatDate(previousDate)}
           </a>
@@ -114,7 +114,7 @@
         {#if nextDailyExists}
           <a
             href="/replay/{makeSaveDataKey(nextDate)}"
-            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground hover:bg-primary-foreground/50 hover:text-white"
+            class="inline-block rounded-xs bg-primary-background px-4 py-1 text-primary-foreground visited:bg-mute-background hover:bg-primary-foreground/50 hover:text-white"
           >
             Play next - {formatDate(nextDate)}
           </a>
