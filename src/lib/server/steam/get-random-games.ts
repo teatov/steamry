@@ -46,8 +46,6 @@ export default async function getRandomGames(
         continue;
       }
 
-      console.log(`\nhttps://store.steampowered.com/app/${steamApp.appid}`);
-
       const game = await fetchGameInfo(steamApp.appid.toString());
       if (!game) {
         continue;

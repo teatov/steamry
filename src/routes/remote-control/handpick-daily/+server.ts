@@ -19,5 +19,5 @@ export const POST: RequestHandler = async ({ request }) => {
 
   handpickDaily(floorDate(new Date(date)), appids, 2);
 
-  return json({ message: 'Started...' });
+  return json({ message: `Started for ${new Date(date).toISOString()}...` });
 };

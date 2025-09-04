@@ -8,6 +8,8 @@ const WAIT_TIME_SECONDS = 60;
 const RETRY_ATTEMPTS = 15;
 
 export default async function fetchGameInfo(appid: string): Promise<schema.NewGameInfoOnly | null> {
+  console.log(`\nhttps://store.steampowered.com/app/${appid}`);
+
   const detailsUrl = new URL(APP_DETAILS_URL);
   detailsUrl.searchParams.set('appids', appid);
 

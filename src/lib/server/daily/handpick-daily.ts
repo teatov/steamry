@@ -3,16 +3,22 @@ import fetchGameInfo from '../steam/fetch-game-info';
 import saveDaily from './save-daily';
 
 export default async function handpickDaily(date: Date, appids: number[], gamesPerRound: number) {
-  const gameInfos: NewGameInfoOnly[] = [];
+  try {
+    console.log(`\nHand picking daily for ${date.toISOString()}`);
 
-  for (let i = 0; i < appids.length; i++) {
-    console.log(`\nhttps://store.steampowered.com/app/${appids[i]}`);
-    const gameInfo = await fetchGameInfo(appids[i].toString());
-    if (!gameInfo) {
-      throw new Error(`Could not fetch game info for ${appids[i]}!`);
+    const gameInfos: NewGameInfoOnly[] = [];
+
+    for (let i = 0; i < appids.length; i++) {
+      const gameInfo = await fetchGameInfo(appids[i].toString());
+      if (!gameInfo) {
+        throw new Error(`Could not fetch game info for ${appids[i]}!`);
+      }
+      gameInfos.push(gameInfo);
     }
-    gameInfos.push(gameInfo);
-  }
 
-  await saveDaily(date, gameInfos, gamesPerRound);
+    await saveDaily(date, gameInfos, gamesPerRound);
+    console.log('Done!');
+  } catch (err) {
+    console.error(err);
+  }
 }

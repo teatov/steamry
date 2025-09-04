@@ -5,9 +5,10 @@ import fetchGameInfo from '$lib/server/steam/fetch-game-info';
 
 export async function refetchDailyInfo(games: schema.Game[]) {
   try {
+    console.log(`\nRefetching game info...`);
+
     await db.transaction(async (tx) => {
       for (let i = 0; i < games.length; i++) {
-        console.log(`\nhttps://store.steampowered.com/app/${games[i].appid}`);
         const gameInfo = await fetchGameInfo(games[i].appid.toString());
         if (!gameInfo) {
           throw new Error(`Could not fetch ${games[i].appid}`);
