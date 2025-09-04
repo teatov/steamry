@@ -1,6 +1,8 @@
 FROM node:22-slim AS base
 ARG PORT
 ENV PORT=$PORT
+ARG ORIGIN
+ENV ORIGIN=$ORIGIN
 RUN apt-get update && apt-get install -y curl --no-install-recommends
 
 FROM base AS builder
