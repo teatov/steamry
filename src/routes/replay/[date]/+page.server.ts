@@ -1,12 +1,13 @@
 import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, and, lt } from 'drizzle-orm';
 import { formatDate, getTomorrowDate } from '$lib';
+import getClientDate from '$lib/server/daily/get-client-date';
 import getRounds from '$lib/server/daily/get-rounds';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, cookies }) => {
   const date = new Date(params.date);
 
   if (isNaN(date.getTime())) {
@@ -14,7 +15,7 @@ export const load: PageServerLoad = async ({ params }) => {
   }
 
   const daily = await db.query.dailies.findFirst({
-    where: eq(schema.dailies.date, date),
+    where: and(eq(schema.dailies.date, date), lt(schema.dailies.date, getClientDate(cookies))),
     with: { games: true },
   });
 
@@ -25,7 +26,10 @@ export const load: PageServerLoad = async ({ params }) => {
   }
 
   const nextDaily = await db.query.dailies.findFirst({
-    where: eq(schema.dailies.date, getTomorrowDate(date)),
+    where: and(
+      eq(schema.dailies.date, getTomorrowDate(date)),
+      lt(schema.dailies.date, getClientDate(cookies)),
+    ),
   });
   const previousDaily = await db.query.dailies.findFirst({
     where: eq(schema.dailies.date, getTomorrowDate(date, -1)),
