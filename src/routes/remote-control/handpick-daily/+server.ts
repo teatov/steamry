@@ -5,19 +5,19 @@ import handpickDaily from '$lib/server/daily/handpick-daily';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { key, date, appids } = (await request.json()) as {
+  const { key, date, rounds } = (await request.json()) as {
     key?: string;
     date?: string;
-    appids?: number[];
+    rounds?: number[][];
   };
   if (!key || key !== env.REMOTE_CONTROL_KEY) {
     throw error(401);
   }
-  if (!date || !appids) {
-    throw error(400, "Field 'date' or 'data' are missing");
+  if (!date || !rounds) {
+    throw error(400, "Field 'date' or 'rounds' are missing");
   }
 
-  handpickDaily(floorDate(new Date(date)), appids, 2);
+  handpickDaily(floorDate(new Date(date)), rounds);
 
   return json({ message: `Started for ${new Date(date).toISOString()}...` });
 };
