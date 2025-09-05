@@ -3,6 +3,7 @@ ARG PORT
 ENV PORT=$PORT
 ARG ORIGIN
 ENV ORIGIN=$ORIGIN
+ENV PUBLIC_ORIGIN=$ORIGIN
 RUN apt-get update && apt-get install -y curl --no-install-recommends
 
 FROM base AS builder

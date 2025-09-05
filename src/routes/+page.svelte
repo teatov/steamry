@@ -1,14 +1,30 @@
 <script lang="ts">
+  import { env } from '$env/dynamic/public';
   import { MIN_REVIEWS } from '$lib';
   import logoImage from '$lib/assets/logo.png';
   import Button from '$lib/components/ui/button.svelte';
   import Card from '$lib/components/ui/card.svelte';
   import Container from '$lib/components/ui/container.svelte';
   import Link from '$lib/components/ui/link.svelte';
+
+  const DESCRIPTION = 'A daily Steam review ratio guessing game';
+  const OG_IMAGE = `${env.PUBLIC_ORIGIN}/og-image.png`;
 </script>
 
 <svelte:head>
-  <title>Steamry - A daily Steam review ratio guessing game</title>
+  <title>Steamry - {DESCRIPTION}</title>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={env.PUBLIC_ORIGIN} />
+  <meta property="og:title" content="Steamry" />
+  <meta property="og:description" content={DESCRIPTION} />
+  <meta property="og:image" content={OG_IMAGE} />
+
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={env.PUBLIC_ORIGIN} />
+  <meta property="twitter:title" content="Steamry" />
+  <meta property="twitter:description" content={DESCRIPTION} />
+  <meta property="twitter:image" content={OG_IMAGE} />
 </svelte:head>
 
 <Container>
