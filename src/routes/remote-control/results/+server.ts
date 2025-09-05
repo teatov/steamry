@@ -42,13 +42,12 @@ export const POST: RequestHandler = async ({ request }) => {
   const humanhash = new HumanHasher();
 
   try {
-    return json(
-      (await query).map((result) => ({
-        ...result,
-        guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
-        ipHashed: humanhash.humanize(result.ipHashed),
-      })),
-    );
+    const results = (await query).map((result) => ({
+      ...result,
+      guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
+      ipHashed: humanhash.humanize(result.ipHashed),
+    }));
+    return json({ total: results.length, results });
   } catch (err) {
     throw error(500, String(err).substring(0, MAX_ERROR_LENGTH));
   }
