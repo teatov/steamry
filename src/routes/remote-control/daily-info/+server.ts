@@ -32,8 +32,14 @@ export const POST: RequestHandler = async ({ request }) => {
 
   daily.games = daily.games.toSorted((a, b) => a.round - b.round);
 
-  return json({
-    storePages: daily.games.map((game) => [game.round, `${STORE_PAGE_URL}/${game.appid}`]),
-    daily,
-  });
+  const storePages: Record<string, string>[] = [];
+  for (let i = 0; i < daily.games.length; i++) {
+    const game = daily.games[i];
+    if (!storePages[game.round]) {
+      storePages[game.round] = {};
+    }
+    storePages[game.round][game.name] = `${STORE_PAGE_URL}/${game.appid}`;
+  }
+
+  return json({ storePages, daily });
 };
