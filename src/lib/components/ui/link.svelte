@@ -8,7 +8,7 @@
 <a
   {href}
   target={href?.startsWith('/') ? undefined : '_blank'}
-  rel={href?.startsWith('/') ? undefined : 'nofollow, noopener, noreferrer'}
+  rel={href?.startsWith('/') ? undefined : 'noopener noreferrer'}
   {...restProps}
   class={cn('text-card-foreground underline hover:text-white', className)}>{@render children?.()}</a
 >
