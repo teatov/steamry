@@ -1,6 +1,5 @@
 import { error, json } from '@sveltejs/kit';
 import { gte, lte, eq } from 'drizzle-orm';
-import HumanHasher from 'humanhash';
 import { env } from '$env/dynamic/private';
 import { MAX_ERROR_LENGTH } from '$lib';
 import { db } from '$lib/server/db';
@@ -22,8 +21,6 @@ export const POST: RequestHandler = async ({ request }) => {
     .select({
       date: schema.dailies.date,
       createdAt: schema.results.createdAt,
-      ipHashed: schema.results.ipHashed,
-      correctGuesses: schema.results.correctGuesses,
       guesses: schema.results.guesses,
     })
     .from(schema.results)
@@ -39,13 +36,10 @@ export const POST: RequestHandler = async ({ request }) => {
     query.where(eq(schema.dailies.date, new Date(date)));
   }
 
-  const humanhash = new HumanHasher();
-
   try {
     const results = (await query).map((result) => ({
       ...result,
       guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
-      ipHashed: humanhash.humanize(result.ipHashed),
     }));
     return json({ total: results.length, results });
   } catch (err) {
