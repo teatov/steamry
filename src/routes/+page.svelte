@@ -30,8 +30,8 @@
 
 <Container>
   <Card>
-    <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white">
-      <img src={logoImage} alt="Steamry logo" width="56" height="56" />STEAMRY
+    <h1 class="flex items-center justify-center gap-4 text-6xl font-bold text-white uppercase">
+      <img src={logoImage} alt="Steamry logo" width="56" height="56" />Steamry
     </h1>
     <h2 class="mt-2 text-center text-card-foreground md:text-2xl">
       A daily Steam review ratio guessing game
