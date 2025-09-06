@@ -15,10 +15,11 @@
   <title>Steamry - {DESCRIPTION}</title>
 
   <meta property="og:type" content="website" />
-  <meta property="og:url" content={env.PUBLIC_ORIGIN} />
+  <meta property="og:url" content="{env.PUBLIC_ORIGIN}/" />
   <meta property="og:title" content="Steamry" />
   <meta property="og:description" content={DESCRIPTION} />
   <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:logo" content="/logo.png" />
 
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content={env.PUBLIC_ORIGIN} />
