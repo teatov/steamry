@@ -16,8 +16,8 @@ export const POST: RequestHandler = async ({ request }) => {
   if (!key || key !== env.REMOTE_CONTROL_KEY) {
     throw error(401);
   }
-  if (!appid || !data) {
-    throw error(400, "Field 'appid' or 'data' are missing");
+  if ((!appid && !dailyId) || !data) {
+    throw error(400, "Fields 'appid', 'dailyId' or 'data' are missing");
   }
   const keys = Object.keys(data) as (keyof schema.Game)[];
   if (keys.includes('dailyId') || keys.includes('round')) {
@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request }) => {
         .set(data)
         .where(
           and(
-            eq(schema.games.appid, appid),
+            appid ? eq(schema.games.appid, appid) : undefined,
             dailyId ? eq(schema.games.dailyId, dailyId) : undefined,
           ),
         )
