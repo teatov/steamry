@@ -19,13 +19,13 @@
   <meta property="og:title" content="Steamry" />
   <meta property="og:description" content={DESCRIPTION} />
   <meta property="og:image" content={OG_IMAGE} />
-  <meta property="og:logo" content="/logo.png" />
+  <meta property="og:logo" content="{env.PUBLIC_ORIGIN}/logo.png" />
 
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={env.PUBLIC_ORIGIN} />
-  <meta property="twitter:title" content="Steamry" />
-  <meta property="twitter:description" content={DESCRIPTION} />
-  <meta property="twitter:image" content={OG_IMAGE} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="{env.PUBLIC_ORIGIN}/" />
+  <meta name="twitter:title" content="Steamry" />
+  <meta name="twitter:description" content={DESCRIPTION} />
+  <meta name="twitter:image" content={OG_IMAGE} />
 </svelte:head>
 
 <Container>
