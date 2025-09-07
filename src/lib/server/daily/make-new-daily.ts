@@ -1,11 +1,12 @@
 import { MAX_ERROR_LENGTH } from '$lib';
-import type { NewGameInfoOnly } from '../db/schema';
 import { saveEventLog } from '../event-logs';
 import getRandomGames from '../steam/get-random-games';
+import makeRounds from './make-rounds';
 import saveDaily from './save-daily';
 
 const ROUNDS = 10;
 const GAMES_PER_ROUND = 2;
+const MIN_PERCENTAGE_DIFF = 10;
 
 export default async function makeNewDaily(date: Date) {
   try {
@@ -16,21 +17,15 @@ export default async function makeNewDaily(date: Date) {
       throw new Error('No games!');
     }
 
-    const rounds: NewGameInfoOnly[][] = [];
-
-    for (let i = 0; i < gameInfos.length; i++) {
-      const round = Math.floor(i / GAMES_PER_ROUND);
-      if (!rounds[round]) {
-        rounds[round] = [];
-      }
-      rounds[round].push(gameInfos[i]);
-    }
+    const rounds = makeRounds(gameInfos, GAMES_PER_ROUND, MIN_PERCENTAGE_DIFF);
+    rounds.sort(() => Math.random() - 0.5);
 
     const daily = await saveDaily(date, rounds);
 
     await saveEventLog('make-new-daily-finished', daily);
 
     console.log('Finished!');
+    return { daily: daily, rounds: rounds };
   } catch (err) {
     console.error(err);
     try {

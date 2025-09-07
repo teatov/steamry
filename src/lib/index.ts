@@ -1,4 +1,4 @@
-import type { Game } from './server/db/schema';
+import type { Game, NewGameInfoOnly } from './server/db/schema';
 
 export const STORE_PAGE_URL = 'https://store.steampowered.com/app';
 export const MIN_REVIEWS = 20;
@@ -28,13 +28,13 @@ export function getTimezoneDate(offsetMinutes: number) {
   return floorDate(date);
 }
 
-export function getScore(game: Game) {
+export function getScore(game: NewGameInfoOnly) {
   return (
     Math.round((game.reviewsPositive / (game.reviewsNegative + game.reviewsPositive)) * 10000) / 100
   );
 }
 
-export function getMaxScore(games: Game[]) {
+export function getMaxScore(games: NewGameInfoOnly[]) {
   return getScore(
     games.reduce(function (prev, current) {
       return prev && getScore(prev) > getScore(current) ? prev : current;
