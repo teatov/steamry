@@ -57,11 +57,6 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     return null;
   }
 
-  if (!appDetails.short_description) {
-    console.error(`App ${appid} has no description`);
-    return null;
-  }
-
   const reviewsUrl = new URL(`${APP_REVIEWS_URL}/${appid}`);
   reviewsUrl.searchParams.set('json', '1');
   reviewsUrl.searchParams.set('language', 'all');
@@ -121,14 +116,14 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     name: appDetails.name,
     reviewsPositive: reviewsSummary.total_positive,
     reviewsNegative: reviewsSummary.total_negative,
-    description: appDetails.short_description,
+    description: appDetails.short_description ?? '',
     price:
       appDetails.is_free || !appDetails.price_overview
         ? null
         : appDetails.price_overview.initial_formatted ||
           appDetails.price_overview.final_formatted ||
           null,
-    releaseDate: appDetails.release_date.date,
+    releaseDate: appDetails.release_date.date ?? '',
     headerImage: appDetails.header_image,
     developers: appDetails.developers ? appDetails.developers : [],
     publishers: appDetails.publishers ? appDetails.publishers : [],
@@ -176,7 +171,7 @@ export default async function fetchGameInfo(appid: string): Promise<schema.NewGa
     requiredAge:
       typeof appDetails.required_age === 'number'
         ? appDetails.required_age
-        : Number.isInteger(Number(appDetails.required_age))
+        : appDetails.required_age && Number.isInteger(Number(appDetails.required_age))
           ? parseInt(appDetails.required_age)
           : 0,
   };
@@ -188,8 +183,8 @@ type AppDetails = {
   type: 'game' | 'dlc' | 'demo' | 'advertising' | 'mod' | 'video';
   name: string;
   steam_appid: number;
-  required_age: number | string;
-  is_free: boolean;
+  required_age?: number | string;
+  is_free?: boolean;
   short_description?: string;
   header_image: string;
   developers?: string[];
@@ -212,8 +207,8 @@ type AppDetails = {
     highlight: boolean;
   }[];
   release_date?: {
-    coming_soon: boolean;
-    date: string;
+    coming_soon?: boolean;
+    date?: string;
   };
   content_descriptors?: { ids?: ContentDescriptor[]; notes?: string | null };
 };
