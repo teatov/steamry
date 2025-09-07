@@ -37,10 +37,12 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 
   const nextDaily = await db.query.dailies.findFirst({
     where: and(eq(schema.dailies.date, getTomorrowDate(date)), lt(schema.dailies.date, clientDate)),
+    columns: { date: true, description: true },
   });
   const previousDaily = await db.query.dailies.findFirst({
     where: eq(schema.dailies.date, getTomorrowDate(date, -1)),
+    columns: { date: true, description: true },
   });
 
-  return { rounds, date, nextDailyExists: !!nextDaily, previousDailyExists: !!previousDaily };
+  return { rounds, date, nextDaily, previousDaily };
 };

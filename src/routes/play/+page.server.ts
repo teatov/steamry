@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
     with: { games: true },
   });
 
-  const rounds = await getRounds(daily);
+  const rounds = getRounds(daily);
 
   return { rounds, date };
 };

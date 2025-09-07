@@ -51,7 +51,7 @@ export function ensureHttps(url: string) {
 }
 
 export function formatDate(date: Date) {
-  return date.toLocaleDateString('en-US', { dateStyle: 'long' });
+  return date.toLocaleDateString('en-US', { dateStyle: 'medium' });
 }
 
 export function getContentDescriptorText(descriptor: number): string {

@@ -18,6 +18,7 @@
   import Card from '$lib/components/ui/card.svelte';
   import Container from '$lib/components/ui/container.svelte';
   import Link from '$lib/components/ui/link.svelte';
+  import type { NewDaily } from '$lib/server/db/schema';
   import ResultsIndicator from './results-indicator.svelte';
 
   let {
@@ -26,8 +27,8 @@
     correctGuesses,
     date,
     isReplay,
-    nextDailyExists,
-    previousDailyExists,
+    nextDaily,
+    previousDaily,
     saveData,
   }: {
     rounds: Round[];
@@ -35,8 +36,8 @@
     correctGuesses: number;
     date: Date;
     isReplay: boolean;
-    nextDailyExists: boolean;
-    previousDailyExists: boolean;
+    nextDaily?: NewDaily;
+    previousDaily?: NewDaily;
     saveData: SaveData;
   } = $props();
 
@@ -103,19 +104,17 @@
     {#if !isReplay}
       <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
     {:else}
-      {@const nextDate = getTomorrowDate(date)}
-      {@const previousDate = getTomorrowDate(date, -1)}
       <div class="mt-4 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
-        {#if previousDailyExists}
+        {#if previousDaily}
           <div class="max-w-xl md:w-0 md:grow">
-            <div>Previous daily</div>
-            <DailyList dailies={[{ date: previousDate }]} {saveData} />
+            <div class="text-left">Previous daily</div>
+            <DailyList dailies={[previousDaily]} {saveData} />
           </div>
         {/if}
-        {#if nextDailyExists}
+        {#if nextDaily}
           <div class="max-w-xl md:w-0 md:grow">
-            <div>Next daily</div>
-            <DailyList dailies={[{ date: nextDate }]} {saveData} />
+            <div class="text-right">Next daily</div>
+            <DailyList dailies={[nextDaily]} {saveData} />
           </div>
         {/if}
       </div>

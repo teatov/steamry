@@ -1,7 +1,8 @@
 <script lang="ts">
   import { formatDate, makeSaveDataKey, type Round, type SaveData } from '$lib';
+  import type { NewDaily } from '$lib/server/db/schema';
 
-  let { dailies, saveData }: { dailies: { date: Date }[]; saveData: SaveData } = $props();
+  let { dailies, saveData }: { dailies: NewDaily[]; saveData: SaveData } = $props();
 </script>
 
 <ul class="space-y-1">
@@ -10,13 +11,16 @@
     <li>
       <a
         href="/replay/{saveDataKey}"
-        class="group flex justify-between bg-primary-background px-4 py-1 visited:bg-mute-background hover:bg-primary-foreground/50"
+        class="group flex justify-between gap-3 bg-primary-background px-4 py-1 visited:bg-mute-background hover:bg-primary-foreground/50"
       >
-        <div class="text-primary-foreground/100 group-hover:text-white">
+        <div class="shrink-0 text-primary-foreground/100 group-hover:text-white">
           {formatDate(daily.date)}
         </div>
+        {#if daily.description}
+          <div class="grow truncate group-hover:text-white">{daily.description}</div>
+        {/if}
         {#if saveData[saveDataKey]}
-          <div class="text-card-foreground group-hover:text-white">
+          <div class="shrink-0 text-card-foreground group-hover:text-white">
             {saveData[saveDataKey].filter((value) => value).length}/{saveData[saveDataKey].length}
           </div>
         {:else}

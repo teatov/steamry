@@ -65,6 +65,7 @@ export type NewGameInfoOnly = Omit<NewGame, 'dailyId' | 'round'>;
 export const dailies = pgTable('dailies', {
   id: serial().primaryKey(),
   date: date({ mode: 'date' }).notNull().unique(),
+  description: text(),
 });
 
 export const dailiesRelations = relations(dailies, ({ many }) => ({

@@ -9,7 +9,7 @@
     type Round,
     type SaveData,
   } from '$lib';
-  import type { Game } from '$lib/server/db/schema';
+  import type { Game, NewDaily } from '$lib/server/db/schema';
   import Button from '../ui/button.svelte';
   import Container from '../ui/container.svelte';
   import GamePanel from './game-panel/game-panel.svelte';
@@ -21,14 +21,14 @@
     rounds,
     date,
     isReplay = false,
-    nextDailyExists = false,
-    previousDailyExists = false,
+    nextDaily,
+    previousDaily,
   }: {
     rounds: Round[];
     date: Date;
     isReplay?: boolean;
-    nextDailyExists?: boolean;
-    previousDailyExists?: boolean;
+    nextDaily?: NewDaily;
+    previousDaily?: NewDaily;
   } = $props();
 
   let saveData = $state<SaveData>({});
@@ -127,8 +127,8 @@
     {correctGuesses}
     {date}
     {isReplay}
-    {nextDailyExists}
-    {previousDailyExists}
+    {nextDaily}
+    {previousDaily}
     {saveData}
   />
 {/if}

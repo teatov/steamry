@@ -15,7 +15,7 @@
     rounds={data.rounds}
     date={data.date}
     isReplay={true}
-    nextDailyExists={data.nextDailyExists}
-    previousDailyExists={data.previousDailyExists}
+    nextDaily={data.nextDaily}
+    previousDaily={data.previousDaily}
   />
 {/key}
