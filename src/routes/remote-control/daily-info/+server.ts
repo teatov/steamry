@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
-import { MAX_ERROR_LENGTH, STORE_PAGE_URL } from '$lib';
+import { getScore, MAX_ERROR_LENGTH, STORE_PAGE_URL } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
@@ -32,13 +32,16 @@ export const POST: RequestHandler = async ({ request }) => {
 
   daily.games = daily.games.toSorted((a, b) => a.round - b.round);
 
-  const storePages: Record<string, string>[] = [];
+  const storePages: Record<string, { url: string; score: number }>[] = [];
   for (let i = 0; i < daily.games.length; i++) {
     const game = daily.games[i];
     if (!storePages[game.round]) {
       storePages[game.round] = {};
     }
-    storePages[game.round][game.name] = `${STORE_PAGE_URL}/${game.appid}`;
+    storePages[game.round][game.name] = {
+      url: `${STORE_PAGE_URL}/${game.appid}`,
+      score: getScore(game),
+    };
   }
 
   return json({ storePages, daily });
