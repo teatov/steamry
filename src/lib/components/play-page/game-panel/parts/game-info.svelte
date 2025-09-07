@@ -39,7 +39,9 @@
     'Total reviews',
     numberFormat.format(game.reviewsNegative + game.reviewsPositive),
   )}
-  {@render infoItem('Release date', game.releaseDate)}
+  {#if game.releaseDate}
+    {@render infoItem('Release date', game.releaseDate)}
+  {/if}
   <div>
     {@render infoItem('Developer', undefined, game.developers)}
     {@render infoItem('Publisher', undefined, game.publishers)}
