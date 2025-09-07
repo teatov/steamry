@@ -69,7 +69,7 @@
         {@const roundMaxScore = getMaxScore(round.games)}
         <li
           aria-label={guesses[i] ? 'Correct' : 'Incorrect'}
-          class="flex gap-8 px-2 {guesses[i]
+          class="flex gap-4 px-2 {guesses[i]
             ? 'bg-accent-background-1/25'
             : 'bg-danger-foreground/25'}"
         >
@@ -80,7 +80,7 @@
           {/if}
           {#each round.games as game}
             {@const score = getScore(game)}
-            <div class="flex w-0 grow justify-between gap-2">
+            <div class="flex w-0 grow justify-between">
               <Link
                 href={`${STORE_PAGE_URL}/${game.appid}`}
                 class="truncate"
@@ -89,9 +89,11 @@
                 {game.name}
               </Link>
               <div
-                class="font-semibold {score === roundMaxScore
+                class="cursor-help font-semibold underline decoration-dashed decoration-1 underline-offset-2 {score ===
+                roundMaxScore
                   ? 'text-accent-background-1'
                   : 'text-danger-foreground'}"
+                title="Positive: {game.reviewsPositive}; Negative: {game.reviewsNegative}"
               >
                 {score}%
               </div>

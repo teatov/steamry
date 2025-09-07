@@ -28,7 +28,7 @@
 <div class="mt-2 space-y-2 pr-4 text-xs">
   {#if game.isHandPicked}
     <p
-      class="cursor-help text-sm font-semibold text-danger-foreground underline decoration-dashed"
+      class="cursor-help text-sm font-semibold text-danger-foreground underline decoration-dashed decoration-1 underline-offset-2"
       title="This game wasn't picked randomly, and instead was added manually"
     >
       Hand-picked
