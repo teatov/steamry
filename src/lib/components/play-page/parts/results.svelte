@@ -45,7 +45,7 @@
     const guessEmojis = guesses.map((value) => (value ? '🟩' : '🟥')).join('');
     const guessesTotal = `${correctGuesses}/${rounds.length}`;
     const dateIso = date.toISOString().split('T')[0];
-    const resulstsText = `${guessEmojis} ${guessesTotal} | ${dateIso} | ${env.PUBLIC_ORIGIN}`;
+    const resulstsText = `${guessEmojis} ${guessesTotal} | Steamry ${dateIso} | ${env.PUBLIC_ORIGIN}`;
     try {
       await navigator.clipboard.writeText(resulstsText);
     } catch (err) {
