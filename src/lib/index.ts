@@ -28,10 +28,12 @@ export function getTimezoneDate(offsetMinutes: number) {
   return floorDate(date);
 }
 
+export function formatPercentage(ratio: number) {
+  return Math.round(ratio * 10000) / 100;
+}
+
 export function getScore(game: NewGameInfoOnly) {
-  return (
-    Math.round((game.reviewsPositive / (game.reviewsNegative + game.reviewsPositive)) * 10000) / 100
-  );
+  return formatPercentage(game.reviewsPositive / (game.reviewsNegative + game.reviewsPositive));
 }
 
 export function getMaxScore(games: NewGameInfoOnly[]) {

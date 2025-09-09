@@ -1,11 +1,10 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
   import {
-    formatDate,
+    formatPercentage,
     getMaxScore,
     getScore,
-    getTomorrowDate,
-    makeSaveDataKey,
     STORE_PAGE_URL,
     type Round,
     type SaveData,
@@ -40,6 +39,24 @@
     previousDaily?: NewDaily;
     saveData: SaveData;
   } = $props();
+
+  let results = $state<null | { average: number; rounds: number[] }>(null);
+
+  onMount(async () => {
+    const response = await fetch('/get-results', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ date: date.toISOString() }),
+    });
+
+    if (response.ok) {
+      results = await response.json();
+    } else {
+      console.error(`Results ${response.status} ${response.statusText}`);
+    }
+  });
 
   async function copyResults() {
     const guessEmojis = guesses.map((value) => (value ? '🟩' : '🟥')).join('');
@@ -103,10 +120,51 @@
       {/each}
     </ul>
 
+    <div class="mt-6">
+      <div class="text-center text-xl">
+        Today's average: <span class="font-semibold text-card-foreground">
+          {#if results}
+            {Math.round(results.average * 100) / 100}/{rounds.length}
+          {:else}
+            N/A
+          {/if}
+        </span>
+      </div>
+      <div class="text-center">Average guess distribution:</div>
+      <div class="mx-auto flex h-26 max-w-sm items-stretch justify-stretch gap-2">
+        {#if results}
+          {#each results.rounds as round, index}
+            <div
+              class="flex w-full cursor-help flex-col gap-2 text-center text-[0.6rem]"
+              title="{index + 1}. Correct: {formatPercentage(round)}%; Incorrect: {formatPercentage(
+                1 - round,
+              )}%"
+            >
+              {#if round < 1}
+                <div
+                  class="rounded-xs bg-danger-foreground/75"
+                  style="height: {(1 - round) * 100}%;"
+                ></div>
+              {/if}
+              {#if round > 0}
+                <div
+                  class="rounded-xs bg-accent-background-1/75"
+                  style="height: {round * 100}%;"
+                ></div>
+              {/if}
+              <div>{Math.round(round * 100)}%</div>
+            </div>
+          {/each}
+        {:else}
+          <div class="w-full text-center">N/A</div>
+        {/if}
+      </div>
+    </div>
+
     {#if !isReplay}
-      <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
+      <div class="mt-4 text-center">Next game tomorrow!</div>
     {:else}
-      <div class="mt-4 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
+      <div class="mt-2 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
         {#if previousDaily}
           <div class="max-w-xl md:w-0 md:grow">
             <div class="text-left">Previous daily</div>
@@ -122,7 +180,7 @@
       </div>
     {/if}
 
-    <div class="mt-4 text-center">
+    <div class="mt-2 text-center">
       <Button href="/replay" size="sm">
         {#if !isReplay}Play previous dailies{:else}Back to previous dailies{/if}
       </Button>
