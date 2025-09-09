@@ -17,7 +17,9 @@
           {formatDate(daily.date)}
         </div>
         {#if daily.description}
-          <div class="grow truncate group-hover:text-white">{daily.description}</div>
+          <div class="grow truncate group-hover:text-white" title={daily.description}>
+            {daily.description}
+          </div>
         {/if}
         {#if saveData[saveDataKey]}
           <div class="shrink-0 text-card-foreground group-hover:text-white">
