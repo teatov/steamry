@@ -3,7 +3,6 @@
   import { env } from '$env/dynamic/public';
   import {
     formatDate,
-    formatPercentage,
     getMaxScore,
     getScore,
     STORE_PAGE_URL,
@@ -135,26 +134,26 @@
       <div class="text-center">Average guess distribution:</div>
       <div class="mx-auto flex h-26 max-w-sm items-stretch justify-stretch gap-2">
         {#if results}
-          {#each results.rounds as round, index}
+          {#each results.rounds as correctRatio, index}
+            {@const correctPercentage = Math.round(correctRatio * 100)}
             <div
               class="flex w-full cursor-help flex-col gap-2 text-center text-[0.6rem]"
-              title="{index + 1}. Correct: {formatPercentage(round)}%; Incorrect: {formatPercentage(
-                1 - round,
-              )}%"
+              title="{index + 1}. Correct: {correctPercentage}%; Incorrect: {100 -
+                correctPercentage}%"
             >
-              {#if round < 1}
+              {#if correctPercentage < 100}
                 <div
                   class="rounded-xs bg-danger-foreground/75"
-                  style="height: {(1 - round) * 100}%;"
+                  style="height: {100 - correctPercentage}%;"
                 ></div>
               {/if}
-              {#if round > 0}
+              {#if correctPercentage > 0}
                 <div
                   class="rounded-xs bg-accent-background-1/75"
-                  style="height: {round * 100}%;"
+                  style="height: {correctPercentage}%;"
                 ></div>
               {/if}
-              <div>{Math.round(round * 100)}%</div>
+              <div>{correctPercentage}%</div>
             </div>
           {/each}
         {:else}
@@ -166,7 +165,7 @@
     {#if !isReplay}
       <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
     {:else}
-      <div class="mt-2 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
+      <div class="mt-4 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
         {#if previousDaily}
           <div class="max-w-xl md:w-0 md:grow">
             <div class="text-left">Previous daily</div>
