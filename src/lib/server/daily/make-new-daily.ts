@@ -19,6 +19,9 @@ export default async function makeNewDaily(date: Date) {
 
     const rounds = makeRounds(gameInfos, GAMES_PER_ROUND, MIN_PERCENTAGE_DIFF);
     rounds.sort(() => Math.random() - 0.5);
+    for (let i = 0; i < rounds.length; i++) {
+      rounds[i].sort(() => Math.random() - 0.5);
+    }
 
     const daily = await saveDaily(date, rounds);
 
