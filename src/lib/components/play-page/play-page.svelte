@@ -3,6 +3,7 @@
   import {
     getMaxScore,
     getScore,
+    guessesToString,
     makeSaveDataKey,
     SAVE_DATA,
     type ResultBody,
@@ -83,9 +84,12 @@
     }
 
     if (!canAdvance) {
-      const resultBody: ResultBody = { date: date.toISOString(), guesses };
+      const payload: Record<string, string> = {};
+      payload[date.toISOString()] = guessesToString(guesses);
       if (!isReplay) {
-        window.umami.track('guessed', resultBody);
+        window.umami.track('guessed', payload);
+
+        const resultBody: ResultBody = { date: date.toISOString(), guesses };
         fetch('/save-result', {
           method: 'POST',
           headers: {
@@ -94,7 +98,7 @@
           body: JSON.stringify(resultBody),
         });
       } else {
-        window.umami.track('replay-guessed', resultBody);
+        window.umami.track('replay-guessed', payload);
       }
     }
 

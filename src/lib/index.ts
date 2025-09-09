@@ -56,6 +56,10 @@ export function formatDate(date: Date) {
   return date.toLocaleDateString('en-US', { dateStyle: 'medium' });
 }
 
+export function guessesToString(guesses: boolean[]) {
+  return guesses.map((value) => (value ? '🟩' : '🟥')).join('');
+}
+
 export function getContentDescriptorText(descriptor: number): string {
   switch (descriptor) {
     case ContentDescriptor.SomeNudityOrSexualContent:

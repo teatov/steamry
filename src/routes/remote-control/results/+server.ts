@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { gte, lte, eq } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
-import { MAX_ERROR_LENGTH } from '$lib';
+import { guessesToString, MAX_ERROR_LENGTH } from '$lib';
 import { db } from '$lib/server/db';
 import * as schema from '$lib/server/db/schema';
 import type { RequestHandler } from './$types';
@@ -39,7 +39,7 @@ export const POST: RequestHandler = async ({ request }) => {
   try {
     const results = (await query).map((result) => ({
       ...result,
-      guesses: result.guesses.map((value) => (value ? '1' : '0')).join(''),
+      guesses: guessesToString(result.guesses),
     }));
     return json({ total: results.length, results });
   } catch (err) {

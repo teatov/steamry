@@ -5,6 +5,7 @@
     formatDate,
     getMaxScore,
     getScore,
+    guessesToString,
     STORE_PAGE_URL,
     type Round,
     type SaveData,
@@ -59,7 +60,7 @@
   });
 
   async function copyResults() {
-    const guessEmojis = guesses.map((value) => (value ? '🟩' : '🟥')).join('');
+    const guessEmojis = guessesToString(guesses);
     const guessesTotal = `${correctGuesses}/${rounds.length}`;
     const dateIso = date.toISOString().split('T')[0];
     const resulstsText = `${guessEmojis} ${guessesTotal} | Steamry ${dateIso} | ${env.PUBLIC_ORIGIN}`;
