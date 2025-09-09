@@ -82,15 +82,20 @@
       localStorage.setItem(SAVE_DATA, JSON.stringify(saveData));
     }
 
-    if (!canAdvance && !isReplay) {
+    if (!canAdvance) {
       const resultBody: ResultBody = { date: date.toISOString(), guesses };
-      fetch('/save-result', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(resultBody),
-      });
+      if (!isReplay) {
+        window.umami.track('guessed', resultBody);
+        fetch('/save-result', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(resultBody),
+        });
+      } else {
+        window.umami.track('replay-guessed', resultBody);
+      }
     }
 
     await new Promise((resolve) => setTimeout(resolve, 3 * 1000));
