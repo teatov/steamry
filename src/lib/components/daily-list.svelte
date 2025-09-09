@@ -22,7 +22,7 @@
           </div>
         {/if}
         {#if saveData[saveDataKey]}
-          <div class="shrink-0 text-card-foreground group-hover:text-white">
+          <div class="shrink-0 font-semibold text-card-foreground group-hover:text-white">
             {saveData[saveDataKey].filter((value) => value).length}/{saveData[saveDataKey].length}
           </div>
         {:else}
