@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
   import {
+    formatDate,
     formatPercentage,
     getMaxScore,
     getScore,
@@ -74,7 +75,8 @@
 <Container>
   <Card>
     <ResultsIndicator {rounds} {guesses} />
-    <div class="mt-2 text-center text-4xl font-semibold text-card-foreground">
+    <div class="mt-2 text-center text-card-foreground">{formatDate(date)}</div>
+    <div class="text-center text-4xl font-semibold text-card-foreground">
       {correctGuesses}/{rounds.length}
       <Button title="Copy results" aria-label="Copy results" size="icon" onclick={copyResults}>
         <IconCopy />
@@ -162,7 +164,7 @@
     </div>
 
     {#if !isReplay}
-      <div class="mt-4 text-center">Next game tomorrow!</div>
+      <div class="mt-4 text-center text-card-foreground">Next game tomorrow!</div>
     {:else}
       <div class="mt-2 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
         {#if previousDaily}
