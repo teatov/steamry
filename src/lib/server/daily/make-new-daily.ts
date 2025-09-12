@@ -6,7 +6,7 @@ import saveDaily from './save-daily';
 
 const ROUNDS = 10;
 const GAMES_PER_ROUND = 2;
-const MIN_PERCENTAGE_DIFF = 10;
+const MIN_PERCENTAGE_DIFF = 5;
 
 export default async function makeNewDaily(date: Date) {
   try {
