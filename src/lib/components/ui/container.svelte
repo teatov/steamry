@@ -5,6 +5,6 @@
   let { class: className, children, ...restProps }: HTMLAttributes<HTMLElement> = $props();
 </script>
 
-<main {...restProps} class={cn('flex h-full flex-col items-center justify-center', className)}>
+<main {...restProps} class={cn('flex h-full flex-col items-center justify-evenly', className)}>
   {@render children?.()}
 </main>

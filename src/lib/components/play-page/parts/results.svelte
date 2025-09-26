@@ -6,11 +6,11 @@
     getMaxScore,
     getScore,
     guessesToString,
+    makeSaveDataKey,
     STORE_PAGE_URL,
     type Round,
     type SaveData,
   } from '$lib';
-  import DailyList from '$lib/components/daily-list.svelte';
   import IconCheck from '$lib/components/icons/icon-check.svelte';
   import IconCopy from '$lib/components/icons/icon-copy.svelte';
   import IconX from '$lib/components/icons/icon-x.svelte';
@@ -71,6 +71,30 @@
     }
   }
 </script>
+
+{#snippet dailyButton(daily: NewDaily)}
+  {@const saveDataKey = makeSaveDataKey(daily.date)}
+  <a
+    href="/replay/{saveDataKey}"
+    class="group flex justify-between gap-3 bg-primary-background px-4 py-1 visited:bg-mute-background hover:bg-primary-foreground/50"
+  >
+    <div class="shrink-0 text-primary-foreground/100 group-hover:text-white">
+      {formatDate(daily.date)}
+    </div>
+    {#if daily.description}
+      <div class="grow break-words group-hover:text-white" title={daily.description}>
+        {daily.description}
+      </div>
+    {/if}
+    {#if saveData[saveDataKey]}
+      <div class="shrink-0 font-semibold text-card-foreground group-hover:text-white">
+        {saveData[saveDataKey].filter((value) => value).length}/{saveData[saveDataKey].length}
+      </div>
+    {:else}
+      <div class="shrink-0 text-card-foreground/50">Not played</div>
+    {/if}
+  </a>
+{/snippet}
 
 <Container>
   <Card>
@@ -168,15 +192,15 @@
     {:else}
       <div class="mt-4 flex flex-col flex-wrap justify-center gap-2 md:flex-row">
         {#if previousDaily}
-          <div class="max-w-xl md:w-0 md:grow">
+          <div class="md:w-0 md:grow">
             <div class="text-left">Previous daily</div>
-            <DailyList dailies={[previousDaily]} {saveData} />
+            {@render dailyButton(previousDaily)}
           </div>
         {/if}
         {#if nextDaily}
-          <div class="max-w-xl md:w-0 md:grow">
+          <div class="md:w-0 md:grow">
             <div class="text-right">Next daily</div>
-            <DailyList dailies={[nextDaily]} {saveData} />
+            {@render dailyButton(nextDaily)}
           </div>
         {/if}
       </div>

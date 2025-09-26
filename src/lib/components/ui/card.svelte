@@ -8,6 +8,7 @@
       size: {
         default: 'max-w-3xl w-full',
         sm: 'max-w-xl w-full',
+        lg: 'max-w-5xl w-full',
         auto: 'w-auto',
       },
     },
