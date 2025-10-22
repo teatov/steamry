@@ -27,6 +27,7 @@
 @layer base {
   * {
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-card-background-2;
+    scrollbar-color: var(--color-modal-background-1) var(--color-card-background-2);
   }
   body {
     @apply bg-background text-foreground;
