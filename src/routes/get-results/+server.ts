@@ -41,7 +41,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
   return json({
     average: guessesSum / results.length,
-    rounds: roundsSum.map((value) => (value / results.length)),
+    rounds: roundsSum.map((value) => value / results.length),
   });
 };
 
