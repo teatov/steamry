@@ -46,10 +46,7 @@
     </p>
     <ul class="list-inside list-disc">
       <li>Games with less than {MIN_REVIEWS} reviews</li>
-      <li>
-        Games marked as having "Frequent Nudity or Sexual Content" (so straight up porn won't
-        appear)
-      </li>
+      <li>Games marked as having "Frequent Nudity or Sexual Content"</li>
       <li>And also games that had issues with fetching info about them</li>
     </ul>
     <p class="mt-2">
